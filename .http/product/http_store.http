@@ -1,0 +1,18 @@
+POST {{url}}/api/products/
+Accept: application/json
+Content-Type: multipart/form-data; boundary=----BoundaryString
+
+------BoundaryString
+Content-Disposition: form-data; name="name"
+
+Note 2
+------BoundaryString
+Content-Disposition: form-data; name="price"
+
+45
+------BoundaryString
+Content-Disposition: form-data; name="image"; filename="2IhJv_ft1Kw.jpg"
+Content-Type: image/jpeg
+
+< C:/Users/zhuko/Desktop/Temp/2IhJv_ft1Kw.jpg
+------BoundaryString--

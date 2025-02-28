@@ -1,0 +1,5 @@
+# @no-redirect
+GET {{url}}/api/notes/categories?search=&parent_id=
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json

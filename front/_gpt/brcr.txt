@@ -1,0 +1,273 @@
+мой front/src/main.tsx:
+
+// Entry point
+
+import * as ReactDOMClient from "react-dom/client";
+import './index.css';
+import React from 'react';
+import {createBrowserRouter, RouteObject, RouterProvider} from 'react-router-dom';
+import {IRoute, routes} from "./routes";
+import {AuthProvider} from '@/modules/auth/AuthProvider';
+
+
+const rootElement = document.getElementById("root");
+
+if (!rootElement) {
+    throw new Error("Root element not found. Make sure there is a div with id 'root' in your index.html.");
+}
+
+const router = createBrowserRouter(transformRoutes(routes));
+
+//import {route} from '@/utils/route';
+//console.log(route('about.test', {id: 1}]));
+
+ReactDOMClient.createRoot(rootElement).render(
+    <React.StrictMode>
+        <AuthProvider>
+            <RouterProvider router={router} />
+        </AuthProvider>
+    </React.StrictMode>
+);
+
+function transformRoutes(routes: IRoute[]): RouteObject[] {
+    return routes.map(({ path, element, children, index, ...rest }: IRoute) => {
+        const handle = { ...rest, ...(index === true && { index }) }; // Добавляем index в handle только если он true
+        const transformedChildren = children ? transformRoutes(children) : undefined;
+
+        // Создаем RouteObject с index только если он true
+        const routeObject: RouteObject = {
+            path,
+            element,
+            ...(index === true && { index }), // Сохраняем index только если он true
+            children: transformedChildren,
+            handle: Object.keys(handle).length > 0 ? handle : undefined,
+        };
+
+        return Object.fromEntries(Object.entries(routeObject).filter(([_, value]) => value !== undefined)) as RouteObject;
+    });
+}
+
+
+мой front/src/routes.tsx:
+
+import React from "react";
+import { HomePage } from './pages/Home';
+import { About } from './pages/About.tsx';
+import { Contacts } from './pages/Contacts';
+import {Layout} from "@/layouts/Layout.tsx";
+import {RequireAuth} from "@/modules/auth/components/RequireAuth.tsx";
+import {LoginLayout} from "@/layouts/LoginLayout.tsx";
+import {LoginPage} from "@/modules/auth/pages/LoginPage.tsx";
+import {notesRoutes} from '@/modules/notes/routes';
+
+export interface IRoute {
+    name?: string;
+    title?: string;
+    path?: string;
+    index?: boolean;
+    element?: React.ReactNode;
+    children?: IRoute[];
+}
+
+export const routes: IRoute[] = [
+    {
+        path: "/",
+        element: (
+            <RequireAuth>
+                <Layout />
+            </RequireAuth>
+        ),
+        title: "Главная",
+        children: [
+            {
+                name: "home",
+                index: true,
+                element: <HomePage />,
+            },
+            {
+                name: "about",
+                path: "about",
+                element: <About />,
+                title: "О нас",
+                children: [
+                    {
+                        name: "about.contacts",
+                        path: "contacts",
+                        element: <Contacts />,
+                        title: "Контакты",
+                    },
+                    {
+                        name: "about.test",
+                        path: "t/e/s/:id",
+                        element: <p>Test...</p>,
+                       title: "Test"
+                    },
+                ],
+            },
+            notesRoutes,
+        ],
+    },
+    {
+        path: "/login",
+        element: <LoginLayout />,
+        children: [
+            {
+                name: "login",
+                index: true,
+                element: <LoginPage />,
+                title: "О Login",
+            },
+        ],
+    },
+];
+
+
+мой front/src/modules/notes/routes.tsx:
+
+/*export const NotesRoute = {
+    index: '/notes/',
+    category: {
+        index: (categoryId: number) => `/notes/category/${categoryId}`,
+        add: '/notes/category/add',
+        edit: (categoryId: number) => `/notes/category/${categoryId}/edit`,
+    }
+};*/
+import {NotesProvider} from "@/modules/notes/NotesProvider.tsx";
+
+import {IRoute} from "@/routes";
+import React from "react";
+import {Outlet} from "react-router-dom";
+import {Test} from "@/modules/notes/pages/Test.tsx";
+
+const namePrefix = 'notes';
+
+
+export const notesRoutes: IRoute =
+{
+    path: "notes",
+    element: <NotesProvider><Outlet /></NotesProvider>,
+    title: "Notes",
+    children: [
+        {
+            name: namePrefix,
+            index: true,
+            element: <Test /> ,
+        },
+        {
+            name: `notes.categories`,
+            path: 'categories',
+            title: 'categories',
+            element: <p>Categories...</p>
+        }
+    ]
+};
+
+
+мой front/src/layouts/Layout.tsx
+
+// components/Layout.tsx
+import React, { useContext } from "react";
+import {Link, Outlet, RouteObject} from "react-router-dom";
+import { AuthContext } from "@/modules/auth/AuthProvider";
+// import { BreadCrumbsProvider } from "@/components/BreadCrumbsContext";
+import Breadcrumbs from "@/components/BreadCrumbs";
+//import {route} from "@/utils/router";
+
+//export const Layout: React.FC<{ allRoutes: {} }> = ({ allRoutes }) => {
+export const Layout: React.FC = () => {
+    const authContext = useContext(AuthContext);
+
+    return (
+        // <BreadCrumbsProvider>
+        <div className="wrapper">
+            <div className="center-wrap">
+                <header>
+                    <nav>
+                        <Link to="/">Home</Link> | <Link to="/about">About</Link> |{" "} |  <Link to="/notes">Notes</Link>
+
+                        {authContext?.user ? (
+                            <span>
+                                Hello, {authContext.user.email}
+                                <button onClick={() => authContext.signout(() => window.location.reload())}>
+                                    Logout
+                                </button>
+                            </span>
+                        ) : <Link to="/login">Login</Link>}
+                    </nav>
+                </header>
+                <main>
+                     <Breadcrumbs />
+                    <Outlet />
+                </main>
+            </div>
+        </div>
+        // </BreadCrumbsProvider>
+    );
+};
+
+мой front/src/components/BreadCrumbs.tsx
+
+import React from "react";
+import { Link, useMatches } from "react-router-dom";
+
+const Breadcrumbs: React.FC = () => {
+    const matches = useMatches();
+
+    // Формируем цепочку маршрутов
+    const breadcrumbs = matches.map((match) => {
+        let name = match.handle?.title;
+
+        // Если handle.title отсутствует, ищем index маршрут в текущем уровне
+        if (!name || name==undefined) {
+            const indexRoute = matches.find(
+                (m) =>
+                    m.pathname === match.pathname &&
+                    m.handle?.title &&
+                    m.handle.index
+            );
+            console.log(indexRoute);
+            if (indexRoute) {
+                name = indexRoute.handle.title;
+            }
+        }
+
+        // Если имя до сих пор отсутствует, подставляем путь (fallback)
+        if (!name) {
+            console.log(match.handle);
+            if (match.handle?.index) {
+                name = null;
+            } else {
+                name = match.pathname;
+            }
+
+        }
+
+
+        return {
+            name,
+            path: match.pathname,
+        };
+    });
+
+    return (
+        <nav>
+            {breadcrumbs.map((crumb, index) => (
+                <span key={`${crumb.path || ''}-${index}`}>
+                    <Link to={crumb.path}>{crumb.name}</Link>
+                    {index < breadcrumbs.length - 1 && " > "}
+                 </span>
+            ))}
+        </nav>
+    );
+};
+
+export default Breadcrumbs;
+
+
+на странице /notes/categories у меня такие breadcrumbs:Главная > Notes > categories
+
+я хочу например на странице front/src/modules/notes/pages/Test.tsx иметь возможность менять breadcrumbs:
+
+- очистить все breadcrumbs
+- удалить последний breadcrumb
+- добавить новый breadcrumb (title + link)

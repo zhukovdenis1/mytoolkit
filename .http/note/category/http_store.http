@@ -1,0 +1,9 @@
+POST {{url}}/api/notes/categories/
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "name": "asdf",
+    "parent_id": null
+}

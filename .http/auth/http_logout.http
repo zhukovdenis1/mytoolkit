@@ -1,0 +1,8 @@
+POST {{url}}/api/auth/logout
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "refresh_token": "{{refresh_token}}"
+}

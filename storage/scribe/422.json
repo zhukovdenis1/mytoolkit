@@ -1,0 +1,10 @@
+{
+  "errors": {
+    "field1": [
+      "Field1 error description"
+    ],
+    "field2": [
+      "Field2 error description"
+    ]
+  }
+}

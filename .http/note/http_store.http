@@ -1,0 +1,10 @@
+POST {{url}}/api/notes
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "title": "Note 2",
+    "text": "Note text",
+    "categories": [1,2]
+}

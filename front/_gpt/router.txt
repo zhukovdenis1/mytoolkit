@@ -1,0 +1,103 @@
+В App.tsx у меня
+
+const routesOld = (
+<>
+    <Route path="/" element={<RequireAuth><Layout allRoutes={param} /></RequireAuth>}>
+        <Route index element={<HomePage />} />
+        <Route path="about" element={<About />} >
+            <Route path="contacts" element={<p>Our contact...</p>} />
+            <Route path="/t/e/s/:id" element={<p>Test...</p>} />
+        </Route>
+        <Route path="*" element={<NotFoundPage />} />
+    </Route>
+    <Route path="/login" element={<LoginLayout />}>
+        <Route index element={<LoginPage />} />
+    </Route>
+</>
+);
+
+
+
+const router = createBrowserRouter(createRoutesFromElements(
+	<>
+	{routesOld}
+	</>
+));
+
+function App() {
+    return (
+            <AuthProvider>
+                <RouterProvider router={router} />
+            </AuthProvider>
+    );
+}
+
+Теперь я формирую роуты так:
+
+export interface IRoute {
+    name?: string;
+    path: string;
+    component: React.ReactNode;
+    title?: string;
+    children?: IRoute[];
+}
+
+export const routesNew: IRoute[] = [
+    {
+        path: "/",
+        component: <RequireAuth><Layout /></RequireAuth>,
+        children: [
+            { name: "home", path: '', component: <HomePage />, title: "Главная" },
+            {
+                name: "about",
+                path: "about",
+                component: <About />,
+                title: "О нас",
+                children: [
+                    {
+                        name: "about.contacts",
+                        path: "contacts",
+                        component: <p>Our contact...</p>,
+                        title: "Контакты",
+                    },
+                    {
+                        name: "about.test",
+                        path: "t/e/s/:id",
+                        component: <p>Test...</p>,
+                        title: "Test",
+                    },
+                ],
+            }
+        ]
+    },
+    {
+        path: "/login",
+        component: <LoginLayout />,
+        children: [
+            { name: "login", path: '', component: <LoginPage />, title: "Login" },
+        ]
+    }
+];
+
+1. Напиши функцию, которая переводит routesNew в формат routesOld
+
+2. Напиши функцию route() которая на входе получает имя роута и массив параметров, а на выходе формирует урл:
+Примеры:
+route('home') -> /
+route('about') -> /about
+route('about.contacts') -> /about/contacts
+route('about.test', [{id: 1}] -> /about/t/e/s/1
+route('login') -> '/login'
+
+3. Напиши компонент <BreadCrumbs /> который по данным routesNew формирует хлебные крошки.
+
+Примеры страницы и формируемые breadcrumbs:
+
+home -> Главная
+about -> Главная > О нас
+about.contacts -> Главная > О нас > Контакты
+
+И чтобы была возможность влиять на хлебные крошки из компонента страницы. Например для страницы about.test я хочу формировать хлебные крошки в зависисмости от id
+
+about.test -> Главная > О нас > Какой-то текст в зависимости от id
+

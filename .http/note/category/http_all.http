@@ -1,0 +1,5 @@
+# @no-redirect
+GET {{url}}/api/note/categories/all
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json

@@ -1,0 +1,3 @@
+GET {{url}}/api/users
+Accept: application/json
+Authorization: Bearer {{access_token}}

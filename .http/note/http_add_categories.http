@@ -1,0 +1,8 @@
+PATCH {{url}}/api/note/3/add-categories
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "category_ids": [3]
+}

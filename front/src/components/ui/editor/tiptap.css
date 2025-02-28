@@ -1,0 +1,75 @@
+.editor-container p {
+    margin:0;
+    padding:0;
+}
+
+.editor-tooltip {
+    display: flex;
+    justify-content: flex-end
+}
+
+.tiptap {
+    padding: 10px;
+}
+
+.tiptap:focus-visible {
+    outline: none;
+}
+
+.bubble-menu, .floating-menu {
+    display: flex;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.editor-button {
+    padding: 6px 12px;
+    border: 1px solid #aaa;
+    background-color: #e0e0e0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+.editor-button:hover {
+    background-color: #d0d0d0;
+}
+
+.is-active {
+    /*background-color: #bbb;*/
+    /*border-color: #888;*/
+}
+
+.editor-content {
+    padding: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+.bubble-menu button {
+    background-color: #fff;
+    color: #000;
+    padding: 6px 12px;
+    border: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+.bubble-menu button:hover {
+    background-color: #d0d0d0;
+}
+
+.bubble-menu button.is-active {
+    background-color: #bbb;
+    color: #000;
+}
+
+.ProseMirror code {
+    background: #eee;
+}

@@ -1,0 +1,3 @@
+GET {{url}}/api/products/
+Accept: application/json
+Content-Type: application/json

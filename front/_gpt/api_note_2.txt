@@ -1,0 +1,462 @@
+Нужно написать на react+ts модуль для управления пока только категориями заметок
+Важно. Генерируй всё в этом окне, не надо открывать дополнительные. Не останавливайся на пол пути
+и не спрашивай нужно ли продолжить. Ответ - да, нужно. Давай от и до в точности по ТЗ.
+
+папка модуля: /src/modules/notes
+
+├── modules/
+│   ├── notes/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── store/
+│   │   └── types/
+
+uri модуля: /notes/...
+
+---
+
+Такой Апи, где {{url}} = https://mytoolkit.loc
+
+Если что-то нужно подкорректировать в АПИ  дай знать.
+
+Api для notes categories:
+
+POST {{url}}/api/note/categories
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+"name": "video",
+"parent_id": null
+}
+
+Ответ:
+
+{
+    "noteCategory": {
+        "id": 2,
+        "parentId": null,
+        "name": "video"
+    }
+}
+
+---------------
+PUT {{url}}/api/note/categories/4
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "name": "js"
+    "parent_id": 1
+}
+
+Ответ:
+
+{
+    "noteCategory": {
+        "id": 4,
+        "parentId": 1,
+        "name": "js"
+    },
+    "success": true
+}
+----------------
+DELETE {{url}}/api/note/categories/6
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+Ответ:
+{
+"success": true
+}
+-------------------
+Получение всех категорий:
+
+GET {{url}}/api/note/categories/all
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+Ответ:
+
+{
+  "data": [
+    {
+      "id": 1,
+      "parentId": null,
+      "name": "123"
+    },
+    {
+      "id": 2,
+      "parentId": null,
+      "name": "video2"
+    },
+    {
+      "id": 4,
+      "parentId": 1,
+      "name": "js"
+    },
+    {
+      "id": 5,
+      "parentId": 2,
+      "name": "php"
+    },
+    {
+      "id": 7,
+      "parentId": null,
+      "name": "php2"
+    }
+  ]
+}
+
+-------------------
+GET {{url}}/api/note/categories/?search=&parent_id=
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "data": [
+    {
+      "id": 1,
+      "parentId": null,
+      "name": "123"
+    },
+    {
+      "id": 2,
+      "parentId": null,
+      "name": "video2"
+    },
+    {
+      "id": 7,
+      "parentId": null,
+      "name": "php2"
+    }
+  ]
+}
+
+Api для notes:
+
+-------------------
+
+POST {{url}}/api/notes
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "title": "Note 2",
+    "text": "Note text",
+    "categories": [1,2]
+}
+
+
+Ответ:
+
+{
+  "data": {
+    "title": "Note 2",
+    "text": "Note text",
+    "updated_at": "2025-01-06T12:34:01.000000Z",
+    "created_at": "2025-01-06T12:34:01.000000Z",
+    "id": 2,
+    "categories": [
+      1,
+      2
+    ]
+  }
+}
+
+-------------------
+
+PUT {{url}}/api/notes/2
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "title": "Note 2",
+    "text": "Note text 2",
+    "categories": [2]
+}
+
+
+Ответ:
+
+{
+  "data": {
+    "id": 2,
+    "title": "Note 2",
+    "text": "Note text 2",
+    "created_at": "2025-01-06T12:34:01.000000Z",
+    "updated_at": "2025-01-06T12:34:46.000000Z"
+  },
+  "success": true
+}
+
+-------------------------
+
+GET {{url}}/api/notes/2
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+Ответ:
+
+{
+  "data": {
+    "id": 2,
+    "title": "Note 2",
+    "text": "Note text 2",
+    "created_at": "2025-01-06T12:34:01.000000Z",
+    "updated_at": "2025-01-06T12:34:46.000000Z",
+    "categories": [
+      {
+        "id": 1,
+        "parent_id": null,
+        "name": "123",
+        "created_at": "2024-12-27T19:22:23.000000Z",
+        "updated_at": "2024-12-28T17:22:40.000000Z"
+      },
+      {
+        "id": 2,
+        "parent_id": null,
+        "name": "video2",
+        "created_at": "2024-12-27T19:25:48.000000Z",
+        "updated_at": "2024-12-28T13:27:01.000000Z"
+      }
+    ]
+  }
+}
+
+-------------------------------
+
+GET {{url}}/api/notes?search=note&category=2
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+Ответ:
+
+{
+  "data": [
+    {
+      "id": 2,
+      "title": "Note 2",
+      "text": "Note text 2",
+      "created_at": "2025-01-06T12:34:01.000000Z",
+      "updated_at": "2025-01-06T12:34:46.000000Z",
+      "categories": [
+        {
+          "id": 1,
+          "name": "123"
+        },
+        {
+          "id": 2,
+          "name": "video2"
+        }
+      ]
+    }
+  ]
+}
+
+-------------------
+DELETE {{url}}/api/notes/2
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+Ответ:
+
+{
+  "success": true
+}
+
+Апи может возращать ошибки в таком формате:
+
+{
+    "errors": {
+        "name": [
+        "The name field is required."
+        ]
+    }
+}
+
+---------------------------------------
+
+Нужно создать систему crud для notes и notes categories.
+
+1. Страницы: notes/, notes/category-{category_id}/
+
+Сначала идёт форма поиска:
+- input type=text name=search
+- select name=where options: notes, categories
+- button - поиск
+- button - сбросить
+
+Если в форма не сабмитится, то даныне на странице такие:
+
+Далее идёт список названий подкатегорий (notes - где parent_id=null, notes/category-{category_id}/ - где parent={category_id}
+элемент списка - ссылка на страницу notes/category-{category_id}/
+запрос к GET {{url}}/api/note/categories?parent_id={category_id}
+
+Далее идёт список заметок, где category={category_id} либо в случе notes/ - categroy_id=null
+запрос к: GET {{url}}/api/notes?category={categpry_id}
+
+В первом и во втором списке в каждой строчке ссылка на редактирование и удаление, а в конце списка - ссылка на добавление
+
+Если сабмит формы, то в случае если where = notes делается запрос к GET {{url}}/api/notes?search=....&category={категория из урл}
+
+В результате отображается только список найденных заметок
+
+Если where = categories, делается запрос к GET {{url}}/api/note/categories?search=....
+
+В результате отображается только список найденных категорий
+
+---
+Страницы редактирования/добавления
+
+Для категорий такие ссылки:
+notes/category/add
+notes/category-{category_id}/edit
+
+Для заметок:
+notes/add?category_id={текущий category_id}
+notes/note-{note_id}/edit
+
+Для категорий такая форма:
+name: input type=text
+parent_id: select - иерархический select со всеми разделами (запрос к GET {{url}}/api/note/categories/all - список всех категорий)
+
+Для notes форма: (может быть несколько категорий)
+title: input type=text
+text: textarea
+categories: select[ссылка удалить], select[ссылка удалить], ..., [ссылка добавить select, при клике появляется еще одни select]
+По умолчанию один select с выбранным переданным через урл category_id в случае добавления
+
+Во всех формах 2 кнопки: [Сохранить] - после нажатия отправляются запрос на сервер и уведомление над формой - сохранено или ошибка.
+[Сохранить и уйти] - запрос на сервер. Если ошибка, остаёмся на странице. Если всё ок, то сообщеие что сохранение успешное и через 2 сек. возврат на страницу, с которой мы пришли на эту форму
+
+
+
+не использовать redux. Использовать useState и useContext
+
+
+Вот мой package.json:
+
+{
+"name": "next-5",
+"private": true,
+"version": "0.0.0",
+"type": "module",
+"scripts": {
+"dev": "vite",
+"build": "tsc -b && vite build",
+"lint": "eslint .",
+"preview": "vite preview"
+},
+"dependencies": {
+"axios": "^1.7.9",
+"js-cookie": "^3.0.5",
+"react": "^19.0.0",
+"react-dom": "^19.0.0",
+"react-router-dom": "^7.1.1"
+},
+"devDependencies": {
+"@eslint/js": "^9.17.0",
+"@types/js-cookie": "^3.0.6",
+"@types/react": "^19.0.2",
+"@types/react-dom": "^19.0.2",
+"@vitejs/plugin-react": "^4.3.4",
+"eslint": "^9.17.0",
+"eslint-plugin-react-hooks": "^5.0.0",
+"eslint-plugin-react-refresh": "^0.4.16",
+"globals": "^15.14.0",
+"typescript": "~5.6.2",
+"typescript-eslint": "^8.18.2",
+"vite": "^6.0.5"
+}
+}
+
+И еще.. Это закрытый авторизацией модуль. У меня есть файл /src/services/api.tsx. Вот его содержимое:
+
+import axios, { AxiosError } from "axios";
+import Cookies from "js-cookie";
+
+const api = axios.create({
+baseURL: "https://mytoolkit.loc/api",
+headers: {
+Accept: "application/json",
+"Content-Type": "application/json",
+},
+});
+
+api.interceptors.request.use((config) => {
+const token = localStorage.getItem("access_token");
+if (token) {
+config.headers.Authorization = `Bearer ${token}`;
+}
+return config;
+});
+
+api.interceptors.response.use(
+(response) => response,
+async (error: AxiosError) => {
+const originalRequest = error.config!;
+if (error.response?.status === 401 && !originalRequest._retry) {
+originalRequest._retry = true;
+try {
+const refreshToken = Cookies.get("refresh_token");
+if (!refreshToken) throw new Error("No refresh token");
+
+/*const { data } = await axios.post<{ access_token: string; refresh_token: string }>(
+"https://mytoolkit.loc/api/auth/refresh",
+{ refresh_token: refreshToken }
+);*/
+
+const { data } = await api.post<{ access_token: string; refresh_token: string }>(
+"/auth/refresh",
+{ refresh_token: refreshToken }
+);
+
+localStorage.setItem("access_token", data.access_token);
+Cookies.set("refresh_token", data.refresh_token);
+
+return api(originalRequest); // Повторяем запрос
+} catch (refreshError) {
+console.error("Token refresh failed:", refreshError);
+throw refreshError;
+}
+}
+return Promise.reject(error);
+}
+);
+
+export default api;
+
+
+Пиши полные пути при описании созданных файлов! Используй инициализированную константу api в api.tsx для запросов к апи.
+
+Роуты я хочу подключить так:
+import NoteRoutes from "./modules/notes/routes";
+....
+<Route path="notes/*" element={<NoteRoutes />} errorElement={<ErrorPage />} />
+....
+учти, что в итоге должны быть следующие роуты:
+
+    <Route path="/" ... /> - дынне из корневой категории
+    <Route path="/category-:category_id/" ... />  - данные из категории category_id
+    <Route path="/add" ... /> - добавление note
+    <Route path="/note-:note_id/edit/" ... /> - редактирование note
+    <Route path="/category/add/" ... /> - добавление категории
+    <Route path="/category-:category_id/edit/" ... /> - редактирование категории
+
+    Учти что <Route path="/" ... /> и <Route path="/category-:category_id/" ... /> - это одна и та же страница просто в первом случае category_id=null
+
+Не забудь написать обработчики для <button>Delete</button> и кнопок Save и Save and Exit. Не забудь о чем я выше писал, что после
+нажания этих кнопок пишется уведомление что всё хорошо или ошибка. И что задержка 2 секунды и тд

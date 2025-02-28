@@ -1,0 +1,13 @@
+POST {{url}}/api/auth/refresh
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "refresh_token": "{{refresh_token}}"
+}
+
+> {%
+    client.global.set("access_token", response.body.access_token)
+    client.global.set("refresh_token", response.body.refresh_token)
+%}

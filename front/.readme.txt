@@ -1,0 +1,177 @@
+Рабочая версия авторизации
+
+https://www.youtube.com/watch?v=2_ksqNI15Sk
+npm create vite@latest
+npm i
+npm i react@19 react-dom@19 @types/react@19 @types/react-dom@19
+
+npm install react-router-dom
+
+npm install axios js-cookie
+
+---
+//npm install react-beautiful-dnd
+npm install @dnd-kit/core @dnd-kit/sortable
+npm install @reduxjs/toolkit react-redux
+
+npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/modifiers react-redux @reduxjs/toolkit
+
+npm install --save-dev @types/node
+
+
+npm install antd --save
+npm install antd@4
+npm uninstall react react-dom
+npm install react@18 react-dom@18
+
+//npm install antd-style
+
+<!--npm install suneditor --save-->
+<!--npm install suneditor-plugin-source-->
+
+<!--npm install --save-dev @babel/plugin-proposal-optional-chaining-->
+<!--npm install --save-dev @babel/plugin-proposal-logical-assignment-operators-->
+
+//npm install @ckeditor/ckeditor5-react @ckeditor/ckeditor5-build-classic
+//npm install tinymce
+//npm install prismjs
+//npm install codemirror
+//npm install @codemirror/basic-setup @codemirror/lang-html @codemirror/theme-dracula
+//npm install @uiw/codemirror-theme-dracula
+
+<!--npm install lexical @lexical/react @lexical/code @uiw/codemirror-theme-dracula codemirror-->
+<!--npm install @codemirror/lang-javascript @codemirror/view @codemirror/state-->
+<!--npm install @lexical/react lexical-->
+<!--npm install @lexical/rich-text-->
+<!--npm install @lexical/react @lexical/rich-text @lexical/code-->
+
+<!--npm install @uiw/react-codemirror @codemirror/lang-html @codemirror/theme-one-dark-->
+<!---->
+<!--npm install suneditor-react-->
+rd /s /q node_modules && del package-lock.json - удалить все модули
+npm install - переустановить
+<!--<!--npm install prettier-->-->
+<!--npm install prettier --save-dev-->
+<!--npm install https://github.com/prettier/plugin-html --save-dev-->
+<!--//npm install js-beautify --save-dev-->
+<!---->
+<!--npm install slate slate-react slate-history-->
+
+
+<!--npm install @codemirror/view @codemirror/state @codemirror/language @codemirror/lang-javascript @codemirror/lang-html @codemirror/lang-css @codemirror/lang-php @codemirror/lang-xml @codemirror/lang-java @codemirror/commands @codemirror/autocomplete @codemirror/lint-->
+<!---->
+<!--npm install @codemirror/view @codemirror/state @codemirror/language @codemirror/lang-javascript @codemirror/lang-html @codemirror/lang-css @codemirror/lang-php @codemirror/lang-xml @codemirror/lang-java @codemirror/commands @codemirror/autocomplete @codemirror/lint @codemirror/gutter @codemirror/basic-setup-->
+<!---->
+<!--npm uninstall @codemirror/basic-setup @codemirror/gutter @codemirror/rangeset @codemirror/text - удаляем устаревшие-->
+
+npm install codemirror @codemirror/view @codemirror/state @codemirror/language @codemirror/lang-javascript @codemirror/lang-html @codemirror/lang-css @codemirror/lang-php @codemirror/lang-xml @codemirror/lang-java @codemirror/commands @codemirror/autocomplete @codemirror/lint
+
+npm install @codemirror/theme-one-dark
+npm install @codemirror/lang-markdown
+//npm install @codemirror/legacy-modes
+(https://github.com/uiwjs/react-codemirror?ysclid=m7bwwf8l9p964533249)
+
+
+npm install @tiptap/react @tiptap/pm @tiptap/starter-kit
+(https://tiptap.dev/docs/editor/getting-started/install/react) (https://tiptap.dev/docs/examples/advanced/menus)
+
+npm install js-beautify - для исходного кода типтап
+npm i --save-dev @types/js-beautify
+
+
+npm install dayjs
+
+//npm install vite-plugin-checker --save-dev
+//npm install concurrently --save-dev
+
+
+
+
+
+Реализация категорий notes:
+https://chatgpt.com/share/676fb0dd-a780-8010-930d-65ab0d777785
+---------------------------------------------------------------------------------------------------------------------
+Основная структура
+
+src/
+├── components/         // Общие компоненты, используемые во всем проекте
+├── layouts/            // Глобальные макеты и общие структуры страниц
+├── modules/            // Модули приложения
+│   ├── auth/           // Модуль авторизации
+│   │   ├── components/ // Компоненты модуля
+│   │   ├── hooks/      // Хуки, специфичные для модуля
+│   │   ├── pages/      // Страницы модуля
+│   │   ├── services/   // API-запросы и логика
+│   │   ├── store/      // Состояние (если используется Redux/Zustand)
+│   │   └── types/      // Типы для модуля
+│   ├── blog/           // Модуль блога
+│   ├── calendar/       // Модуль календаря событий
+│   └── notes/          // Модуль заметок
+├── routes/             // Маршруты приложения
+├── services/           // Общие сервисы (API, утилиты)
+├── store/              // Глобальное состояние
+├── styles/             // Глобальные стили
+├── utils/              // Вспомогательные функции и утилиты
+└── App.tsx             // Основной компонент приложения
+
+
+
+Детализация структуры модуля
+Каждый модуль (например, auth) имеет четкую структуру:
+
+modules/auth/
+├── components/       // UI-компоненты модуля
+│   ├── LoginForm.tsx
+│   └── RegisterForm.tsx
+├── hooks/            // Кастомные хуки, специфичные для модуля
+│   └── useAuth.ts
+├── pages/            // Страницы модуля
+│   ├── LoginPage.tsx
+│   └── RegisterPage.tsx
+├── services/         // Логика работы с API
+│   └── authApi.ts
+├── store/            // Локальное состояние модуля
+│   └── authSlice.ts  // (Redux или аналог)
+├── types/            // Интерфейсы и типы
+│   └── auth.d.ts
+
+
+Структура папки auth
+
+components/ — для компонентов, связанных с авторизацией (например, формы входа, регистрации).
+hooks/ — для хука useAuth или других кастомных хуков, связанных с авторизацией.
+services/ — для API-запросов и взаимодействия с сервером (например, логин, регистрация).
+AuthProvider.jsx — провайдер контекста, который будет экспортироваться через index.js.
+
+Преимущества
+Модульная структура: У каждого модуля есть своя изолированная область, что упрощает поддержку.
+Понятность: Легче найти нужные компоненты, страницы, хуки или API для конкретного модуля.
+Гибкость: Можно легко добавлять новые модули без влияния на существующие.
+Пример интеграции
+Маршруты: В src/routes создаем файл index.ts, который объединяет маршруты всех модулей.
+
+import { RouteObject } from "react-router-dom";
+import authRoutes from "../modules/auth/routes";
+import blogRoutes from "../modules/blog/routes";
+
+const routes: RouteObject[] = [
+...authRoutes,
+...blogRoutes,
+// Другие модули
+];
+
+export default routes;
+
+Подключение маршрутов: В App.tsx:
+
+import routes from './routes';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+
+const router = createBrowserRouter(routes);
+
+function App() {
+return <RouterProvider router={router} />;
+}
+
+export default App;
+
