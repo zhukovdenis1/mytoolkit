@@ -20,7 +20,7 @@ export const Layout: React.FC = () => {
                         <Link to="/about">About</Link> |{" "} |
                         <Link to={route('notes')}>Notes</Link> |
                         <Link to={route('notes.categories')}>Categories</Link> |
-                        <Link to="/demo">Demo</Link> |
+                        <Link to="/demo">Demos</Link> |
                     </nav>
                     {authContext?.user ? (
                         <div>
