@@ -2,9 +2,10 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import Cookies from "js-cookie";
 import routes from "@/services/apiRoutes";
 import { message } from "ui";
+import config from '@/config';
 
 export const apiAxios = axios.create({
-    baseURL: "https://mytoolkit.loc/api",
+    baseURL: config.apiBaseUrl,
     headers: {
         Accept: "application/json",
         "Content-Type": "application/json",

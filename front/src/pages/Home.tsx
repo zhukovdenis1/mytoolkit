@@ -10,7 +10,7 @@ import React from "react";
 
 const HomePage: React.FC = () => {
     //const [users, setUsers] = useState<User[]>([]);
-
+    //alert(config.apiUrl)
     const fetchUsers = async () => {
         // try {
         //     const { data } = await api.get<{ users: User[] }>("/users");
