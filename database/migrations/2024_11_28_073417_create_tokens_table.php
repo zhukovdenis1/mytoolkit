@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->text('access_token');//2048
             $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('expires_at'); // Срок действия
+            $table->timestamp('expires_at')->nullable(); // Срок действия
         });
     }
 
