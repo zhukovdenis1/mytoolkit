@@ -1,7 +1,9 @@
+import '@/css/ui/editor.css';
 import React, { useState, useEffect } from "react";
-import CodeEditor from "@/components/ui/editor/CodeEditor";
-import VisualEditor from "@/components/ui/editor/VisualEditor";
-import EditorToolBar from "@/components/ui/editor/EditorToolBar";
+import CodeEditor from "./CodeEditor";
+import VisualEditor from "./VisualEditor/VisualEditor";
+import EditorToolBar from "./EditorToolBar";
+import VideoEditor from "./VideoEditor";
 import { html } from "js-beautify";
 
 interface StructureItem {
@@ -12,6 +14,7 @@ interface StructureItem {
 }
 
 export type EditorHandle = {
+    mode: string;
     setValue: (value: string) => void;
     edit: (key: string, data: Partial<StructureItem>) => void;
     add: (key: string, data: Partial<StructureItem>) => void;
@@ -27,6 +30,7 @@ export type EditorHandle = {
 const useEditor = (): EditorHandle => {
     const [value, setValue] = useState("");
     return {
+        mode: 'edit',
         setValue: setValue,
         edit: () => {},
         add: () => {},
@@ -148,14 +152,22 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
     };
 
     return (
-        <div className={`editor editor-${mode}`}>
+        <div className={`editor editor-${mode}-mode`}>
             {Object.entries(structure).map(([key, item]) => (
-                <div key={key}>
+                <div key={key} className="editor-box">
                     {item.type === "visual" ? (
                         <VisualEditor
                             value={item.data}
                             onChange={(val: string) => editor.edit(key, { data: val })}
                             disabled={disabled}
+                            mode = {mode}
+                        />
+                    ) : item.type === "video" ? (
+                        <VideoEditor
+                            value={item.data}
+                            onChange={(val: string) => editor.edit(key, { data: val })}
+                            disabled={disabled}
+                            mode = {mode}
                         />
                     ) : (
                         <CodeEditor value={item.data} onChange={(val) => editor.edit(key, { data: val })} type={item.type} disabled={disabled} />

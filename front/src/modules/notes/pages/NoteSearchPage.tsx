@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
 import { Table, Input, Button, Form, Space, TreeSelect, message, showModal } from "ui";
 import type { TablePaginationConfig, ColumnsType } from "@ui/types";
 import { api, route } from "api";
@@ -20,7 +20,11 @@ interface Params {
     _order?: string;
 }
 
-export const NoteSearchPage: React.FC = () => {
+interface NoteSearchPageProps {
+    action?: string
+}
+
+export const NoteSearchPage: React.FC<NoteSearchPageProps> = ({ action = '' }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [form] = Form.useForm();
@@ -34,6 +38,7 @@ export const NoteSearchPage: React.FC = () => {
         showSizeChanger: true,
     });
     const [sorter, setSorter] = useState<{ field?: string; order?: string }>({});
+    const { note_id: noteId } = useParams<{ note_id: string }>();
 
     const columns: ColumnsType<DataType> = [
         { title: "ID", dataIndex: "id", key: "id", sorter: true, width: 50 },
@@ -55,19 +60,7 @@ export const NoteSearchPage: React.FC = () => {
                 <Space>
                     <Button
                         type="link"
-                        onClick={() =>
-                            showModal(<NoteFormPage />, {
-                                title: "Edit note",
-                                loading: true,
-                                styleName: 'wide',
-                                data: { id: record.id },
-                                onClose: (data: { reload?: boolean }) => {
-                                    if (data?.reload) {
-                                        reload();
-                                    }
-                                },
-                            })
-                        }
+                        onClick={() => showNoteModal('edit', reload, record.id)}
                     >
                         edit
                     </Button>
@@ -83,6 +76,9 @@ export const NoteSearchPage: React.FC = () => {
     ];
 
     useEffect(() => {
+        if (action) {
+            showNoteModal(action, reload, noteId)
+        }
         const params = Object.fromEntries(new URLSearchParams(location.search).entries());
         form.setFieldsValue({
             search: params.search,
@@ -201,17 +197,7 @@ export const NoteSearchPage: React.FC = () => {
 
             <Button
                 type="primary"
-                onClick={() =>
-                    showModal(<NoteFormPage />, {
-                        title: "Add note",
-                        styleName: 'wide',
-                        onClose: (data: { reload?: boolean }) => {
-                            if (data?.reload) {
-                                reload();
-                            }
-                        },
-                    })
-                }
+                onClick={() => showNoteModal('add', reload)}
             >
                 Add
             </Button>
@@ -232,3 +218,32 @@ export const NoteSearchPage: React.FC = () => {
         </div>
     );
 };
+
+const showNoteModal = (action: string, reload: () => void, noteId?: string|number) => {
+    if (action == 'add' || !noteId) {
+        return  showModal(<NoteFormPage />, {
+            title: "Add note",
+            styleName: 'wide',
+            url: route('notes.add'),
+            onClose: (data: { reload?: boolean }) => {
+                if (data?.reload) {
+                    reload();
+                }
+            },
+        })
+    } else {
+        return showModal(<NoteFormPage />, {
+            title: "Edit note",
+            loading: true,
+            styleName: 'wide',
+            data: { id: noteId },
+            url: route('notes.edit', {note_id: noteId}),
+            onClose: (data: { reload?: boolean }) => {
+                if (data?.reload) {
+                    reload();
+                }
+            },
+        })
+    }
+
+}

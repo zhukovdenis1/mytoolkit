@@ -49,6 +49,16 @@ const EditorToolBar: React.FC<EditorToolBarProps> = ({ boxKey, boxType, editor, 
                 PHP
             </button>
 
+            <button
+                onClick={() => {
+                    editor?.edit(boxKey, {type: 'video'})
+                }}
+                type="button"
+                className={boxType == 'video' ? 'active' : ''}
+            >
+                Video
+            </button>
+
             &nbsp;
 
             <button onClick={() => {

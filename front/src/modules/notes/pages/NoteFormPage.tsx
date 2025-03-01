@@ -120,7 +120,6 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
                     />
                 </Form.Item>
                 <Editor editor={editor} disabled={modal.loading} />
-
                 <Form.Item>
                     <Space>
                         <Button type="default" htmlType="submit" onClick={() => form.setFieldValue("exit", 0)}>Save</Button>
@@ -130,6 +129,7 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
                     </Space>
                 </Form.Item>
             </Form>
+
         </>
     );
 };

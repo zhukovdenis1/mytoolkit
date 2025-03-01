@@ -12,6 +12,7 @@ interface ModalConfig {
     width?: string;
     height?: string;
     styleName?: string;
+    url?: string;
 }
 
 // interface ModalProps {
@@ -34,6 +35,8 @@ const ModalComponent: React.FC<{
     const handleClose = (data?: any) => {
         setIsOpen(false);
         setTimeout(() => close(data), 300);
+        // Восстанавливаем предыдущий URL при закрытии
+        window.history.back();
     };
 
     const modalConfig: {
@@ -91,6 +94,11 @@ export const showModal = (
         document.body.removeChild(modalContainer);
         config.onClose?.(data);
     };
+
+    // Меняем URL при открытии модального окна
+    if (config.url) {
+        window.history.pushState(null, "", config.url);
+    }
 
     root.render(
         <ModalComponent config={config} close={close}>

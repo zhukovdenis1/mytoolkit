@@ -4,14 +4,14 @@ import {IRoute} from "@/routes";
 import {Outlet} from "react-router-dom";
 import {NoteSearchPage} from "./pages/NoteSearchPage";
 import {NoteCategoryListPage} from "./pages/categories/NoteCategoryListPage";
-import {NoteFormPage} from "./pages/NoteFormPage.tsx";
+//import {NoteFormPage} from "./pages/NoteFormPage.tsx";
 import {NoteViewPage} from "./pages/NoteViewPage.tsx";
 
 export const notesRoutes: IRoute =
     {
         path: "notes",
         element: <Outlet />,
-        title: "Заметки",
+        title: "Notes",
         children: [
             {
                 name: 'notes',
@@ -27,14 +27,14 @@ export const notesRoutes: IRoute =
             {
                 name: 'notes.add',
                 path: 'add',
-                title: 'Add note',
-                element: <NoteFormPage />
+                title: 'Notes',
+                element: <NoteSearchPage action="add" />
             },
             {
                 name: 'notes.edit',
                 path: ':note_id/edit',
-                title: 'Edit Note',
-                element: <NoteFormPage />
+                title: 'Notes',
+                element: <NoteSearchPage action="edit" />
             },
             {
                 path: "categories",

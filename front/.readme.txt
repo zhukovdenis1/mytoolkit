@@ -85,6 +85,20 @@ npm install dayjs
 //npm install concurrently --save-dev
 
 
+npm install @tiptap/extension-link
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

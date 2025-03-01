@@ -2,7 +2,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import Cookies from "js-cookie";
 import routes from "@/services/apiRoutes";
 import { message } from "ui";
-import config from '@/config';
+import config from '@/config/config';
 
 export const apiAxios = axios.create({
     baseURL: config.apiBaseUrl,

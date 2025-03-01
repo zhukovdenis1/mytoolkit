@@ -1,0 +1,44 @@
+.editor-container p {
+    margin:0;
+    padding:0;
+}
+
+.editor-tooltip {
+    display: flex;
+    justify-content: flex-end
+}
+
+.is-active {
+    /*background-color: #bbb;*/
+    /*border-color: #888;*/
+}
+
+
+
+/*.ProseMirror code {*/
+/*    background: #eee;*/
+/*}*/
+
+
+
+/*.editor-view .visual-editor-content {*/
+/*    border: 0;*/
+/*}*/
+.editor-edit-mode .visual-editor-content {
+    padding: 0 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    }
+    .editor-edit-mode .editor-box {
+        margin: 15px 0;
+    }
+.editor-edit-mode .cm-editor {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.editor-tooltip button.active {
+    color:red;
+}
+
+

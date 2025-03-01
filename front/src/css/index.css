@@ -111,17 +111,3 @@ ul.list li .buttons {
     margin: 15px 0;
 }
 
-.editor p {
-    margin: 15px 0;
-}
-
-.editor-view .visual-editor-content {
-    border: 0;
-}
-.editor-view .visual-editor-content .tiptap {
-    padding:0;
-}
-
-.editor-tooltip button.active {
-    color:red;
-}

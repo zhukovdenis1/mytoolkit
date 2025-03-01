@@ -1,7 +1,7 @@
 // Entry point
 
 import * as ReactDOMClient from "react-dom/client";
-import './index.css';
+import '@/css/index.css';
 import {createBrowserRouter, RouteObject, RouterProvider} from 'react-router-dom';
 import {IRoute, routes} from "./routes";
 import {AuthProvider} from '@/modules/auth/AuthProvider';
