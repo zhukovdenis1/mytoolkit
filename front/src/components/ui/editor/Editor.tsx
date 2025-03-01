@@ -4,6 +4,7 @@ import CodeEditor from "./CodeEditor";
 import VisualEditor from "./VisualEditor/VisualEditor";
 import EditorToolBar from "./EditorToolBar";
 import VideoEditor from "./VideoEditor";
+import ImageEditor from "./ImageEditor";
 import { html } from "js-beautify";
 
 interface StructureItem {
@@ -164,6 +165,13 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
                         />
                     ) : item.type === "video" ? (
                         <VideoEditor
+                            value={item.data}
+                            onChange={(val: string) => editor.edit(key, { data: val })}
+                            disabled={disabled}
+                            mode = {mode}
+                        />
+                    ) : item.type === "image" ? (
+                        <ImageEditor
                             value={item.data}
                             onChange={(val: string) => editor.edit(key, { data: val })}
                             disabled={disabled}

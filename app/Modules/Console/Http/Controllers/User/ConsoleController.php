@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Artisan;
 
 class ConsoleController extends BaseController
 {
-    public function runCommand(RunCommandRequest $request): \Illuminate\Http\JsonResponse
+    public function runCommand(RunCommandRequest $request)//: \Illuminate\Http\JsonResponse
     {
 
         // Вызов команды и захват вывода
@@ -24,8 +24,11 @@ class ConsoleController extends BaseController
         $output = Artisan::output();
 
         // Возврат вывода в ответе
-        return response()->json([
-            'output' => $output,
-        ]);
+//        return response()->json([
+//            'output' => $output,
+//        ]);
+        // Возврат HTML-вывода
+        return response("<pre>{$output}</pre>", 200)
+            ->header('Content-Type', 'text/html');
     }
 }
