@@ -16,6 +16,7 @@ class UpdateNoteRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
+            'parent_id' => 'nullable|exists:notes,id',
             'title' => 'nullable|string|max:255',
             'text' => 'nullable|string',
             'categories' => 'nullable|array',

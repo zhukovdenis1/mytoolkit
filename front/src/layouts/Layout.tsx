@@ -5,6 +5,7 @@ import { AuthContext } from "@/modules/auth/AuthProvider";
 import {Breadcrumbs} from "@/components/BreadCrumbs";
 import {route} from "api";
 import {Button} from "ui";
+import { BrowseToolBar } from '@/components/BrowseToolBar';
 
 //export const Layout: React.FC<{ allRoutes: {} }> = ({ allRoutes }) => {
 export const Layout: React.FC = () => {
@@ -15,12 +16,12 @@ export const Layout: React.FC = () => {
         <div className="wrapper">
             <div className="center-wrap">
                 <header>
+                    <BrowseToolBar />
                     <nav>
-                        <Link to="/">Home</Link> |
-                        <Link to="/about">About</Link> |{" "} |
+                        {/*<Link to="/about">About</Link> |{" "} |*/}
                         <Link to={route('notes')}>Notes</Link> |
-                        <Link to={route('notes.categories')}>Categories</Link> |
-                        <Link to="/demo">Demos</Link> |
+                        <Link to={route('notes.categories')}>Categories</Link>
+                        {/*<Link to="/demo">Demos</Link> |*/}
                     </nav>
                     {authContext?.user ? (
                         <div>

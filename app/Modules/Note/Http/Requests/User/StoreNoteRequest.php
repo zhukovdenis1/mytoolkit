@@ -17,8 +17,9 @@ class StoreNoteRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
+            'parent_id' => 'nullable|integer|exists:notes,id',
             'title' => 'required|string|max:255',
-            'text' => 'required|string',
+            'text' => 'nullable|string',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:note_categories,id',
         ];

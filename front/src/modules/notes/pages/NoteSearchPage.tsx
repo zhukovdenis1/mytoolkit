@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
-import { Table, Input, Button, Form, Space, TreeSelect, message, showModal } from "ui";
+import { Table, Input, Button, Form, Space, TreeSelect, message, showModal, Confirmable } from "ui";
 import type { TablePaginationConfig, ColumnsType } from "@ui/types";
 import { api, route } from "api";
 import { NoteFormPage } from "./NoteFormPage";
@@ -64,12 +64,13 @@ export const NoteSearchPage: React.FC<NoteSearchPageProps> = ({ action = '' }) =
                     >
                         edit
                     </Button>
+                    <Confirmable onConfirm={() => deleteNote(record.id)}>
                     <Button
                         type="link"
-                        onClick={() => deleteNote(record.id)}
                     >
                         delete
                     </Button>
+                    </Confirmable>
                 </Space>
             ),
         },

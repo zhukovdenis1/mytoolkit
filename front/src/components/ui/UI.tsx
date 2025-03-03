@@ -18,3 +18,4 @@ export { Spin };
 export { default as Editor } from "@/components/ui/editor/Editor";
 export { showModal } from "@/components/ui/Modal";
 export { Confirmable } from "./Confirmable";
+export { SearchInput } from "./SearchInput";

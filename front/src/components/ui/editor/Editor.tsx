@@ -62,11 +62,13 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
     }, []);
 
     const buildStructure = (newValue: string): Record<string, StructureItem> => {
+        const defaultStructure = [{ type: "visual", data: newValue, key: uid(), order: 1 }];
         let parsedStructure: StructureItem[];
         try {
             parsedStructure = JSON.parse(newValue);
+            if (!parsedStructure) {parsedStructure = defaultStructure}
         } catch {
-            parsedStructure = [{ type: "html", data: newValue, key: uid(), order: 1 }];
+            parsedStructure = defaultStructure;
         }
         return parsedStructure.reduce((acc, item, index) => {
             const key = uid();
@@ -141,9 +143,11 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
     };
 
     editor.getValue = () => {
-        return JSON.stringify(
+        let value = JSON.stringify(
             Object.values(structure).sort((a, b) => a.order - b.order).map(({ type, data }) => ({ type, data }))
         );
+        if (value == '[{"type":"visual","data":""}]') value = '';
+        return value;
     };
 
     editor.setValue = (newValue) => {

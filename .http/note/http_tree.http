@@ -1,0 +1,5 @@
+# @no-redirect
+GET {{url}}/api/notes/tree?parent_id=50
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json

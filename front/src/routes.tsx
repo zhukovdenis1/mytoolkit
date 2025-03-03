@@ -1,5 +1,5 @@
 import React from "react";
-import { HomePage } from './pages/Home';
+import { NoteTreePage } from '@/modules/notes/pages/NoteTreePage';
 import { About } from './pages/About.tsx';
 import { Contacts } from './pages/Contacts';
 import {Layout} from "@/layouts/Layout.tsx";
@@ -34,12 +34,12 @@ export const routes: IRoute[] = [
                 </BreadcrumbsProvider>
             </RequireAuth>
         ),
-        title: "Главная",
+        title: "Home",
         children: [
             {
                 name: "home",
                 index: true,
-                element: <HomePage />,
+                element: <NoteTreePage />,
             },
             {
                 name: "about",

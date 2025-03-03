@@ -2,7 +2,7 @@
 
 import * as ReactDOMClient from "react-dom/client";
 import '@/css/index.css';
-import {createBrowserRouter, RouteObject, RouterProvider} from 'react-router-dom';
+import {createBrowserRouter, RouteObject, RouterProvider } from 'react-router-dom';
 import {IRoute, routes} from "./routes";
 import {AuthProvider} from '@/modules/auth/AuthProvider';
 //import "prismjs/themes/prism-tomorrow.css";

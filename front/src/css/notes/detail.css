@@ -1,0 +1,13 @@
+.note-menu ul {
+    padding-left: 1em;
+}
+.note-menu {
+    border-bottom: 1px solid #ccc;
+}
+
+.date {
+    display: flex;
+    justify-content: right;
+    color: #ccc;
+    font-size: 0.9em;
+}

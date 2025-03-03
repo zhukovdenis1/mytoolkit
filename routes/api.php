@@ -30,13 +30,13 @@ Route::middleware([JwtMiddleware::class])->group(function () {
 
     Route::prefix('notes')->group(function () {
         Route::get('/', [NoteController::class, 'index'])->name('notes.search');
+        Route::get('/getDropDown', [NoteController::class, 'getDropDown']);
+        Route::get('/tree', [NoteController::class, 'tree']);
         Route::post('/', [NoteController::class, 'store'])->name('notes.store');
         Route::get('{note}', [NoteController::class, 'show'])->where('note', '[0-9]+');
         Route::put('{note}', [NoteController::class, 'update']);
         Route::delete('{note}', [NoteController::class, 'destroy']);
     });
-
-
 });
 
 Route::get('products', [ProductController::class, 'index']);

@@ -48,6 +48,73 @@ class NoteService
         ];
     }
 
+    public function getDropDownNotes(array $validatedData): array
+    {
+        $id = isset($validatedData['id']) ? intval($validatedData['id']) : 0;
+        $search = $validatedData['search'] ?? '';
+        $userId = isset($validatedData['user_id']) ? intval($validatedData['user_id']) : 0;
+
+        $notes = Note::select('id','title as name')->where('user_id', $userId);
+
+        if ($id) {
+            $notes->where('id', $id);
+        } elseif ($search) {
+            $notes->where('title', 'like', '%' . $search . '%');
+        }
+        $notes->limit(100)->orderBy('title', 'asc');
+
+        return $notes->get()->toArray();
+    }
+
+    public function tree(array $validatedData): array
+    {
+        $userId = $validatedData['user_id'] ?? 0;
+        $parentId = isset($validatedData['parent_id']) ? intval($validatedData['parent_id']) : null;
+
+        $data = [];
+        $currentLevelIds = [$parentId];
+
+        while (!empty($currentLevelIds)) {
+            // Запрашиваем все узлы текущего уровня
+            $notes = Note::where('user_id', $userId)
+                ->whereIn('parent_id', $currentLevelIds)
+                ->select('id', 'title as name', 'parent_id', 'text')
+                ->orderBy('name', 'asc')
+                ->get()
+                ->toArray();
+
+            // Добавляем полученные данные в общий массив
+            $data = array_merge($data, $notes);
+
+            // Собираем ID узлов текущего уровня для следующего запроса
+            $nextLevelIds = array_column($notes, 'id');
+
+            // Переходим на следующий уровень
+            $currentLevelIds = $nextLevelIds;
+        }
+
+        return $this->buildNoteTree($data, $parentId);
+    }
+
+    private  function buildNoteTree(array $notes, ?int $parentId = null): array
+    {
+        $tree = [];
+
+        foreach ($notes as $note) {
+            if ($note['parent_id'] === $parentId) {
+                $children = $this->buildNoteTree($notes, $note['id']);
+                $tree[] = [
+                    'id'    => $note['id'],
+                    'name'    => $note['name'],
+                    'text' => ($note['text'] && $children) ? $note['text'] : '' ,
+                    'children' => $children,
+                ];
+            }
+        }
+
+        return $tree;
+    }
+
     public function findNotes(array $validatedData): AnonymousResourceCollection
     {
         $notes = Note::with('categories:id,name')
@@ -105,9 +172,9 @@ class NoteService
     }
 
 
-    public function assignCategories(Note $note, array $categoryIds): void
-    {
-        $categories = NoteCategory::find($categoryIds);
-        $note->categories()->sync($categories);
-    }
+//    public function assignCategories(Note $note, array $categoryIds): void
+//    {
+//        $categories = NoteCategory::find($categoryIds);
+//        $note->categories()->sync($categories);
+//    }
 }

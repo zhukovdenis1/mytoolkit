@@ -7,7 +7,9 @@ namespace App\Modules\Note\Http\Controllers\User;
 use App\Http\Controllers\BaseController;
 use App\Modules\Note\Http\Requests\User\AddCategoriesToNoteRequest;
 use App\Modules\Note\Http\Requests\User\DestroyNoteRequest;
+use App\Modules\Note\Http\Requests\User\DropDownNoteRequest;
 use App\Modules\Note\Http\Requests\User\SearchNoteRequest;
+use App\Modules\Note\Http\Requests\User\TreeNoteRequest;
 use App\Modules\Note\Models\Note;
 use App\Modules\Note\Services\NoteService;
 use App\Modules\Note\Http\Requests\User\StoreNoteRequest;
@@ -28,6 +30,16 @@ class NoteController extends BaseController
     public function index(SearchNoteRequest $request): AnonymousResourceCollection
     {
         return $this->noteService->findNotes($request->getWithUserId());
+    }
+
+    public function getDropDown(DropDownNoteRequest $request): array
+    {
+        return $this->noteService->getDropDownNotes($request->getWithUserId());
+    }
+
+    public function tree(TreeNoteRequest $request): array
+    {
+        return ['data' => $this->noteService->tree($request->getWithUserId())];
     }
 
     public function store(StoreNoteRequest $request): NoteResource

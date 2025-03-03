@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Space, TreeSelect, message } from "ui";
+import { Form, Input, Button, Space, TreeSelect, message, SearchInput } from "ui";
 import { api } from "api";
 import { convertTreeData } from "@/utils/ui";
 import { Editor } from "ui";
+import {SubNoteList} from "../components/SubNoteList";
 
 interface NoteFormPageProps {
     modal?: {
@@ -103,6 +104,9 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
                 <Form.Item name="title" label="Title" rules={[{ required: true, message: "Please input title!" }]}>
                     <Input disabled={modal.loading} />
                 </Form.Item>
+                <Form.Item name="parent_id" label="Parent">
+                    <SearchInput route="notes.dropdown" placeholder="Please select" />
+                </Form.Item>
                 <Form.Item label="Categories" name='categories'>
                     <TreeSelect
                         disabled={modal.loading}
@@ -119,6 +123,7 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
                         }
                     />
                 </Form.Item>
+                <SubNoteList parentId={noteId} />
                 <Editor editor={editor} disabled={modal.loading} />
                 <Form.Item>
                     <Space>

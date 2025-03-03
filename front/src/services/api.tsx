@@ -106,6 +106,7 @@ export const api = {
 
     safeRequest: async (route: string, data = {}) => {
         try {
+            console.log(route, data);
             return await api.request(route, data);
         } catch (err) {
             console.error("API Request Error:", err);

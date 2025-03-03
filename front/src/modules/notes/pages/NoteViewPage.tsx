@@ -4,6 +4,8 @@ import { api, route } from "api";
 import { Spin, Editor } from "ui";
 import dayjs from "dayjs";
 import { useBreadCrumbs } from "@/components/BreadCrumbs";
+import {SubNoteList} from "../components/SubNoteList";
+import '@/css/notes/detail.css';
 
 interface NoteData {
     id: number;
@@ -41,11 +43,13 @@ export const NoteViewPage: React.FC = () => {
     return (
         <Spin spinning={loading}>
             <h1>{data?.title}</h1>
-            <p>
-                Дата: {data?.created_at ? dayjs(data.created_at).format("DD.MM.YYYY") : ""}
+            <p className="date">
+                {data?.created_at ? dayjs(data.created_at).format("DD.MM.YYYY") : ""}
                 (изменено: {data?.updated_at ? dayjs(data.updated_at).format("DD.MM.YYYY") : ""})
             </p>
-            <Editor editor={editor} disabled={loading} mode="view" />
+            <SubNoteList parentId={noteId}/>
+            <Editor editor={editor} disabled={loading} mode="view"/>
+            <button onClick={() => {window.history.pushState(null, "", "/");}}>button</button>
         </Spin>
     );
 };

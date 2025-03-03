@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { DownOutlined } from '@ui/icons';
-import { Input, Tree, Space, Spin, Button, message, showModal, Confirmable } from 'ui';
+import { Input, Tree, Space, Spin} from 'ui';
 import type { TreeDataNode } from '@ui/types';
-import { api } from "api";
-import { NoteCategoryFormPage } from "./NoteCategoryFormPage";
+import { api, route } from "api";
 import {convertTreeData} from "@/utils/ui.ts";
+import {Link} from "react-router-dom";
 
-export const NoteCategoryListPage: React.FC = () => {
+
+export const NoteTreePage: React.FC = () => {
     const [search, setSearch] = useState('');
     const [originalTreeData, setOriginalTreeData] = useState<TreeDataNode[]>([]);
     const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
@@ -81,37 +82,9 @@ export const NoteCategoryListPage: React.FC = () => {
                 onExpand={(keys: React.Key[]) => setExpandedKeys(keys)}
                 treeData={treeData}
             />
-            <Button
-                type="primary"
-                htmlType="button"
-                onClick={() =>
-                    showModal(<NoteCategoryFormPage />, {
-                        title: "Add category",
-                        loading: true,
-                        onClose: (data: { reload?: boolean }) => {
-                            if (data?.reload) {
-                                setReloadTrigger(prev => prev + 1);
-                            }
-                        },
-                    })
-                }
-            >
-                Add
-            </Button>
         </Spin>
     );
 };
-
-// const formatTreeData = (data: any[]): TreeDataNode[] => {
-//     return data.map(item => {
-//         const { id, name } = item;
-//         return {
-//             key: id.toString(),
-//             title: name.toString(),
-//             children: item.children ? formatTreeData(item.children) : undefined,
-//         };
-//     });
-// };
 
 const highlightText = (node: TreeDataNode, search: string): React.ReactNode => {
     const text = node.title as string;
@@ -127,59 +100,14 @@ const highlightText = (node: TreeDataNode, search: string): React.ReactNode => {
 };
 
 const nodeHtml = (id: string, title: React.ReactNode, reload: () => void = () => { }) => {
+    if (false)
+        reload();
     return (
         <div>
             <Space>
-                <span className="title">{title}</span>
-                <Button
-                    type="link"
-                    htmlType="button"
-                    onClick={() =>
-                        showModal(<NoteCategoryFormPage />, {
-                            title: "Add category",
-                            data: { parentId: parseInt(id) },
-                            loading: true,
-                            onClose: (data: { reload?: boolean }) => {
-                                if (data?.reload) {
-                                    reload();
-                                }
-                            },
-                        })
-                    }
-                >
-                    add
-                </Button>
-                <Button
-                    type="link"
-                    onClick={() =>
-                        showModal(<NoteCategoryFormPage />, {
-                            title: "Edit category",
-                            data: { id: parseInt(id) },
-                            loading: true,
-                            onClose: (data: { reload?: boolean }) => {
-                                if (data?.reload) {
-                                    reload();
-                                }
-                            },
-                        })
-                    }
-                >
-                    edit
-                </Button>
-                <Confirmable onConfirm={() => deleteCategory(id, reload)}>
-                    <Button type="link">delete</Button>
-                </Confirmable>
+                <Link to={route('notes', {categories: id})}>{title}</Link>
             </Space>
         </div>
     );
 };
 
-const deleteCategory = async (categoryId: string, reload: () => void) => {
-    const response = await api.safeRequest(`notes.categories.delete`, { category_id: categoryId });
-    if (response && typeof response !== 'boolean' && response.data && response.data.success) {
-        reload();
-        message.success('Category was deleted successfully');
-    } else {
-        message.error('Deleting failed');
-    }
-};

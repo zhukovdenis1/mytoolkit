@@ -15,7 +15,7 @@ class Note extends BaseModel
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'text', 'user_id'];
+    protected $fillable = ['title', 'text', 'user_id', 'parent_id'];
     protected $dates = ['created_at', 'updated_at'];
 
     protected $hidden = ['user_id'];

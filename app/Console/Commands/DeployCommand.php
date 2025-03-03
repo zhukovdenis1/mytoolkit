@@ -86,6 +86,12 @@ class DeployCommand extends Command
             $output .= $line . "\n";
         }
 
+        $result = exec("php artisan migrate 2>&1", $r2);
+
+        foreach ($r2 as $line) {
+            $output .= $line . "\n";
+        }
+
         $this->info($output);
         return 0; // Возвращаем 0, если команда выполнена успешно
     }
