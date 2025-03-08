@@ -5,11 +5,12 @@ const apiRoutes: Record<string, [string, string]> = {
     "me": ["me", "get"],
     "users": ["users", "get"],
     "notes.search": ["notes", "get"],
-    "notes.dropdown": ["notes/getDropDown", "get"],
+    "notes.dropdown": ["notes/get-dropdown", "get"],
     "notes.tree": ["notes/tree", "get"],
     "notes.show": ["notes/:note_id", "get"],
     "notes.add": ['notes', "post"],
     "notes.edit": ['notes/:note_id', "put"],
+    "notes.editContent": ['notes/:note_id/edit-content', "put"],
     "notes.delete": ['notes/:note_id', "delete"],
     "notes.categories": ["notes/categories", "get"],
     "notes.categories.show": ["notes/categories/:category_id", "get"],
@@ -18,6 +19,7 @@ const apiRoutes: Record<string, [string, string]> = {
     "notes.categories.edit": ["notes/categories/:category_id", "put"],
     "notes.categories.add": ["notes/categories", "post"],
     "notes.categories.delete": ["notes/categories/:category_id", "delete"],
+    "notes.files.add": ["notes/:note_id/files", "post"]
 };
 
 export default apiRoutes;

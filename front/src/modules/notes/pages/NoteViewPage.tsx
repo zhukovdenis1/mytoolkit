@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { api, route } from "api";
-import { Spin, Editor } from "ui";
+import {Spin, Editor, Button, Space, message} from "ui";
 import dayjs from "dayjs";
 import { useBreadCrumbs } from "@/components/BreadCrumbs";
 import {SubNoteList} from "../components/SubNoteList";
 import '@/css/notes/detail.css';
+import { UndoOutlined, RedoOutlined} from "@ui/icons"
 
 interface NoteData {
     id: number;
@@ -19,6 +20,9 @@ export const NoteViewPage: React.FC = () => {
     const { note_id: noteId } = useParams<{ note_id: string }>();
     const [data, setData] = useState<NoteData | null>(null);
     const [loading, setLoading] = useState(true);
+    const [showSaveButton, setShowSaveButton] = useState(false);
+    const [reset, setReset] = useState(0);
+    const [editorMode, setEditorMode] = useState('view');
     const editor = Editor.useEditor();
     const brcr = useBreadCrumbs();
 
@@ -38,18 +42,56 @@ export const NoteViewPage: React.FC = () => {
         };
 
         fetchData();
-    }, [noteId]);
+    }, [noteId, reset]);
+
+    const saveChanges = async () => {
+        setLoading(true)
+        const response = await api.safeRequest(
+            `notes.editContent`,
+            { note_id: noteId, text: editor.getValue()}
+        );
+        if (response && typeof response !== 'boolean' && response.data) {
+            if (response.data.success) {
+                message.success('Data saved successfully');
+            } else {
+                message.error('Data was')
+            }
+        }
+        setLoading(false)
+        setShowSaveButton(false)
+    }
+
+    const switchEditorMode = () => {
+        setEditorMode(editorMode == 'view' ? 'edit' : 'view')
+    }
 
     return (
         <Spin spinning={loading}>
             <h1>{data?.title}</h1>
+
             <p className="date">
                 {data?.created_at ? dayjs(data.created_at).format("DD.MM.YYYY") : ""}
                 (изменено: {data?.updated_at ? dayjs(data.updated_at).format("DD.MM.YYYY") : ""})
             </p>
             <SubNoteList parentId={noteId}/>
-            <Editor editor={editor} disabled={loading} mode="view"/>
-            <button onClick={() => {window.history.pushState(null, "", "/");}}>button</button>
+            <Editor editor={editor} disabled={loading} mode={editorMode} onChange={() => setShowSaveButton(true)} />
+
+            <div className="stickyBottom" style={{ display: showSaveButton ? '' : 'none' }}>
+                <Space>
+                    <Button title="Undo" disabled={!editor.isUndoAvailable()} onClick={() => {editor.undo()}}><UndoOutlined /></Button>
+                    <Button title="Redo" disabled={!editor.isRedoAvailable()} onClick={() => {editor.redo()}}><RedoOutlined /></Button>
+                    Mode: <Button type="dashed" onClick={switchEditorMode}>{editorMode}</Button>
+                    <Button type="primary" onClick={saveChanges}>
+                        Save
+                    </Button>
+                    <Button type="default" onClick={() => setShowSaveButton(false)}>
+                        Hide
+                    </Button>
+                    <Button type="dashed" onClick={() => {setReset(reset + 1)}}>
+                        Reset
+                    </Button>
+                </Space>
+            </div>
         </Spin>
     );
 };

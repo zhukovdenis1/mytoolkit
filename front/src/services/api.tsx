@@ -60,16 +60,13 @@ const resolveRoute = (routeKey: string, params: Record<string, string | number> 
     const route = routes[routeKey];
     if (!route) {
         console.error(`Api route ${routeKey} was not found`);
-        return {};
+        throw new Error(`Api route ${routeKey} was not found`);
     }
 
     let [path, method] = route;
-    const queryParams: Record<string, string | number> = {};
 
-    if (!path) {
-        console.error(`route ${routeKey} was not found`);
-        throw new Error(`Маршрут "${routeKey}" не найден в routes.ts`);
-    }
+
+    const queryParams: Record<string, string | number> = {};
 
     Object.keys(params).forEach((key) => {
         if (path.includes(`:${key}`)) {
@@ -79,35 +76,67 @@ const resolveRoute = (routeKey: string, params: Record<string, string | number> 
         }
     });
 
+    if (!path) {
+        console.error(`route ${routeKey} was not found`);
+        throw new Error(`Маршрут "${routeKey}" не найден в routes.ts`);
+    }
+
     return { path, params: queryParams, method };
 };
 
 export const api = {
-    request: (route: string, data = {}) => {
+    request: (route: string, data = {}, formData = {}) => {
         const config: any = {};
 
-        const { path, params, method } = resolveRoute(route, data);
+        let { path, params, method } = resolveRoute(route, data);
 
-        switch (method) {
-            case 'get':
-                config.params = params;
-                return apiAxios.get(path, config);
-            case 'post':
-                return apiAxios.post(path, params, config);
-            case 'put':
-                return apiAxios.put(path, params, config);
-            case 'delete':
-                config.params = params;
-                return apiAxios.delete(path, config);
-            default:
-                throw new Error(`Error: unknown api method in route: "${route}"`);
+        //if (data instanceof FormData) {
+        if (Object.keys(formData).length != 0) {
+            if (params) {
+                //const queryParams = new URLSearchParams(params).toString();
+                const queryParams = new URLSearchParams(
+                    Object.entries(params).reduce((acc, [key, value]) => {
+                        acc[key] = String(value); // Преобразуем все значения в строки
+                        return acc;
+                    }, {} as Record<string, string>)
+                ).toString();
+                path = `${path}?${queryParams}`;
+            }
+            const formDataObj = new FormData();
+            Object.entries(formData).forEach(([key, value]) => {
+                formDataObj.append(key, String(value));
+            });
+
+            switch (method) {
+                case 'post':
+                    return apiAxios.post(path, formDataObj, {headers: {'Content-Type': 'multipart/form-data'}});
+                case 'put':
+                    return apiAxios.put(path, formDataObj, {headers: {'Content-Type': 'multipart/form-data'}});
+                default:
+                    throw new Error(`FormData supported only for POST and PUT. Route: "${route}"`);
+            }
+        } else {// Обычная логика для JSON-объектов
+            switch (method) {
+                case 'get':
+                    config.params = params;
+                    return apiAxios.get(path, config);
+                case 'post':
+                    return apiAxios.post(path, params, config);
+                case 'put':
+                    return apiAxios.put(path, params, config);
+                case 'delete':
+                    config.params = params;
+                    return apiAxios.delete(path, config);
+                default:
+                    throw new Error(`Error: unknown api method in route: "${route}"`);
+            }
         }
     },
 
-    safeRequest: async (route: string, data = {}) => {
+    safeRequest: async (route: string, data = {}, formData = {}) => {
         try {
-            console.log(route, data);
-            return await api.request(route, data);
+            console.log(route, data, formData);
+            return await api.request(route, data, formData);
         } catch (err) {
             console.error("API Request Error:", err);
             message.error("Error while requesting data");

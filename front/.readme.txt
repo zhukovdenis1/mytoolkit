@@ -74,6 +74,7 @@ npm install @codemirror/lang-markdown
 
 npm install @tiptap/react @tiptap/pm @tiptap/starter-kit
 (https://tiptap.dev/docs/editor/getting-started/install/react) (https://tiptap.dev/docs/examples/advanced/menus)
+npm install @tiptap/extension-table @tiptap/extension-table-row @tiptap/extension-table-header @tiptap/extension-table-cell
 
 npm install js-beautify - для исходного кода типтап
 npm i --save-dev @types/js-beautify

@@ -1,0 +1,8 @@
+PUT {{url}}/api/notes/3/edit-content
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "text": "Note text 213"
+}

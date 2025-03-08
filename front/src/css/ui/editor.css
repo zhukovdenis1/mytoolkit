@@ -25,7 +25,7 @@
 /*    border: 0;*/
 /*}*/
 .editor-edit-mode .visual-editor-content {
-    padding: 0 15px;
+    padding: 15px;
     border: 1px solid #ddd;
     border-radius: 5px;
     }
@@ -37,8 +37,15 @@
     border-radius: 5px;
 }
 
+.editor-edit-mode .image-editor, .editor-edit-mode .video-editor{
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+}
+
 .editor-tooltip button.active {
     color:red;
 }
+
 
 

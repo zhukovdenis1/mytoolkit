@@ -12,7 +12,7 @@ class NoteCategoryResource extends BaseResource
      *
      * @var string|null
      */
-    public static $wrap = 'noteCategory';
+    //public static $wrap = 'noteCategory';
 
     /**
      * Transform the resource into an array.

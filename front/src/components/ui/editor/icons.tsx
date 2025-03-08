@@ -1,0 +1,15 @@
+export {
+    UnorderedListOutlined,
+    TableOutlined,
+    LinkOutlined,
+    PlusSquareOutlined,
+    PlusOutlined,
+    MinusSquareOutlined,
+    MinusOutlined,
+    SmallDashOutlined,
+    ArrowUpOutlined,
+    ArrowDownOutlined,
+    DeleteOutlined,
+    VideoCameraOutlined,
+    PictureOutlined,
+} from '@ant-design/icons';

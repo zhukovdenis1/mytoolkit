@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Note\Http\Controllers\User;
 
 use App\Http\Controllers\BaseController;
+use App\Modules\Note\Http\Requests\UpdateContentNoteRequest;
 use App\Modules\Note\Http\Requests\User\AddCategoriesToNoteRequest;
 use App\Modules\Note\Http\Requests\User\DestroyNoteRequest;
 use App\Modules\Note\Http\Requests\User\DropDownNoteRequest;
@@ -42,10 +43,11 @@ class NoteController extends BaseController
         return ['data' => $this->noteService->tree($request->getWithUserId())];
     }
 
-    public function store(StoreNoteRequest $request): NoteResource
+    public function store(StoreNoteRequest $request): array //NoteResource
     {
         $data = $this->noteService->createNote($request->getWithUserId());
-        return (new NoteResource($data['note']))->additional(['success' => $data['success']]);
+        //return (new NoteResource($data['note']))->additional(['success' => $data['success']]);
+        return $data;
     }
 
     public function show(int $id): NoteResource
@@ -56,10 +58,17 @@ class NoteController extends BaseController
         return new NoteResource($note);
     }
 
-    public function update(UpdateNoteRequest $request, Note $note): NoteResource
+    public function update(UpdateNoteRequest $request, Note $note): array// NoteResource
     {
         $data = $this->noteService->updateNote($request->validated(), $note);
-        return  (new NoteResource($data['note']))->additional(['success' => $data['success']]);
+        //return  (new NoteResource($data['note']))->additional(['success' => $data['success']]);
+        return $data;
+    }
+
+    public function updateContent(UpdateContentNoteRequest $request, Note $note): array// NoteResource
+    {
+        $data = $this->noteService->updateNoteContent($request->validated(), $note);
+        return  $data;
     }
 
     public function destroy(DestroyNoteRequest $request, Note $note): JsonResponse

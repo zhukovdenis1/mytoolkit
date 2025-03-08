@@ -26,10 +26,11 @@ body::-webkit-scrollbar-thumb {
 .wrapper {
     color: #000;
     background-color: #fff;
-    padding: 0 10px;
+    padding: 0 10px 70px 0;
     display: flex;
     justify-content: center;
     align-items: center;
+
 }
 .center-wrap {
     min-height: 100vh;
@@ -111,3 +112,13 @@ ul.list li .buttons {
     margin: 15px 0;
 }
 
+.stickyBottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    border-top: 1px solid gray;
+    padding: 15px;
+    background: #fff;
+    width: 100%;
+    text-align: right;
+}

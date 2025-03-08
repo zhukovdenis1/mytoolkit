@@ -1,0 +1,30 @@
+POST {{url}}/api/notes/3/files
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "store_id": 1,
+    "link": "https://disk.yandex.ru/i/1l27j1wXGp03BA"
+}
+
+### Запрос 2: с файлом
+POST {{url}}/api/notes/3/files
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="store_id"
+
+1
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="link"
+
+https://disk.yandex.ru/i/1l27j1wXGp03BA
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="example.png"
+Content-Type: image/png
+
+< ./example.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--

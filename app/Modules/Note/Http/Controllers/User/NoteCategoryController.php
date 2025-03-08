@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Modules\Note\Http\Controllers\User;
 
 use App\Http\Controllers\BaseController;
-use App\Modules\Note\Http\Requests\User\DestroyNoteCategoryRequest;
-use App\Modules\Note\Http\Requests\User\SearchNoteCategoryRequest;
-use App\Modules\Note\Http\Requests\User\SearchNoteRequest;
-use App\Modules\Note\Http\Requests\User\ShowCategoryRequest;
-use App\Modules\Note\Http\Requests\User\StoreNoteCategoryRequest;
-use App\Modules\Note\Http\Requests\User\UpdateNoteCategoryRequest;
+use App\Modules\Note\Http\Requests\User\Category\DestroyNoteCategoryRequest;
+use App\Modules\Note\Http\Requests\User\Category\SearchNoteCategoryRequest;
+use App\Modules\Note\Http\Requests\User\Category\ShowCategoryRequest;
+use App\Modules\Note\Http\Requests\User\Category\StoreNoteCategoryRequest;
+use App\Modules\Note\Http\Requests\User\Category\UpdateNoteCategoryRequest;
 use App\Modules\Note\Http\Resources\User\NoteCategoryResource;
 use App\Modules\Note\Http\Resources\User\NoteCategoryResourceCollection;
 use App\Modules\Note\Models\NoteCategory;

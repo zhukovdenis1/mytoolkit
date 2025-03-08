@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
 import { Table, Input, Button, Form, Space, TreeSelect, message, showModal, Confirmable } from "ui";
 import type { TablePaginationConfig, ColumnsType } from "@ui/types";
+import { EditOutlined, DeleteOutlined } from '@ui/icons';
 import { api, route } from "api";
 import { NoteFormPage } from "./NoteFormPage";
 import { convertTreeData } from "@/utils/ui";
@@ -55,21 +56,21 @@ export const NoteSearchPage: React.FC<NoteSearchPageProps> = ({ action = '' }) =
             title: "Actions",
             key: "action",
             fixed: "right",
-            width: 200,
+            width: 50,
             render: (_, record) => (
                 <Space>
                     <Button
                         type="link"
+                        title="edit"
+                        icon={<EditOutlined />}
                         onClick={() => showNoteModal('edit', reload, record.id)}
-                    >
-                        edit
-                    </Button>
+                    />
                     <Confirmable onConfirm={() => deleteNote(record.id)}>
                     <Button
                         type="link"
-                    >
-                        delete
-                    </Button>
+                        title="delete"
+                        icon={<DeleteOutlined />}
+                    />
                     </Confirmable>
                 </Space>
             ),

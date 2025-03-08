@@ -27,7 +27,7 @@ class NoteService
         //$note->categories = NoteNoteCategory::where('note_id', $note->id)->pluck('note_category_id')->toArray();
 
         return [
-            'note' => $note,
+            //'note' => $note,
             'success' => $note->exists
         ];
     }
@@ -43,8 +43,16 @@ class NoteService
         }
 
         return [
-            'note' => $note,
             'success' => $note->wasChanged() || $categoriesChanged
+        ];
+    }
+
+    public function updateNoteContent(array $validatedData, Note $note): array
+    {
+        $note->update($validatedData);
+
+        return [
+            'success' => $note->wasChanged()
         ];
     }
 

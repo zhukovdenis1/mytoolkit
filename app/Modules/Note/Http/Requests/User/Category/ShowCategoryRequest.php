@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Note\Http\Requests\User;
+namespace App\Modules\Note\Http\Requests\User\Category;
 
 use App\Http\Requests\BaseFormRequest;
 
-class DestroyNoteCategoryRequest extends BaseFormRequest
+class ShowCategoryRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

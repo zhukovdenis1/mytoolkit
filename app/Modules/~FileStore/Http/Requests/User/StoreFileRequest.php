@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Note\Http\Requests\User;
+namespace App\Modules\FileStore\Http\Requests\User;
 
 use App\Http\Requests\BaseFormRequest;
 
-class StoreNoteCategoryRequest extends BaseFormRequest
+class StoreFileRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {
@@ -16,8 +16,8 @@ class StoreNoteCategoryRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'parent_id' => 'nullable|integer|exists:note_categories,id',
-            'name' => 'required|string|max:255',
+            'store_id' => 'required|integer|in:1',
+            'path' => 'required|string|max:255',
         ];
     }
 }

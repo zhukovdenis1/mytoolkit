@@ -25,7 +25,11 @@ export type EditorHandle = {
     beautify: (key: string) => void;
     getValue: () => string;
     getBoxType: (key: string) => string;
-    onChange: () => void;
+    //onChange: () => void;
+    undo: () => void;
+    redo: () => void;
+    isUndoAvailable: () => boolean;
+    isRedoAvailable: () => boolean;
 };
 
 const useEditor = (): EditorHandle => {
@@ -41,7 +45,11 @@ const useEditor = (): EditorHandle => {
         beautify: () => {},
         getValue: () => value,
         getBoxType: () => "",
-        onChange: () => {},
+        //onChange: () => null,
+        undo: () => {},
+        redo: () => {},
+        isUndoAvailable: () => false,
+        isRedoAvailable: () => false,
     };
 };
 
@@ -49,24 +57,39 @@ type EditorProps = {
     editor: EditorHandle;
     disabled?: boolean;
     mode?: string;
+    onChange?: () => void;
 };
 
 const uid = () => Math.random().toString(36).substr(2, 9);
 
-const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode = "edit" }) => {
+const EditorComponent: React.FC<EditorProps> = ({editor, disabled = false, mode = "edit", onChange = () => {}}) => {
     const [structure, setStructure] = useState<Record<string, StructureItem>>({});
     const [value, setValue] = useState(editor.getValue());
+    const [history, setHistory] = useState<Record<string, StructureItem>[]>([]); // История изменений
+    const [historyIndex, setHistoryIndex] = useState(-1); // Текущий индекс в истории
 
     useEffect(() => {
-        setStructure(buildStructure(value));
+        const initialStructure = buildStructure(value);
+        setStructure(initialStructure);
+        updateHistory(initialStructure);
     }, []);
+
+
+    const updateHistory = (newStructure: Record<string, StructureItem>) => {
+        const newHistory = [...history.slice(0, historyIndex + 1), newStructure]; // Добавляем новое состояние
+        if (newHistory.length > 10) {
+            newHistory.shift(); // Удаляем самое старое состояние, если история превышает 10 элементов
+        }
+        setHistory(newHistory);
+        setHistoryIndex(newHistory.length - 1); // Обновляем индекс
+    };
 
     const buildStructure = (newValue: string): Record<string, StructureItem> => {
         const defaultStructure = [{ type: "visual", data: newValue, key: uid(), order: 1 }];
         let parsedStructure: StructureItem[];
         try {
             parsedStructure = JSON.parse(newValue);
-            if (!parsedStructure) {parsedStructure = defaultStructure}
+            if (!Array.isArray(parsedStructure)) {parsedStructure = defaultStructure}
         } catch {
             parsedStructure = defaultStructure;
         }
@@ -75,6 +98,34 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
             acc[key] = { ...item, key, order: index + 1 };
             return acc;
         }, {} as Record<string, StructureItem>);
+    };
+
+    // Отмена действия
+    editor.undo = () => {
+        if (historyIndex > 0) {
+            const prevIndex = historyIndex - 1;
+            setStructure(history[prevIndex]);
+            setHistoryIndex(prevIndex);
+            onChange();
+        }
+    };
+
+    editor.isUndoAvailable = () => {
+        return true;
+    }
+
+    editor.isRedoAvailable = () => {
+        return true;
+    }
+
+    // Повтор действия
+    editor.redo = () => {
+        if (historyIndex < history.length - 1) {
+            const nextIndex = historyIndex + 1;
+            setStructure(history[nextIndex]);
+            setHistoryIndex(nextIndex);
+            onChange();
+        }
     };
 
     editor.edit = (key: string, data) => {
@@ -91,7 +142,8 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
             }
         };
         setStructure(updatedStructure);
-        editor.onChange();
+        updateHistory(updatedStructure);
+        onChange()
     };
 
     editor.add = (afterKey, data) => {
@@ -105,20 +157,27 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
         };
         const updatedStructure = { ...structure, [newKey]: newNode };
         setStructure(updatedStructure);
-        editor.onChange();
+        updateHistory(updatedStructure);
+        onChange();
     };
 
     editor.delete = (key) => {
         const updatedStructure = { ...structure };
         delete updatedStructure[key];
         setStructure(updatedStructure);
-        editor.onChange();
+        updateHistory(updatedStructure);
+        onChange();
     };
 
     editor.move = (key, step) => {
+        // Получаем массив элементов, отсортированный по полю `order`
         const entries = Object.entries(structure).sort(([, a], [, b]) => a.order - b.order);
+
+        // Находим индекс текущего элемента
         const index = entries.findIndex(([k]) => k === key);
         if (index === -1) return;
+
+        // Вычисляем новый индекс с учетом шага `step`
         const newIndex = Math.max(0, Math.min(index + step, entries.length - 1));
         const targetKey = entries[newIndex][0];
 
@@ -127,14 +186,27 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
             [key]: { ...structure[key], order: structure[targetKey].order },
             [targetKey]: { ...structure[targetKey], order: structure[key].order },
         };
-        setStructure(updatedStructure);
-        editor.onChange();
+
+        // Перестраиваем объект updatedStructure согласно порядку `order`
+        const sortedStructure = Object.values(updatedStructure)
+            .sort((a, b) => a.order - b.order)
+            .reduce((acc, item) => {
+                acc[item.key] = item;
+                return acc;
+            }, {} as Record<string, StructureItem>);
+
+        setStructure(sortedStructure);
+        updateHistory(sortedStructure);
+        onChange();
     };
 
     editor.beautify = (key) => {
         if (structure[key]) {
             structure[key].data = beautify(structure[key].data);
             setStructure({ ...structure });
+            updateHistory({ ...structure });
+            onChange();
+
         }
     };
 
@@ -151,9 +223,15 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
     };
 
     editor.setValue = (newValue) => {
+        const oldValue = editor.getValue();
         setValue(newValue);
-        setStructure(buildStructure(newValue));
-        editor.onChange();
+        const newStructure = buildStructure(newValue);
+        setStructure(newStructure);
+        updateHistory(newStructure); // Обновляем историю
+
+        if( /*editor.getValue() !== newValue && */oldValue !== '[]') {//if not initialized value
+            onChange();
+        }
     };
 
     return (
