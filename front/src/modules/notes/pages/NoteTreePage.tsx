@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { DownOutlined } from '@ui/icons';
-import { Input, Tree, Space, Spin} from 'ui';
+import {Input, Tree, Space, Spin, SearchInput} from 'ui';
 import type { TreeDataNode } from '@ui/types';
 import { api, route } from "api";
 import {convertTreeData} from "@/utils/ui.ts";
-import {Link} from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
 
 
 export const NoteTreePage: React.FC = () => {
@@ -14,6 +14,7 @@ export const NoteTreePage: React.FC = () => {
     const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
     const [loading, setLoading] = useState(true);
     const [reloadTrigger, setReloadTrigger] = useState(0);
+    const navigate = useNavigate();
 
     const fetchCategories = async () => {
         const response = await api.safeRequest("notes.categories.tree");
@@ -73,16 +74,25 @@ export const NoteTreePage: React.FC = () => {
     };
 
     return (
-        <Spin spinning={loading}>
-            <Input placeholder="Search" value={search} onChange={onSearch} style={{ marginBottom: 8 }} />
-            <Tree
-                showLine
-                switcherIcon={<DownOutlined />}
-                expandedKeys={expandedKeys}
-                onExpand={(keys: React.Key[]) => setExpandedKeys(keys)}
-                treeData={treeData}
+
+        <Space direction="vertical" style={{width: "100%"}}>
+            <SearchInput
+                route="notes.dropdown"
+                placeholder="Search note"
+                onChange={(value) => { value && navigate(route('notes.view', {note_id: value}))}}
+                style={{width: "100%"}}
             />
-        </Spin>
+            <Spin spinning={loading}>
+                <Input placeholder="Search category" value={search} onChange={onSearch} style={{ marginBottom: 8 }} />
+                <Tree
+                    showLine
+                    switcherIcon={<DownOutlined />}
+                    expandedKeys={expandedKeys}
+                    onExpand={(keys: React.Key[]) => setExpandedKeys(keys)}
+                    treeData={treeData}
+                />
+            </Spin>
+        </Space>
     );
 };
 

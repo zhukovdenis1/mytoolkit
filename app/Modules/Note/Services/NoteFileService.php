@@ -32,7 +32,11 @@ class NoteFileService
             $fullPath = getcwd() . '/' . $path;
 
             if (file_exists($fullPath)) {
-                throw new \Exception('File with name "' . $fileName . '.' . $fileExt . '" already exists.');
+                return [
+                    'data' => [],
+                    'message' => 'File with name "' . $fileName . '.' . $fileExt . '" already exists.',
+                    'success' => false,
+                ];
             }
 
             // Создаем директории рекурсивно

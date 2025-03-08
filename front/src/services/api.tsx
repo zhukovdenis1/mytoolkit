@@ -104,13 +104,19 @@ export const api = {
             }
             const formDataObj = new FormData();
             Object.entries(formData).forEach(([key, value]) => {
-                formDataObj.append(key, String(value));
+                if (typeof value === 'string' || value instanceof Blob) {
+                    formDataObj.append(key, value);
+                } else {
+                    // Если value не является строкой или Blob, преобразуем его в строку
+                    formDataObj.append(key, String(value));
+                }
             });
 
             switch (method) {
                 case 'post':
                     return apiAxios.post(path, formDataObj, {headers: {'Content-Type': 'multipart/form-data'}});
                 case 'put':
+
                     return apiAxios.put(path, formDataObj, {headers: {'Content-Type': 'multipart/form-data'}});
                 default:
                     throw new Error(`FormData supported only for POST and PUT. Route: "${route}"`);

@@ -199,7 +199,7 @@ export const NoteSearchPage: React.FC<NoteSearchPageProps> = ({ action = '' }) =
 
             <Button
                 type="primary"
-                onClick={() => showNoteModal('add', reload)}
+                onClick={() => showNoteModal('add', reload, undefined, {categories: form.getFieldValue('categories')})}
             >
                 Add
             </Button>
@@ -221,11 +221,12 @@ export const NoteSearchPage: React.FC<NoteSearchPageProps> = ({ action = '' }) =
     );
 };
 
-const showNoteModal = (action: string, reload: () => void, noteId?: string|number) => {
+const showNoteModal = (action: string, reload: () => void, noteId?: string|number, noteData?: {}) => {
     if (action == 'add' || !noteId) {
         return  showModal(<NoteFormPage />, {
             title: "Add note",
             styleName: 'wide',
+            data: noteData,
             url: route('notes.add'),
             onClose: (data: { reload?: boolean }) => {
                 if (data?.reload) {

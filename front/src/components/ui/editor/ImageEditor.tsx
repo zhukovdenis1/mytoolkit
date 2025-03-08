@@ -147,7 +147,6 @@ const uploadImg = async (link: string, file: UploadFile<any>) => {
 
     const formData = file?.originFileObj ? {file: file.originFileObj} : {};
     const data = {store_id: 1, note_id: 3, link: file?.originFileObj ? '' : link, type: 'image'}
-
     const response = await api.safeRequest("notes.files.add", data, formData);
 
     return (response && typeof response !== 'boolean' && response.data)

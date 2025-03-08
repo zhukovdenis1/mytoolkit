@@ -22,6 +22,7 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
     close: (_data?: {reload: boolean}) => {},
     loading: false
 } }) => {
+    console.log('*', modal.data)
     const noteId = modal.data?.id || 0;
     const isEditPage = !!noteId;
     const [form] = Form.useForm();
@@ -42,6 +43,8 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
                     form.setFieldsValue(noteResponse.data.data);
                     editor.setValue(noteResponse.data.data.text);
                 }
+            } else {
+                form.setFieldsValue(modal.data);
             }
             modal.setLoading(false);
             const categoriesTreeResponse = await api.safeRequest("notes.categories.tree");

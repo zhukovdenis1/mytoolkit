@@ -100,7 +100,7 @@ class StoreNoteFileRequest extends BaseFormRequest
                 stream_context_create([
                     'http' => [
                         'timeout' => 20, // Таймаут в секундах
-                        'max_length' => NoteFileValidator::getMaxFileSize(), // Максимальный размер файла в байтах
+                        'max_length' => NoteFileValidator::getMaxFileSize($type), // Максимальный размер файла в байтах
                     ]
                 ])));
             // Создаем объект UploadedFile из скачанного файла
