@@ -30,36 +30,10 @@ export type EditorHandle = {
     redo: () => void;
     isUndoAvailable: () => boolean;
     isRedoAvailable: () => boolean;
-    getHistory: () => Record<string, StructureItem>[];
-    getHistoryIndex: () => number;
-    setHistory: (value: Record<string, StructureItem>[]) => void;
-    setHistoryIndex: (value: number) => void;
 };
 
-const useEditor = (): {
-    add: () => void;
-    move: () => void;
-    debug: () => void;
-    edit: () => void;
-    beautify: () => void;
-    redo: () => void;
-    isUndoAvailable: () => boolean;
-    setHistory: (value: (((prevState: Record<string, StructureItem>[]) => Record<string, StructureItem>[]) | Record<string, StructureItem>[])) => void;
-    delete: () => void;
-    setHistoryIndex: (value: (((prevState: number) => number) | number)) => void;
-    mode: string;
-    getValue: () => string;
-    isRedoAvailable: () => boolean;
-    undo: () => void;
-    getHistoryIndex: () => number;
-    getBoxType: () => string;
-    getHistory: () => Record<string, StructureItem>[];
-    setValue: (value: (((prevState: string) => string) | string)) => void
-} => {
+const useEditor = (): EditorHandle => {
     const [value, setValue] = useState("");
-    const [history, setHistory] = useState<Record<string, StructureItem>[]>([]); // История изменений
-    const [historyIndex, setHistoryIndex] = useState(-1); // Текущий индекс в истории
-
     return {
         mode: 'edit',
         setValue: setValue,
@@ -74,12 +48,8 @@ const useEditor = (): {
         //onChange: () => null,
         undo: () => {},
         redo: () => {},
-        isUndoAvailable: () => historyIndex > 0,
-        isRedoAvailable: () => historyIndex < history.length - 1,
-        getHistory: () => history, // Добавлено: функция для получения истории
-        getHistoryIndex: () => historyIndex, // Добавлено: функция для получения индекса истории
-        setHistory: setHistory, // Добавлено: функция для обновления истории
-        setHistoryIndex: setHistoryIndex, // Добавлено: функция для обновления индекса истории
+        isUndoAvailable: () => false,
+        isRedoAvailable: () => false,
     };
 };
 
@@ -92,26 +62,18 @@ type EditorProps = {
 
 const uid = () => Math.random().toString(36).substr(2, 9);
 
-const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode = "edit", onChange = () => {} }) => {
+const EditorComponent: React.FC<EditorProps> = ({editor, disabled = false, mode = "edit", onChange = () => {}}) => {
     const [structure, setStructure] = useState<Record<string, StructureItem>>({});
     const [value, setValue] = useState(editor.getValue());
-    const [history, setHistory] = useState<Record<string, StructureItem>[]>(editor.getHistory()); // История изменений
-    const [historyIndex, setHistoryIndex] = useState(editor.getHistoryIndex()); // Текущий индекс в истории
-
-    // Синхронизация history и historyIndex с useEditor
-    useEffect(() => {
-        editor.setHistory(history);
-    }, [history]);
-
-    useEffect(() => {
-        editor.setHistoryIndex(historyIndex);
-    }, [historyIndex]);
+    const [history, setHistory] = useState<Record<string, StructureItem>[]>([]); // История изменений
+    const [historyIndex, setHistoryIndex] = useState(-1); // Текущий индекс в истории
 
     useEffect(() => {
         const initialStructure = buildStructure(value);
         setStructure(initialStructure);
         updateHistory(initialStructure);
     }, []);
+
 
     const updateHistory = (newStructure: Record<string, StructureItem>) => {
         const newHistory = [...history.slice(0, historyIndex + 1), newStructure]; // Добавляем новое состояние
@@ -127,7 +89,7 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
         let parsedStructure: StructureItem[];
         try {
             parsedStructure = JSON.parse(newValue);
-            if (!Array.isArray(parsedStructure)) { parsedStructure = defaultStructure }
+            if (!Array.isArray(parsedStructure)) {parsedStructure = defaultStructure}
         } catch {
             parsedStructure = defaultStructure;
         }
@@ -149,12 +111,12 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
     };
 
     editor.isUndoAvailable = () => {
-        return historyIndex > 0;
-    };
+        return true;
+    }
 
     editor.isRedoAvailable = () => {
-        return historyIndex < history.length - 1;
-    };
+        return true;
+    }
 
     // Повтор действия
     editor.redo = () => {
@@ -169,7 +131,7 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
     editor.edit = (key: string, data) => {
         if (data?.type) {
             if (structure[key].type == 'visual' && !data.data) {
-                data.data = beautify(structure[key].data);
+                data.data = beautify(structure[key].data)
             }
         }
         const updatedStructure = {
@@ -181,7 +143,7 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
         };
         setStructure(updatedStructure);
         updateHistory(updatedStructure);
-        onChange();
+        onChange()
     };
 
     editor.add = (afterKey, data) => {
@@ -244,11 +206,12 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
             setStructure({ ...structure });
             updateHistory({ ...structure });
             onChange();
+
         }
     };
 
     editor.debug = (key: string) => {
-        console.log(key, structure);
+        console.log(key, structure)
     };
 
     editor.getValue = () => {
@@ -266,7 +229,7 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
         setStructure(newStructure);
         updateHistory(newStructure); // Обновляем историю
 
-        if (oldValue !== '[]') { // Если это не инициализационное значение
+        if( /*editor.getValue() !== newValue && */oldValue !== '[]') {//if not initialized value
             onChange();
         }
     };
@@ -280,21 +243,21 @@ const EditorComponent: React.FC<EditorProps> = ({ editor, disabled = false, mode
                             value={item.data}
                             onChange={(val: string) => editor.edit(key, { data: val })}
                             disabled={disabled}
-                            mode={mode}
+                            mode = {mode}
                         />
                     ) : item.type === "video" ? (
                         <VideoEditor
                             value={item.data}
                             onChange={(val: string) => editor.edit(key, { data: val })}
                             disabled={disabled}
-                            mode={mode}
+                            mode = {mode}
                         />
                     ) : item.type === "image" ? (
                         <ImageEditor
                             value={item.data}
                             onChange={(val: string) => editor.edit(key, { data: val })}
                             disabled={disabled}
-                            mode={mode}
+                            mode = {mode}
                         />
                     ) : (
                         <CodeEditor value={item.data} onChange={(val) => editor.edit(key, { data: val })} type={item.type} disabled={disabled} />

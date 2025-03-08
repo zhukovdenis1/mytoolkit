@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { useBreadCrumbs } from "@/components/BreadCrumbs";
 import {SubNoteList} from "../components/SubNoteList";
 import '@/css/notes/detail.css';
-import { UndoOutlined, RedoOutlined} from "@ui/icons"
+import { UndoOutlined, RedoOutlined, EyeOutlined, EditOutlined} from "@ui/icons"
 
 interface NoteData {
     id: number;
@@ -80,7 +80,7 @@ export const NoteViewPage: React.FC = () => {
                 <Space>
                     <Button title="Undo" disabled={!editor.isUndoAvailable()} onClick={() => {editor.undo()}}><UndoOutlined /></Button>
                     <Button title="Redo" disabled={!editor.isRedoAvailable()} onClick={() => {editor.redo()}}><RedoOutlined /></Button>
-                    Mode: <Button type="dashed" onClick={switchEditorMode}>{editorMode}</Button>
+                    <Button title="Mode" type="dashed" onClick={switchEditorMode}>{editorMode == 'view' ? (<EyeOutlined />) : (<EditOutlined />)}</Button>
                     <Button type="primary" onClick={saveChanges}>
                         Save
                     </Button>

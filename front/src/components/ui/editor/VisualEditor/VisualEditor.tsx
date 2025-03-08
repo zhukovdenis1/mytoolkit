@@ -23,7 +23,7 @@ import {
     MinusOutlined,
     SmallDashOutlined
 } from '../icons'
-import { Dropdown, Menu } from 'antd';
+import { Dropdown } from 'antd';
 import { useEffect } from "react";
 
 
@@ -43,7 +43,7 @@ const VisualEditor: React.FC<VisualEditorProps> = ({ value, onChange, disabled, 
         addAttributes() {
             return {
                 // extend the existing attributes …
-                //...this.parent?.(),
+                ...this.parent?.(),
 
                 // and add a new one …
                 backgroundColor: {
@@ -103,95 +103,97 @@ const VisualEditor: React.FC<VisualEditorProps> = ({ value, onChange, disabled, 
     };
 
     // Меню для операций с таблицами
-    const tableMenu = (
-        <Menu>
-            <Menu.Item
-                key="insert-table"
-                onClick={() => editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
-            >
-                <PlusSquareOutlined /> table
-            </Menu.Item>
-            <Menu.Item
-                key="add-column"
-                onClick={() => editor?.chain().focus().addColumnAfter().run()}
-                disabled={!editor?.can().addColumnAfter()}
-            >
-                <PlusOutlined /> column
-            </Menu.Item>
-            <Menu.Item
-                key="add-row"
-                onClick={() => editor?.chain().focus().addRowAfter().run()}
-                disabled={!editor?.can().addRowAfter()}
-            >
-                <PlusOutlined /> row
-            </Menu.Item>
-            <Menu.Item
-                key="delete-column"
-                onClick={() => editor?.chain().focus().deleteColumn().run()}
-                disabled={!editor?.can().deleteColumn()}
-            >
-                <MinusOutlined /> column
-            </Menu.Item>
-            <Menu.Item
-                key="delete-row"
-                onClick={() => editor?.chain().focus().deleteRow().run()}
-                disabled={!editor?.can().deleteRow()}
-            >
-                <MinusOutlined /> row
-            </Menu.Item>
-            <Menu.SubMenu key="extra" title=<SmallDashOutlined />>
-                <Menu.Item
-                    key="add-row-before"
-                    onClick={() => editor?.chain().focus().addRowBefore().run()}
-                    disabled={!editor?.can().addRowBefore()}
-                >
-                    <PlusOutlined/> row before
-                </Menu.Item>
-                <Menu.Item
-                    key="add-column-before"
-                    onClick={() => editor?.chain().focus().addColumnBefore().run()}
-                    disabled={!editor?.can().addColumnBefore()}
-                >
-                    <PlusOutlined/> column before
-                </Menu.Item>
-                <Menu.Item
-                    key="split-cell"
-                    onClick={() => editor?.chain().focus().toggleHeaderRow().run()}
-                    disabled={!editor?.can().toggleHeaderRow()}
-                >
-                    toggleHeaderRow
-                </Menu.Item>
-                <Menu.Item
-                    key="split-cell"
-                    onClick={() => editor?.chain().focus().toggleHeaderCell().run()}
-                    disabled={!editor?.can().toggleHeaderCell()}
-                >
-                    toggleHeaderCell
-                </Menu.Item>
-                <Menu.Item
-                    key="split-cell"
-                    onClick={() => editor?.chain().focus().mergeOrSplit().run()}
-                    disabled={!editor?.can().mergeOrSplit()}
-                >
-                    mergeOrSplit
-                </Menu.Item>
-                <Menu.Item
-                    key="split-cell"
-                    onClick={() => editor?.chain().focus().setCellAttribute('backgroundColor', '#FAF594').run()}
-                    disabled={!editor?.can().setCellAttribute('backgroundColor', '#FAF594')}
-                >
-                    setCellAttribute
-                </Menu.Item>
-            </Menu.SubMenu>
-            <Menu.Item
-                key="delete-table"
-                onClick={() => editor?.chain().focus().deleteTable().run()}
-                disabled={!editor?.can().deleteTable()}
-            >
-                <MinusSquareOutlined /> таблицу
-            </Menu.Item>
-        </Menu>
-    );
+    const tableMenu = {
+        items: [
+            {
+                key: "insert-table",
+                label: "Table",
+                icon: <PlusSquareOutlined />,
+                onClick: () => editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run(),
+            },
+            {
+                key: "add-column",
+                label: "Column",
+                icon: <PlusOutlined />,
+                disabled: !editor?.can().addColumnAfter(),
+                onClick: () => editor?.chain().focus().addColumnAfter().run(),
+            },
+            {
+                key: "add-row",
+                label: "Row",
+                icon: <PlusOutlined />,
+                disabled: !editor?.can().addRowAfter(),
+                onClick: () => editor?.chain().focus().addRowAfter().run(),
+            },
+            {
+                key: "delete-column",
+                label: "Delete Column",
+                icon: <MinusOutlined />,
+                disabled: !editor?.can().deleteColumn(),
+                onClick: () => editor?.chain().focus().deleteColumn().run(),
+            },
+            {
+                key: "delete-row",
+                label: "Delete Row",
+                icon: <MinusOutlined />,
+                disabled: !editor?.can().deleteRow(),
+                onClick: () => editor?.chain().focus().deleteRow().run(),
+            },
+            {
+                key: "extra",
+                label: "More Actions",
+                icon: <SmallDashOutlined />,
+                children: [
+                    {
+                        key: "add-row-before",
+                        label: "Row Before",
+                        icon: <PlusOutlined />,
+                        disabled: !editor?.can().addRowBefore(),
+                        onClick: () => editor?.chain().focus().addRowBefore().run(),
+                    },
+                    {
+                        key: "add-column-before",
+                        label: "Column Before",
+                        icon: <PlusOutlined />,
+                        disabled: !editor?.can().addColumnBefore(),
+                        onClick: () => editor?.chain().focus().addColumnBefore().run(),
+                    },
+                    {
+                        key: "toggle-header-row",
+                        label: "Toggle Header Row",
+                        disabled: !editor?.can().toggleHeaderRow(),
+                        onClick: () => editor?.chain().focus().toggleHeaderRow().run(),
+                    },
+                    {
+                        key: "toggle-header-cell",
+                        label: "Toggle Header Cell",
+                        disabled: !editor?.can().toggleHeaderCell(),
+                        onClick: () => editor?.chain().focus().toggleHeaderCell().run(),
+                    },
+                    {
+                        key: "merge-or-split",
+                        label: "Merge or Split",
+                        disabled: !editor?.can().mergeOrSplit(),
+                        onClick: () => editor?.chain().focus().mergeOrSplit().run(),
+                    },
+                    {
+                        key: "set-cell-attribute",
+                        label: "Set Cell Background",
+                        disabled: !editor?.can().setCellAttribute('backgroundColor', '#FAF594'),
+                        onClick: () => editor?.chain().focus().setCellAttribute('backgroundColor', '#FAF594').run(),
+                    },
+                ],
+            },
+            {
+                key: "delete-table",
+                label: "Delete Table",
+                icon: <MinusSquareOutlined />,
+                disabled: !editor?.can().deleteTable(),
+                onClick: () => editor?.chain().focus().deleteTable().run(),
+            },
+        ],
+    };
+
 
     return (
         <div className="visual-editor-container">
@@ -254,7 +256,7 @@ const VisualEditor: React.FC<VisualEditorProps> = ({ value, onChange, disabled, 
                     >
                         <LinkOutlined />
                     </button>
-                    <Dropdown overlay={tableMenu} trigger={['click']}>
+                    <Dropdown menu={tableMenu} trigger={['click']}>
                         <button
                             title="Table operations"
                             type="button"

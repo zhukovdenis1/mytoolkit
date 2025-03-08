@@ -5,5 +5,6 @@ export {
     UploadOutlined,
     PaperClipOutlined,
     UndoOutlined,
-    RedoOutlined
+    RedoOutlined,
+    EyeOutlined
 } from '@ant-design/icons';
