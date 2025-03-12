@@ -65,7 +65,7 @@ class DeployCommand extends Command
 
         $branch = $this->option('branch') ?? 'main';
 
-        $result = exec("cd {$repositoryPath} &&  git fetch origin && git reset --hard origin/master && git pull origin {$branch} 2>&1", $r2);
+        $result = exec("cd {$repositoryPath} &&  git fetch origin && git reset --hard origin/main && git pull origin {$branch} 2>&1", $r2);
         $result = exec("git pull 2>&1", $r2);
 
         foreach ($r2 as $line) {
