@@ -34,7 +34,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({ route, placeholder, va
             //const response = await axios.get(route, { params: { id } });
             const response = await api.safeRequest(route, {id: id});
 
-            if (response !== false && Array.isArray(response.data) && response.data.length > 0) {
+            if (response.data.success && response.data.length > 0) {
                 const item = response.data[0]; // Берём первый элемент массива
                 setOptions([{ value: item.id.toString(), label: item.name }]);
                 setSelectedValue(item.id.toString());
@@ -57,7 +57,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({ route, placeholder, va
             //const response = await axios.get(route, { params: { search: searchText } });
 
             const response = await api.safeRequest(route, { search: searchText });
-            if (response !== false && Array.isArray(response.data)) {
+            if (response.data.success !== false && Array.isArray(response.data)) {
                 const fetchedOptions = response.data.map((item: any) => ({
                     value: item.id.toString(),
                     label: item.name,

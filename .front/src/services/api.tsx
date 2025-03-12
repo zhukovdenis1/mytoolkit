@@ -140,13 +140,44 @@ export const api = {
     },
 
     safeRequest: async (route: string, data = {}, formData = {}) => {
+        let result;
         try {
-            console.log(route, data, formData);
-            return await api.request(route, data, formData);
+            //console.log(route, data, formData);
+            const response = await api.request(route, data, formData);
+
+            const success = (
+                (!response.data.errors || response.data.errors.length === 0) &&
+                !response.data.message
+            );
+
+            result =  {
+                ...response,
+                data: {
+                    errors: false, warnings: false, success: success, data: {}, message: '',
+                    ...response.data,
+
+                }
+            };
         } catch (err) {
             console.error("API Request Error:", err);
-            message.error("Error while requesting data");
-            return false;
+            //message.error("Error while requesting data");
+            result = {data: {errors: true, warnings: false, success: false, data: {}, message: ''}};
         }
+
+        return result;
     },
+
+    safeRequestWithAlert: async (route: string, data = {}, formData = {}) => {
+        const result =  await api.safeRequest(route, data, formData);
+
+        if (Array.isArray(result.data.errors) && result.data.errors.length) {
+            message.error(`${result.data.errors.map((error: string) => `${error}`).join('\r\n')}`);
+        }
+
+        if (Array.isArray(result.data.warnings) && result.data.warnings.length) {
+            message.warning(`${result.data.warnings.map((warning: string) => `${warning}`).join('\r\n')}`);
+        }
+
+        return result;
+    }
 };

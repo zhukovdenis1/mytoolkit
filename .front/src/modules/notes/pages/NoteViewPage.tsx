@@ -27,6 +27,7 @@ export const NoteViewPage: React.FC = () => {
     const brcr = useBreadCrumbs();
 
     useEffect(() => {
+
         const fetchData = async () => {
             if (!noteId) return; // Проверка на undefined
 
@@ -74,7 +75,16 @@ export const NoteViewPage: React.FC = () => {
                 (изменено: {data?.updated_at ? dayjs(data.updated_at).format("DD.MM.YYYY") : ""})
             </p>
             <SubNoteList parentId={noteId}/>
-            <Editor editor={editor} disabled={loading} mode={editorMode} onChange={() => setShowSaveButton(true)} />
+            <Editor
+                editor={editor}
+                disabled={loading}
+                mode={editorMode}
+                onChange={() => setShowSaveButton(true)}
+                fileRoutes={{
+                    save: {route: 'notes.files.add', data: {note_id: data?.id}},
+                    delete: {route: 'notes.files.delete', data: {note_id: data?.id}}
+                }}
+            />
 
             <div className="stickyBottom" style={{ display: showSaveButton ? '' : 'none' }}>
                 <Space>

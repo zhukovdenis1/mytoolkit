@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Note\Http\Controllers\User;
 
 use App\Http\Controllers\BaseController;
+use App\Modules\Note\Http\Requests\User\File\DestroyNoteFileRequest;
 use App\Modules\Note\Http\Requests\User\File\StoreNoteFileRequest;
 use App\Modules\Note\Http\Resources\User\NoteFileResource;
 use App\Modules\Note\Models\Note;
@@ -21,6 +22,7 @@ class NoteFileController extends BaseController
 
     public function store(StoreNoteFileRequest $request, Note $note ): array
     {
+
         // Сохраняем файл
         $data = $this->noteFileService->saveFile(
             (int) $request->input('store_id'),
@@ -30,5 +32,15 @@ class NoteFileController extends BaseController
         );
 
         return $data;
+    }
+
+    public function destroy(DestroyNoteFileRequest $request, Note $note ): array
+    {
+        return $this->noteFileService->deleteFile(
+            (int) $request->input('store_id'),
+            (int) $note->id,
+            $request->user()->id,
+            $request->input('path')
+        );
     }
 }

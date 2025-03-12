@@ -9,6 +9,7 @@ use App\Helpers\Helper;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use App\Modules\Note\Validators\NoteFileValidator;
+use App\Exceptions\ErrorException;
 
 class NoteFileService
 {
@@ -16,42 +17,35 @@ class NoteFileService
 
     public function saveFile(int $storeId, int $noteId, int $userId, UploadedFile $file): array
     {
-        $success = false;
-        $errorMessage = '';
+        // Извлекаем расширение
+        $fileExt = strtolower($file->getClientOriginalExtension());
+        //$fileName = Helper::uid(8);
+        //$fileName = strtolower(str_replace('lin', '', pathinfo($file->getFilename(), PATHINFO_FILENAME)));
+        $fileName = Helper::normalizeFileName(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+
+        // Генерируем путь для сохранения файла
+        $path = $this->getPath($storeId, $noteId, $userId) . $fileName . '.' . $fileExt;
+        $fullPath = getcwd() . '/' . $path;
+
+        $warnings = [];
 
         try {
-            // Извлекаем расширение
-            $fileExt = strtolower($file->getClientOriginalExtension());
-            //$fileName = Helper::uid(8);
-            //$fileName = strtolower(str_replace('lin', '', pathinfo($file->getFilename(), PATHINFO_FILENAME)));
-            $fileName = Helper::normalizeFileName(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
-
-
-            // Генерируем путь для сохранения файла
-            $path = 'uploads/' . $userId . '/notes/' . $noteId . '/' . $fileName . '.' . $fileExt;
-            $fullPath = getcwd() . '/' . $path;
-
             if (file_exists($fullPath)) {
-                return [
-                    'data' => [],
-                    'message' => 'File with name "' . $fileName . '.' . $fileExt . '" already exists.',
-                    'success' => false,
-                ];
-            }
+                //$warnings[] = 'File with name "' . $fileName . '.' . $fileExt . '" already exists.';
+                throw new ErrorException('File with name "' . $fileName . '.' . $fileExt . '" already exists.');
+            } else {
+                // Создаем директории рекурсивно
+                if (!file_exists(dirname($path))) {
+                    mkdir(dirname($path), 0777, true);
+                }
 
-            // Создаем директории рекурсивно
-            if (!file_exists(dirname($path))) {
-                mkdir(dirname($path), 0777, true);
-            }
+                // Сохраняем файл
+                //$success = Storage::put($path, file_get_contents($file->getRealPath()));
+                copy($file->getRealPath(), $fullPath);
 
-            // Сохраняем файл
-            //$success = Storage::put($path, file_get_contents($file->getRealPath()));
-            copy($file->getRealPath(), $fullPath);
-
-            $success = file_exists($fullPath);
-
-            if (!$success) {
-                throw new \Exception('Failed to save file.');
+                if (!file_exists($fullPath)) {
+                    throw new ErrorException('Failed to save file.');
+                }
             }
 
             // Определяем тип файла
@@ -78,24 +72,44 @@ class NoteFileService
                     'height' => $height,
                     'store_id' => $storeId,
                 ],
-                'message' => $errorMessage,
-                'success' => $success,
+                'success' => true,
+                'warnings' => $warnings
             ];
-        } catch (\Exception $e) {
+        } catch (ErrorException $e) {
             // Удаляем файл, если он не прошел валидацию
             /*if (isset($path)) {
                 Storage::delete($path);
             }*/
-            if (file_exists($fullPath)) {
-                unlink($fullPath);
-            }
 
             return [
                 'data' => [],
-                'message' => $e->getMessage(),
+                'errors' => [$e->getMessage()],
                 'success' => false,
             ];
         }
+    }
+
+    public function deleteFile(int $storeId, int $noteId, int $userId, string $path): array
+    {
+        $success = false;
+        $errors = false;
+
+        $fileName = basename($path);
+
+        $path = $this->getPath($storeId, $noteId, $userId) . $fileName;
+        $fullPath = getcwd() . '/' . $path;
+
+        if (!is_file($fullPath)) {
+            $success = true;
+            $errors = ['File with name "' . $fileName . '" does not exist.'];
+        } else {
+            $success = unlink($fullPath);
+        }
+
+        return [
+            'errors' => $errors,
+            'success' => $success,
+        ];
     }
 
     private function getFileType(string $extension): string
@@ -108,5 +122,10 @@ class NoteFileService
         }
 
         return '';
+    }
+
+    private function getPath(int $storeId, int $noteId, int $userId): string
+    {
+        return 'uploads/' . $userId . '/notes/' . $noteId . '/';
     }
 }

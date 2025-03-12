@@ -40,7 +40,7 @@ const EditorToolBar: React.FC<EditorToolBarProps> = ({ boxKey, boxType, editor, 
 
                 <button
                     onClick={() => {
-                        editor?.edit(boxKey, {type: 'php'})
+                        editor?.edit(boxKey, {type: 'php', data: JSON.stringify({language: 'php'})})
                     }}
                     type="button"
                     className={boxType == 'php' ? 'active' : ''}
