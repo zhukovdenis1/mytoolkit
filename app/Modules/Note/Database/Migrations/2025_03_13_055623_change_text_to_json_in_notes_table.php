@@ -13,7 +13,7 @@ return new class extends Migration
     {
         // Изменяем тип поля text с TEXT на JSON
         Schema::table('notes', function (Blueprint $table) {
-            $table->json('text')->change();
+            $table->json('text')->nullable()->change();
         });
     }
 

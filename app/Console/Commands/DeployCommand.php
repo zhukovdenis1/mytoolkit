@@ -87,7 +87,7 @@ class DeployCommand extends Command
         }
         //$result = exec("php -r 'echo getcwd();'", $r2);
 
-        $result = exec("php ./artisan migrate 2>&1", $r2);
+        $result = exec("php ../artisan migrate 2>&1", $r2);
 
         foreach ($r2 as $line) {
             $output .= $line . "\n";
