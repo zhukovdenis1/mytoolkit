@@ -22,6 +22,7 @@ Route::middleware([JwtMiddleware::class])->group(function () {
     Route::prefix('notes/{note}/files')->group(function () {
         Route::post('/', [NoteFileController::class, 'store']);
         Route::delete('/', [NoteFileController::class, 'destroy']);
+        Route::post('/tg', [NoteFileController::class, 'tg']);
     });
 
     Route::patch('notes/{note}/add-categories', [NoteController::class, 'addCategories']);

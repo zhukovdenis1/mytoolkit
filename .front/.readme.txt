@@ -85,8 +85,11 @@ npm install dayjs
 //npm install vite-plugin-checker --save-dev
 //npm install concurrently --save-dev
 
-
 npm install @tiptap/extension-link
+
+npm install @react-oauth/google
+//@googleapis/drive
+npm install gapi-script
 
 
 

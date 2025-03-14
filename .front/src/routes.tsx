@@ -13,7 +13,9 @@ import {Outlet} from "react-router-dom";
 import {DemoPage} from "@/pages/Demo/DemoPage.tsx";
 import {DemoTplPage} from "@/pages/Demo/DemoTplPage.tsx";
 //import {DemoTreeCategoriesPage} from "@/pages/Demo/DemoTreeCategoriesPage.tsx";
-import {DemoNoteCategoryListPage} from "@/pages/Demo/DemoNoteCategoryListPage.tsx";
+import {DemoNoteCategoryListPage} from "@/pages/Demo/DemoNoteCategoryListPage";
+import {DemoGoogleDrivePage} from "@/pages/Demo/DemoGoogleDrivePage";
+import { GoogleOAuthProvider} from '@react-oauth/google';
 
 export interface IRoute {
     name?: string;
@@ -88,6 +90,12 @@ export const routes: IRoute[] = [
                         path: "tpl",
                         element: <DemoTplPage />,
                         title: "Шаблон",
+                    },
+                    {
+                        name: "google",
+                        path: "google",
+                        element: <GoogleOAuthProvider clientId="YOUR_CLIENT_ID"><DemoGoogleDrivePage /></GoogleOAuthProvider>,
+                        title: "Google Upload",
                     }
                 ],
             },
