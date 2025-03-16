@@ -78,13 +78,10 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
                 categories: form.getFieldValue('categories') ?? null,
             });
 
-        if (response && typeof response !== 'boolean' && response.data) {
-            success = response.data.success;
-            if (success) {
-                message.success("Note saved successfully!");
-            } else {
-                message.error("Data wasn't changed");
-            }
+        if (response.data.success) {
+            message.success("Note saved successfully!");
+        } else {
+            message.error("Data wasn't changed");
         }
 
         if (values.exit && success) {

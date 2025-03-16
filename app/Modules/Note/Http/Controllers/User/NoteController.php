@@ -18,6 +18,7 @@ use App\Modules\Note\Http\Requests\User\UpdateNoteRequest;
 use App\Modules\Note\Http\Resources\User\NoteResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Http\Resources\AnonymousResource;
 
 class NoteController extends BaseController
 {
@@ -33,9 +34,9 @@ class NoteController extends BaseController
         return $this->noteService->findNotes($request->getWithUserId());
     }
 
-    public function getDropDown(DropDownNoteRequest $request): array
+    public function getDropDown(DropDownNoteRequest $request): AnonymousResource
     {
-        return $this->noteService->getDropDownNotes($request->getWithUserId());
+        return new AnonymousResource($this->noteService->getDropDownNotes($request->getWithUserId()));
     }
 
     public function tree(TreeNoteRequest $request): array

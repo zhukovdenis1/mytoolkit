@@ -41,15 +41,15 @@ export const NoteCategoryFormPage: React.FC<NoteCategoryFormPageProps> = ({ moda
             let categoryResponse;
             if (isEditPage) {
                 categoryResponse = await api.safeRequest(`notes.categories.show`, { category_id: categoryId });
-                if (categoryResponse && typeof categoryResponse !== 'boolean' && categoryResponse.data) {
-                    form.setFieldsValue(categoryResponse.data.noteCategory);
+                if (categoryResponse.data.success) {
+                    form.setFieldsValue(categoryResponse.data.data);
                 }
             } else if (parentId) {
                 form.setFieldValue('parent_id', parentId);
             }
             modal.setLoading(false);
             const treeResponse = await api.safeRequest("notes.categories.tree");
-            if ((categoryResponse && categoryResponse.data.success === false) || treeResponse.data.success === false) {
+            if ((categoryResponse && !categoryResponse.data.success) || !treeResponse.data.success) {
                 modal.close();
             }
             if (treeResponse && typeof treeResponse !== 'boolean' && treeResponse.data) {

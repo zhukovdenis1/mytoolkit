@@ -18,8 +18,9 @@ export const NoteTreePage: React.FC = () => {
 
     const fetchCategories = async () => {
         const response = await api.safeRequest("notes.categories.tree");
-        if (response && typeof response !== 'boolean' && response.data) {
+        if (response && response.data.success) {
             const data = convertTreeData(response.data.data || [], { id: "key", name: "title" });
+
             setOriginalTreeData(data);
             searchInTree('', data);
         }

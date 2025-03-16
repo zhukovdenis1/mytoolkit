@@ -122,3 +122,9 @@ ul.list li .buttons {
     width: 100%;
     text-align: right;
 }
+
+.login {
+    max-width: 400px;
+    text-align: center;
+    margin: 0 auto;
+}

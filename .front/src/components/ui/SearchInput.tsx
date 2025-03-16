@@ -57,8 +57,10 @@ export const SearchInput: React.FC<SearchInputProps> = ({ route, placeholder, va
             //const response = await axios.get(route, { params: { search: searchText } });
 
             const response = await api.safeRequest(route, { search: searchText });
-            if (response.data.success !== false && Array.isArray(response.data)) {
-                const fetchedOptions = response.data.map((item: any) => ({
+
+
+            if (response.data.success) {
+                const fetchedOptions = response.data.data.map((item: any) => ({
                     value: item.id.toString(),
                     label: item.name,
                 }));

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Space, Tooltip } from 'antd';
+import { Button, Space } from 'antd';
 import { ArrowLeftOutlined, ArrowRightOutlined, ReloadOutlined, HomeOutlined } from '@ant-design/icons';
 
 export const BrowseToolBar: React.FC = () => {
@@ -35,39 +35,33 @@ export const BrowseToolBar: React.FC = () => {
 
     return (
         <Space>
-            {/* Кнопка "Назад" */}
-            <Tooltip title="Назад">
-                <Button
-                    icon={<ArrowLeftOutlined />}
-                    onClick={handleGoBack}
-                    disabled={!canGoBack}
-                />
-            </Tooltip>
+            <Button
+                title="Backward"
+                icon={<ArrowLeftOutlined />}
+                onClick={handleGoBack}
+                disabled={!canGoBack}
+            />
 
-            {/* Кнопка "Вперёд" */}
-            <Tooltip title="Вперёд">
-                <Button
-                    icon={<ArrowRightOutlined />}
-                    onClick={handleGoForward}
-                    disabled={!canGoForward}
-                />
-            </Tooltip>
+            <Button
+                title="Forward"
+                icon={<ArrowRightOutlined />}
+                onClick={handleGoForward}
+                disabled={!canGoForward}
+            />
 
-            {/* Кнопка "Обновить" */}
-            <Tooltip title="Обновить">
-                <Button
-                    icon={<ReloadOutlined />}
-                    onClick={handleRefresh}
-                />
-            </Tooltip>
+            <Button
+                title="Refresh"
+                icon={<ReloadOutlined />}
+                onClick={handleRefresh}
+            />
 
-            {/* Кнопка "Домой" */}
-            <Tooltip title="Домой">
-                <Button
-                    icon={<HomeOutlined />}
-                    onClick={handleGoHome}
-                />
-            </Tooltip>
+
+            <Button
+                title="Home"
+                icon={<HomeOutlined />}
+                onClick={handleGoHome}
+            />
+
         </Space>
     );
 };

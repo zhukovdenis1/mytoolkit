@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Resources\User;
+namespace App\Resources;
 
 use App\Modules\Profile\Http\Resources\Shared\ProfileResource;
 use App\Modules\Profile\Models\Profile;

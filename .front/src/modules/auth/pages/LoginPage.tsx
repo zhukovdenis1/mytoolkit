@@ -1,36 +1,74 @@
-import React, { useContext, useState, FormEvent } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthProvider.tsx";
+import { Form, Input, Button } from "antd";
+import { LockOutlined, MailOutlined } from "@ant-design/icons";
 
 export const LoginPage: React.FC = () => {
     const authContext = useContext(AuthContext);
     const navigate = useNavigate();
-    const [email, setEmail] = useState<string>("test@example.com");
-    const [password, setPassword] = useState<string>("password");
+    const [loading, setLoading] = useState<boolean>(false); // Состояние для лоадера
 
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async (values: { email: string; password: string }) => {
+        setLoading(true);
         if (authContext) {
-            await authContext.signin({ email, password }, () => navigate("/"));
+            try {
+                await authContext.signin(values, () => navigate("/"));
+            } catch (error) {
+                console.error("Login failed:", error);
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h1>Login</h1>
-            <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <button type="submit">Login</button>
-        </form>
+            <div className="login">
+                <h1>
+                    Login
+                </h1>
+                <Form
+                    name="login"
+                    initialValues={{ email: "test@example.com", password: "password" }}
+                    onFinish={handleSubmit}
+                    layout="vertical"
+                >
+                    <Form.Item
+                        name="email"
+                        label="Email"
+                        rules={[
+                            { required: true, message: "Please input your email!" },
+                            { type: "email", message: "Please enter a valid email!" },
+                        ]}
+                    >
+                        <Input
+                            prefix={<MailOutlined />}
+                            placeholder="Email"
+                            disabled={loading} // Отключаем поле ввода при загрузке
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        name="password"
+                        label="Password"
+                        rules={[{ required: true, message: "Please input your password!" }]}
+                    >
+                        <Input.Password
+                            prefix={<LockOutlined />}
+                            placeholder="Password"
+                            disabled={loading} // Отключаем поле ввода при загрузке
+                        />
+                    </Form.Item>
+                    <Form.Item>
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            block
+                            loading={loading} // Добавляем лоадер на кнопку
+                        >
+                            Login
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </div>
     );
 };

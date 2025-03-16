@@ -16,6 +16,7 @@ import {DemoTplPage} from "@/pages/Demo/DemoTplPage.tsx";
 import {DemoNoteCategoryListPage} from "@/pages/Demo/DemoNoteCategoryListPage";
 import {DemoGoogleDrivePage} from "@/pages/Demo/DemoGoogleDrivePage";
 import { GoogleOAuthProvider} from '@react-oauth/google';
+import YandexDiskUploader from "@/pages/Demo/YandexDiskUploader";
 
 export interface IRoute {
     name?: string;
@@ -96,6 +97,12 @@ export const routes: IRoute[] = [
                         path: "google",
                         element: <GoogleOAuthProvider clientId="YOUR_CLIENT_ID"><DemoGoogleDrivePage /></GoogleOAuthProvider>,
                         title: "Google Upload",
+                    },
+                    {
+                        name: "yandex",
+                        path: "yandex",
+                        element: <YandexDiskUploader />,
+                        title: "Yandex Upload",
                     }
                 ],
             },

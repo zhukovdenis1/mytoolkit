@@ -108,7 +108,7 @@ export const NoteSearchPage: React.FC<NoteSearchPageProps> = ({ action = '' }) =
         }
 
         const response = await api.safeRequest("notes.search", params);
-        if (response && typeof response !== 'boolean' && response.data) {
+        if (response.data.success) {
             setData(response.data.data);
             setPagination((prev) => ({
                 ...prev,
@@ -121,16 +121,19 @@ export const NoteSearchPage: React.FC<NoteSearchPageProps> = ({ action = '' }) =
         setLoading(false);
 
         const categoriesTreeResponse = await api.safeRequest("notes.categories.tree");
-        if (categoriesTreeResponse && typeof categoriesTreeResponse !== 'boolean' && categoriesTreeResponse.data) {
+        if (categoriesTreeResponse.data.success) {
             setCategoriesTree(convertTreeData(categoriesTreeResponse.data.data, { id: 'value', name: 'title' }));
         }
     };
 
     const handleSearch = (values: any) => {
+        const toPage = pagination.current ?? 1;
+        const fromPage = new URLSearchParams(window.location.search).get('_page') ?? 1;
+        console.log(`${toPage}=${fromPage}`)
         const queryParams: Params = {
             search: values.search || "",
             categories: values.categories ? values.categories.join(',') : "",
-            _page: 1,
+            _page: (toPage == fromPage) ? 1 : toPage,//сбрасыаем на 1, если преход не по страницам, а => меняются условия поиска
             _limit: pagination.pageSize,
             _sort: sorter.field || "",
             _order: sorter.order || "",
