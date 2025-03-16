@@ -68,6 +68,9 @@ export const NoteViewPage: React.FC = () => {
 
     return (
         <Spin spinning={loading}>
+            <div style={{float: "right"}}>
+                <Button title="Mode" type="dashed" onClick={switchEditorMode}>{editorMode == 'view' ? (<EyeOutlined />) : (<EditOutlined />)}</Button>
+            </div>
             <h1>{data?.title}</h1>
 
             <p className="date">

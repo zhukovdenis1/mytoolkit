@@ -1,7 +1,7 @@
 import React from "react";
 import {EditorHandle} from "./Editor";
-import {Space} from "ui"
-import {ArrowUpOutlined, ArrowDownOutlined, PlusOutlined, DeleteOutlined, VideoCameraOutlined, PictureOutlined} from "./icons"
+import {Space, Dropdown, Menu} from "ui"
+import {ArrowUpOutlined, ArrowDownOutlined, PlusOutlined, DeleteOutlined, VideoCameraOutlined, PictureOutlined, CodeOutlined, EyeOutlined} from "./icons"
 
 
 type EditorToolBarProps = {
@@ -16,6 +16,23 @@ const EditorToolBar: React.FC<EditorToolBarProps> = ({ boxKey, boxType, editor, 
         return null;
     }
 
+    // Обработчик для выбора языка в выпадающем меню
+    const handleCodeMenuClick = (language: string) => {
+        editor?.edit(boxKey, { type: "code", data: { language } });
+    };
+
+    // Меню для выпадающего списка "Code"
+    const codeMenu = (
+        <Menu>
+            <Menu.Item key="html" onClick={() => handleCodeMenuClick("html")}>
+                HTML
+            </Menu.Item>
+            <Menu.Item key="php" onClick={() => handleCodeMenuClick("php")}>
+                PHP
+            </Menu.Item>
+        </Menu>
+    );
+
     return (
         <div className="editor-tooltip">
             <Space wrap={true}>
@@ -23,36 +40,26 @@ const EditorToolBar: React.FC<EditorToolBarProps> = ({ boxKey, boxType, editor, 
                     onClick={() => {
                         editor?.edit(boxKey, {type: 'visual'})
                     }}
-                    type="button"
+                    type="button" title="Visual editor"
                     className={boxType == 'visual' ? 'active' : ''}
                 >
-                    VISUAL
+                    <EyeOutlined />
                 </button>
-                <button
-                    onClick={() => {
-                        editor?.edit(boxKey, {type: 'code', data: {language: 'php'}})
-                    }}
-                    type="button"
-                    className={boxType == 'html' ? 'active' : ''}
-                >
-                    HTML
-                </button>
-
-                <button
-                    onClick={() => {
-                        editor?.edit(boxKey, {type: 'code', data: {language: 'php'}})
-                    }}
-                    type="button"
-                    className={boxType == 'php' ? 'active' : ''}
-                >
-                    PHP
-                </button>
+                <Dropdown overlay={codeMenu} trigger={["click"]}>
+                    <button
+                        type="button"
+                        title="Code"
+                        className={boxType == "code" ? "active" : ""}
+                    >
+                        <CodeOutlined />
+                    </button>
+                </Dropdown>
 
                 <button
                     onClick={() => {
                         editor?.edit(boxKey, {type: 'video'})
                     }}
-                    type="button"
+                    type="button" title="Video"
                     className={boxType == 'video' ? 'active' : ''}
                 >
                     <VideoCameraOutlined/>
@@ -62,46 +69,47 @@ const EditorToolBar: React.FC<EditorToolBarProps> = ({ boxKey, boxType, editor, 
                     onClick={() => {
                         editor?.edit(boxKey, {type: 'image'})
                     }}
-                    type="button"
+                    type="button" title="Image"
                     className={boxType == 'image' ? 'active' : ''}
                 >
                     <PictureOutlined/>
                 </button>
                 <button onClick={() => {
                     editor?.move(boxKey, -1)
-                }} type="button">
+                }} type="button" title="Up">
                     <ArrowUpOutlined/>
                 </button>
 
                 <button onClick={() => {
                     editor?.move(boxKey, 1)
-                }} type="button">
+                }} type="button" title="Down">
                     <ArrowDownOutlined/>
                 </button>
 
                 <button onClick={() => {
                     editor?.add(boxKey, {type: 'visual'})
-                }} type="button">
+                }} type="button" title="Add block">
                     <PlusOutlined/>
                 </button>
 
                 <button onClick={() => {
                     editor?.delete(boxKey)
-                }} type="button">
+                }} type="button" title="Delete this block">
                     <DeleteOutlined/>
                 </button>
 
-                <button onClick={() => {
-                    editor.beautify(boxKey)
-                }} type="button">
-                    Beautify
-                </button>
+                {/*<button onClick={() => {*/}
+                {/*    editor.beautify(boxKey)*/}
+                {/*}} type="button">*/}
+                {/*    Beautify*/}
+                {/*</button>*/}
 
-                <button onClick={() => {
-                    editor.debug(boxKey)
-                }} type="button">
-                    DEBUG
-                </button>
+                {/*<button onClick={() => {*/}
+                {/*    editor.debug(boxKey)*/}
+                {/*}} type="button">*/}
+                {/*    DEBUG*/}
+                {/*</button>*/}
+
             </Space>
         </div>
     );

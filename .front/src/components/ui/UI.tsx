@@ -12,7 +12,9 @@ export {
     Table,
     Tree,
     TreeSelect,
-    Upload
+    Upload,
+    Dropdown,
+    Menu
 } from "antd";
 
 export { Spin };

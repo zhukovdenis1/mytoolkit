@@ -12,4 +12,6 @@ export {
     DeleteOutlined,
     VideoCameraOutlined,
     PictureOutlined,
+    CodeOutlined,
+    EyeOutlined
 } from '@ant-design/icons';

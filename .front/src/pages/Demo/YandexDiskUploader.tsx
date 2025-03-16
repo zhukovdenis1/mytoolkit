@@ -1,124 +1,123 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const CLIENT_ID = "cfccbe2a17574a87ab4379df39c18007";
-
-const YandexUpload = () => {
-    const [token, setToken] = useState<string | null>(localStorage.getItem("yandex_token"));
+const YandexUpload: React.FC = () => {
+    const CLIENT_ID = "cfccbe2a17574a87ab4379df39c18007";
+    const REDIRECT_URI = "https://mytoolkit.loc:3000/demo/yandex";
+    const [token, setToken] = useState<string | null>(null);
     const [file, setFile] = useState<File | null>(null);
-    const [fileUrl, setFileUrl] = useState<string>("");
-    const [isPublic, setIsPublic] = useState<boolean>(false);
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [isPublic, setIsPublic] = useState<boolean>(true);
 
     useEffect(() => {
-        const hash = window.location.hash;
-        if (hash.includes("access_token")) {
-            const params = new URLSearchParams(hash.replace("#", "?"));
-            const accessToken = params.get("access_token");
-            if (accessToken) {
-                setToken(accessToken);
-                localStorage.setItem("yandex_token", accessToken);
-                window.history.replaceState(null, "", window.location.pathname);
-            }
+        const hash = new URLSearchParams(window.location.hash.substring(1));
+        const accessToken = hash.get("access_token");
+        if (accessToken) {
+            setToken(accessToken);
+            localStorage.setItem("yandex_token", accessToken);
+        } else {
+            const savedToken = localStorage.getItem("yandex_token");
+            if (savedToken) setToken(savedToken);
         }
     }, []);
 
-    const authenticate = () => {
-        const redirectUri = encodeURIComponent(window.location.href);
-        const authUrl = `https://oauth.yandex.ru/authorize?response_type=token&client_id=${CLIENT_ID}&redirect_uri=${redirectUri}&scope=cloud_api:disk.app_folder`;
-        window.location.href = authUrl;
+    const handleLogin = () => {
+        window.location.href = `https://oauth.yandex.ru/authorize?response_type=token&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}`;
     };
 
-    const logout = () => {
-        setToken(null);
-        localStorage.removeItem("yandex_token");
-    };
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files.length > 0) {
-            setFile(e.target.files[0]);
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files?.length) {
+            setFile(event.target.files[0]);
         }
     };
 
-    const uploadFile = async () => {
-        if (!file || !token) {
-            alert("Выберите файл и авторизуйтесь!");
-            return;
-        }
+    const handleUpload = async () => {
+        if (!file || !token) return;
 
         try {
-            const filePath = `app:/${encodeURIComponent(file.name)}`;
+            const filePath = `app:/MyToolKit/${file.name}`;
 
-            const uploadUrlResponse = await fetch(
-                `https://cloud-api.yandex.net/v1/disk/resources/upload?path=${filePath}`,
-                {
-                    method: "GET",
-                    headers: { Authorization: `OAuth ${token}` },
+            // 1️⃣ Проверяем, существует ли файл и является ли он публичным
+            let publicKey = "";
+            try {
+                const fileInfoResponse = await axios.get(
+                    `https://cloud-api.yandex.net/v1/disk/resources?path=${encodeURIComponent(filePath)}`,
+                    { headers: { Authorization: `OAuth ${token}` } }
+                );
+
+                // Если у файла уже есть `public_key`, используем его
+                if (fileInfoResponse.data.public_key) {
+                    publicKey = fileInfoResponse.data.public_key;
                 }
-            );
+            } catch (err) {
+                console.log("Файл ещё не загружен, загружаем...");
+            }
 
-            const uploadUrlData = await uploadUrlResponse.json();
-            if (!uploadUrlData.href) throw new Error("Не удалось получить ссылку для загрузки");
-
-            await fetch(uploadUrlData.href, {
-                method: "PUT",
-                body: file,
-            });
-
-            if (isPublic) {
-                await fetch(
-                    `https://cloud-api.yandex.net/v1/disk/resources/publish?path=${filePath}`,
-                    {
-                        method: "PUT",
-                        headers: { Authorization: `OAuth ${token}` },
-                    }
+            // 2️⃣ Если файла нет → загружаем
+            if (!publicKey) {
+                const uploadResponse = await axios.get(
+                    `https://cloud-api.yandex.net/v1/disk/resources/upload?path=${encodeURIComponent(filePath)}`,
+                    { headers: { Authorization: `OAuth ${token}` } }
                 );
 
-                const fileInfoResponse = await fetch(
-                    `https://cloud-api.yandex.net/v1/disk/resources?path=${filePath}&fields=public_url`,
-                    {
-                        headers: { Authorization: `OAuth ${token}` },
-                    }
-                );
+                await axios.put(uploadResponse.data.href, file);
+            }
 
-                const fileInfo = await fileInfoResponse.json();
-                if (fileInfo.public_url) {
-                    const resourceInfoResponse = await fetch(
-                        `https://cloud-api.yandex.net/v1/disk/public/resources?public_key=${encodeURIComponent(fileInfo.public_url)}`,
-                        {
-                            headers: { Authorization: `OAuth ${token}` },
-                        }
+            // 3️⃣ Если файл должен быть публичным → публикуем
+            if (isPublic && !publicKey) {
+                try {
+                    await axios.put(
+                        `https://cloud-api.yandex.net/v1/disk/resources/publish?path=${encodeURIComponent(filePath)}`,
+                        {},
+                        { headers: { Authorization: `OAuth ${token}` } }
                     );
 
-                    const resourceInfo = await resourceInfoResponse.json();
-                    if (resourceInfo.file) {
-                        const directUrl = `https://downloader.disk.yandex.ru/disk/${resourceInfo.file}?disposition=inline`;
-                        setFileUrl(directUrl);
-                        return;
-                    }
+                    // 4️⃣ Получаем `public_key` после публикации
+                    const publicData = await axios.get(
+                        `https://cloud-api.yandex.net/v1/disk/resources?path=${encodeURIComponent(filePath)}`,
+                        { headers: { Authorization: `OAuth ${token}` } }
+                    );
+                    publicKey = publicData.data.public_key;
+                } catch (publishError) {
+                    console.error("Ошибка публикации файла", publishError);
                 }
             }
 
-            setFileUrl(`https://disk.yandex.ru/client/disk/app/${encodeURIComponent(file.name)}`);
+            // 5️⃣ Если файл публичный, получаем постоянную ссылку
+            if (publicKey) {
+                const publicUrlResponse = await axios.get(
+                    `https://cloud-api.yandex.net/v1/disk/resources/download?public_key=${publicKey}`
+                );
+                setImageUrl(publicUrlResponse.data.href);
+            }
         } catch (error) {
-            alert("Ошибка загрузки файла");
+            console.error("Ошибка загрузки", error);
         }
     };
 
+
+
     return (
-        <div className="p-4 border rounded-md w-96 mx-auto text-center">
+        <div>
             {!token ? (
-                <button onClick={authenticate} className="p-2 bg-blue-500 text-white rounded-md">Войти через Яндекс</button>
+                <button onClick={handleLogin}>Войти через Яндекс</button>
             ) : (
                 <>
-                    <button onClick={logout} className="p-2 bg-red-500 text-white rounded-md mb-2">Выйти</button>
-                    <input type="file" onChange={handleFileChange} className="block mb-2" />
-                    <label className="flex items-center justify-center gap-2">
-                        <input type="checkbox" checked={isPublic} onChange={() => setIsPublic(!isPublic)} /> Сделать публичным
+                    <input type="file" onChange={handleFileChange} />
+                    <label>
+                        <input type="checkbox" checked={isPublic} onChange={() => setIsPublic(!isPublic)} />
+                        Сделать публичным
                     </label>
-                    <button onClick={uploadFile} className="p-2 bg-green-500 text-white rounded-md mt-2">Загрузить</button>
-                    {fileUrl && (
-                        <div className="mt-2">
-                            <input type="text" readOnly value={fileUrl} className="block w-full border p-1 mb-2" />
-                            <img src={fileUrl} alt="Uploaded File" className="max-w-full h-auto border" />
+                    <button onClick={handleUpload}>Загрузить</button>
+
+                    {imageUrl && (
+                        <div>
+                            <p>Ссылка на изображение:</p>
+                            <a href={imageUrl} target="_blank" rel="noopener noreferrer">
+                                {imageUrl}
+                            </a>
+                            <br />
+                            <img src={imageUrl} alt="Uploaded" style={{ maxWidth: "300px", marginTop: "10px" }} />
                         </div>
                     )}
                 </>
