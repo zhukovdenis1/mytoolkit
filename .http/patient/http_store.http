@@ -1,0 +1,10 @@
+POST {{url}}/api/patients
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "first_name": "Ivan",
+    "last_name": "Petrov",
+    "birthdate": "2024-01-01"
+}
