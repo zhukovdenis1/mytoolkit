@@ -5,6 +5,7 @@ use App\Modules\Note\Http\Controllers\User\NoteCategoryController;
 use App\Modules\Note\Http\Controllers\User\NoteController;
 //use App\Modules\Product\Http\Controllers\User\ProductController;
 use App\Modules\Note\Http\Controllers\User\NoteFileController;
+use App\Modules\Patient\Http\Controllers\PatientController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\JwtMiddleware;
 
@@ -46,6 +47,11 @@ Route::middleware([JwtMiddleware::class])->group(function () {
         Route::put('{note}/edit-content', [NoteController::class, 'updateContent']);
         Route::put('{note}', [NoteController::class, 'update']);
         Route::delete('{note}', [NoteController::class, 'destroy']);
+    });
+
+    Route::prefix('patients')->group(function () {
+        Route::post('/', [PatientController::class, 'store']);
+        Route::get('/', [PatientController::class, 'index']);
     });
 });
 
