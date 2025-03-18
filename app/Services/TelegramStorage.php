@@ -23,6 +23,12 @@ class TelegramStorage
         $this->chatId = $chatId;
     }
 
+    public function getFile($fileId): \TelegramBot\Api\Types\File
+    {
+        return $this->bot->getFile($fileId);
+    }
+
+
     /**
      * Сохраняет файл в Telegram
      *
@@ -35,7 +41,7 @@ class TelegramStorage
         try {
             $file = new CURLFile($filePath);
             $response = $this->bot->sendDocument($this->chatId, $file, $fileName);
-
+var_dump($response);die;
             return [
                 'file_id' => $response->getDocument()->getFileId(),
                 'message_id' => $response->getMessageId(),
@@ -65,6 +71,11 @@ class TelegramStorage
         }
     }
 
+    public function getFileUrlByMessageId(int $messageId, string $token): string
+    {
+        return 'https://api.telegram.org/file/bot' . $token . '/documents/file_' . $messageId . '.tmp';
+    }
+
     /**
      * Удаляет файл из Telegram
      *
@@ -82,6 +93,8 @@ class TelegramStorage
         }
     }
 
+
+
     /**
      * Проверяет, существует ли файл в Telegram
      *
@@ -98,6 +111,7 @@ class TelegramStorage
             return false;
         }
     }
+
 }
 
 // Пример использования

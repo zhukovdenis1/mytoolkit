@@ -58,13 +58,15 @@ class NoteFileController extends BaseController
         $filePath = $file->getRealPath();
         //var_dump(file_get_contents("https://api.telegram.org/bot$botToken/getUpdates"));die;
         // Сохранение файла
-        $result = $storage->saveFile($filePath, 'file.png');
+        $result = $storage->saveFile($filePath, '111');
         if ($result) {
             echo "Файл сохранён. File ID: {$result['file_id']}, Message ID: {$result['message_id']}\n";
 
+            $file = $storage->getFile($result['file_id']);
             // Получение ссылки на файл
             //$fileUrl = $storage->getFileUrl($result['file_id']);
-            $fileUrl = "https://t.me/MyToolKit/".$result['message_id'];
+            var_dump($file);die;
+            //$fileUrl = "https://t.me/MyToolKit/".$result['message_id'];
             if ($fileUrl) {
                 echo "Ссылка на файл: $fileUrl\n";
             } else {
@@ -74,19 +76,29 @@ class NoteFileController extends BaseController
             echo "Ошибка при сохранении файла.\n";
         }
 
-        // Проверка существования файла
-        if ($storage->fileExists($result['file_id'])) {
-            echo "Файл существует.\n";
-        } else {
-            echo "Файл не существует.\n";
-        }
 
-        // Удаление файла
-        if ($storage->deleteFile($result['message_id'])) {
-            echo "Файл удалён.\n";
-        } else {
-            echo "Ошибка при удалении файла.\n";
-        }
+        file_put_contents(
+            getcwd() . '/uploads/t/'. $result['message_id'] . '_' . $result['file_id'].'.png',
+            file_get_contents($fileUrl)
+        );
+var_dump($result);die;
+
+        //echo 'path=' .  getcwd() . '/uploads/t/' . $result['file_id'].'.png';die;
+
+        // Проверка существования файла
+//        if ($storage->fileExists($result['file_id'])) {
+//            echo "Файл существует.\n";
+//        } else {
+//            echo "Файл не существует.\n";
+//        }
+//
+//        // Удаление файла
+//        if ($storage->deleteFile($result['message_id'])) {
+//            echo "Файл удалён.\n";
+//        } else {
+//            echo "Ошибка при удалении файла.\n";
+//        }
+//        die;
         die;
         return ['asdf'];
     }

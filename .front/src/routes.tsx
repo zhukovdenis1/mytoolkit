@@ -17,6 +17,7 @@ import {DemoNoteCategoryListPage} from "@/pages/Demo/DemoNoteCategoryListPage";
 import {DemoGoogleDrivePage} from "@/pages/Demo/DemoGoogleDrivePage";
 import { GoogleOAuthProvider} from '@react-oauth/google';
 import YandexDiskUploader from "@/pages/Demo/YandexDiskUploader";
+import YandexDiskImage from "@/pages/Demo/YandexDiskImage";
 
 export interface IRoute {
     name?: string;
@@ -102,6 +103,12 @@ export const routes: IRoute[] = [
                         name: "yandex",
                         path: "yandex",
                         element: <YandexDiskUploader />,
+                        title: "Yandex Upload",
+                    },
+                    {
+                        name: "ya",
+                        path: "ya",
+                        element: <YandexDiskImage />,
                         title: "Yandex Upload",
                     }
                 ],
