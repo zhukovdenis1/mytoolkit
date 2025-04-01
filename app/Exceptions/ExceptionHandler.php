@@ -8,7 +8,10 @@ use Illuminate\Foundation\Configuration\Exceptions as BaseExceptions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 //use Sentry\Laravel\Integration;
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\ViewErrorBag;
 use Illuminate\Validation\UnauthorizedException;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -20,14 +23,65 @@ class ExceptionHandler
 
     public function __invoke(BaseExceptions $exceptions): BaseExceptions
     {
-        $this->renderUnauthenticated($exceptions);
-        $this->renderUnauthorized($exceptions);
-        $this->renderNotFound($exceptions);
-
-        //$this->reportSentry($exceptions);
+        $this->registerHandlers($exceptions);
+        // $this->registerSentryReporting($exceptions);
 
         return $exceptions;
     }
+
+    protected function registerHandlers(BaseExceptions $exceptions): void
+    {
+        $this->renderUnauthenticated($exceptions);
+        $this->renderUnauthorized($exceptions);
+        $this->renderNotFound($exceptions);
+        $this->renderCustomError($exceptions);
+        $this->renderValidationErrors($exceptions);
+        //$this->renderHttpResponseErrors($exceptions);
+    }
+
+
+    protected function renderValidationErrors(BaseExceptions $exceptions): void
+    {
+        $exceptions->renderable(
+            fn (ValidationException $e, ?Request $request = null) => $this->response(
+                message: __('Validation Failed'),
+                code: 422,
+                asJson: $request?->expectsJson() ?? false,
+                errors: $e->validator->errors()
+            )
+        );
+
+//
+//        $exceptions->renderable(function (ValidationException $e) {
+//            // Если это наш кастомный HttpResponseException в disguise
+//            if ($e->getMessage() === 'The given data was invalid.' &&
+//                $e->response instanceof \Illuminate\Http\JsonResponse) {
+//                return $e->response;
+//            }
+//
+//            return new JsonResponse([
+//                'message' => __('Validation Failed'),
+//                'errors' => $e->errors(),
+//            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+//        });
+    }
+
+//    protected function renderHttpResponseErrors(BaseExceptions $exceptions): void
+//    {
+//        $exceptions->renderable(function (HttpResponseException $e, Request $request = null) {
+//            $response = $e->getResponse();
+//
+//            if ($response instanceof JsonResponse) {
+//                return $response;
+//            }
+//
+//            return $this->buildResponse(
+//                message: $response->getContent() ?: __('Unprocessable Entity'),
+//                code: $response->getStatusCode(),
+//                isJson: $request?->expectsJson() ?? false
+//            );
+//        });
+//    }
 
     protected function renderUnauthenticated(BaseExceptions $exceptions): void
     {
@@ -62,22 +116,40 @@ class ExceptionHandler
         );
     }
 
-    protected function reportSentry(BaseExceptions $exceptions): void
+    protected function renderCustomError(BaseExceptions $exceptions): void
     {
-        $exceptions->reportable(
-            fn (Throwable $e) => Integration::captureUnhandledException($e)
+        $exceptions->renderable(
+            function (ErrorException $e, ?Request $request = null) {
+                $errors = new MessageBag();
+                $errors->add('custom', __($e->getMessage()));
+                return $this->response(
+                    message: 'Custom error',
+                    code: 409,
+                    asJson: $request?->expectsJson() ?? false,
+                    errors: $errors,
+                );
+            }
         );
     }
 
-    protected function response(string $message, int $code, bool $asJson): Response
+//    protected function reportSentry(BaseExceptions $exceptions): void
+//    {
+//        $exceptions->reportable(
+//            fn (Throwable $e) => Integration::captureUnhandledException($e)
+//        );
+//    }
+
+    protected function response(string $message, int $code, bool $asJson, $errors = null): Response
     {
         if ($asJson) {
-            return response()->json(compact('message'), $code, options: $this->jsonFlags);
+            return response()->json(['message' => $message, 'errors' => $errors], $code, options: $this->jsonFlags);
         }
 
         $this->registerErrorViewPaths();
 
-        return response()->view($this->view($code), status: $code);
+        return response()->view($this->view($code), [
+            'errors' => $errors
+        ]);
     }
 
     protected function view(int $code): string

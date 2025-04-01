@@ -6,5 +6,5 @@ use App\Http\Resources\BaseResourceCollection;
 
 class NoteCategoryResourceCollection extends BaseResourceCollection
 {
-    //public static $wrap = 'noteCategories';
+    public static $wrap = 'categories';
 }

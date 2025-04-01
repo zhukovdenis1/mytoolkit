@@ -1,9 +1,5 @@
-DELETE {{url}}/api/notes/3/files
+DELETE {{url}}/api/files/1070
 Accept: application/json
 Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
-{
-    "store_id": 1,
-    "path": "1l27j1wxgp03ba.png"
-}

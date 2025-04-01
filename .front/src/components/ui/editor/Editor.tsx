@@ -222,15 +222,17 @@ const EditorComponent: React.FC<EditorProps> = ({
 
     editor.delete = async (key) => {
         const item = structure[key];
-        let success = true;
-        if ((item.type == 'image' || item.type == 'video' )&& item.data.storeId) {
+        let success = false;
+        if ((item.type == 'image' || item.type == 'video' ) && item.data.fileId) {
             success = false;
-            const data = {store_id: item.data.storeId, ...fileRoutes.delete.data, type: item.type, path: item.data.src}
+            const data = {file_id: item.data.fileId, ...fileRoutes.delete.data, type: item.type, path: item.data.src}
             const response = await api.safeRequestWithAlert(fileRoutes.delete.route, data);
 
-            if (response.data.success) {
+            if (response.success || response.status == 404) {
                 success = true;
             }
+
+
         }
 
         if (success) {

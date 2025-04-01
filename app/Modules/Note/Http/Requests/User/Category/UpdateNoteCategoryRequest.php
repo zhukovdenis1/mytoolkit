@@ -8,11 +8,6 @@ use App\Http\Requests\BaseFormRequest;
 
 class UpdateNoteCategoryRequest extends BaseFormRequest
 {
-    public function authorize(): bool
-    {
-        return $this->verifyUser($this->route('category'));
-    }
-
     public function rules(): array
     {
         return [

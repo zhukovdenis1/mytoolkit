@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Note\Http\Controllers\User;
 
+use App\Exceptions\ErrorException;
 use App\Http\Controllers\BaseController;
+use App\Http\Resources\AnonymousResource;
 use App\Modules\Note\Http\Requests\User\Category\DestroyNoteCategoryRequest;
 use App\Modules\Note\Http\Requests\User\Category\SearchNoteCategoryRequest;
 use App\Modules\Note\Http\Requests\User\Category\ShowCategoryRequest;
@@ -14,16 +16,12 @@ use App\Modules\Note\Http\Resources\User\NoteCategoryResource;
 use App\Modules\Note\Http\Resources\User\NoteCategoryResourceCollection;
 use App\Modules\Note\Models\NoteCategory;
 use App\Modules\Note\Services\NoteCategoryService;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class NoteCategoryController extends BaseController
 {
-    protected NoteCategoryService $noteCategoryService;
 
-    public function __construct(NoteCategoryService $noteCategoryService)
-    {
-        $this->noteCategoryService = $noteCategoryService;
-    }
+    public function __construct(private readonly NoteCategoryService $noteCategoryService) {}
 
     public function all(): NoteCategoryResourceCollection
     {
@@ -32,43 +30,51 @@ class NoteCategoryController extends BaseController
         return new NoteCategoryResourceCollection($categories->get());
     }
 
-    public function tree(): array
+    public function tree(): AnonymousResource
     {
-        return ['data' => $this->noteCategoryService->tree(auth()->id())];
+        return new AnonymousResource($this->noteCategoryService->tree(auth()->id()));
     }
 
     public function index(SearchNoteCategoryRequest $request): NoteCategoryResourceCollection
     {
-        $categories = NoteCategory::where('user_id', auth()->id());
-        if ($search = $request->validated('search')) {
-            $categories->where('name', 'like', '%' . $search . '%');
-        }
-
-        $categories->where('parent_id', $request->validated('parent_id'));
-
-        return new NoteCategoryResourceCollection($categories->get());
+        $data = $this->noteCategoryService->find($request->withUserId()->validated());
+        return new NoteCategoryResourceCollection($data);
     }
 
     public function store(StoreNoteCategoryRequest $request): NoteCategoryResource
     {
-        $category = NoteCategory::create($request->getWithUserId());
-        return (new NoteCategoryResource($category))->additional(['success' => $category->exists]);
-    }
-
-    public function show(ShowCategoryRequest $request, NoteCategory $category): NoteCategoryResource
-    {
+        $category = $this->noteCategoryService->save(new NoteCategory(), $request->withUserId()->validated());
         return new NoteCategoryResource($category);
     }
 
-    public function update(UpdateNoteCategoryRequest $request, NoteCategory $category): NoteCategoryResource
+    /**
+     * @throws AuthorizationException
+     */
+    public function show(NoteCategory $category): NoteCategoryResource
     {
-        $category->update($request->validated());
-        return (new NoteCategoryResource($category))->additional(['success' => $category->wasChanged()]);
+        $this->authorize('show', $category);
+        return new NoteCategoryResource($category);
     }
 
-    public function destroy(DestroyNoteCategoryRequest $request, NoteCategory $category): JsonResponse
+    /**
+     * @throws AuthorizationException
+     * @throws ErrorException
+     */
+    public function update(UpdateNoteCategoryRequest $request, NoteCategory $category): NoteCategoryResource
     {
-        $wasDeleted = $category->delete();
-        return $this->jsonResponse(['success' => $wasDeleted]);
+        $this->authorize('update', $category);
+        $category = $this->noteCategoryService->update($category, $request->validated());
+        return new NoteCategoryResource($category);
+    }
+
+    /**
+     * @throws AuthorizationException
+     * @throws ErrorException
+     */
+    public function destroy(NoteCategory $category): AnonymousResource
+    {
+        $this->authorize('destroy', $category);
+        $this->noteCategoryService->destroy($category);
+        return new AnonymousResource(["success" => true]);
     }
 }

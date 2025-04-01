@@ -1,6 +1,6 @@
 type RouteData = {
     route: string,
-    data: Record<string, any>
+    data?: Record<string, any>
 }
 
 export type FileRouts = {

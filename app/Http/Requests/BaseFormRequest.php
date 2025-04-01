@@ -7,9 +7,12 @@ use App\Models\BaseModel;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\ValidationException;
 
 abstract class BaseFormRequest extends FormRequest
 {
+    protected bool $withUserId = false;
+
     /**
      * Handle a failed validation attempt.
      *
@@ -19,8 +22,10 @@ abstract class BaseFormRequest extends FormRequest
      */
     protected function failedValidation(Validator $validator)
     {
-        //die('look BaseFormRequest*');
-        throw new HttpResponseException(response()->json(['errors' => $validator->errors()], 422));
+        throw new ValidationException(
+            $validator,
+            response()->json(['errors' => $validator->errors()], 422)
+        );
     }
 
     /*public function dto(array $extraData = []): DTO
@@ -33,18 +38,47 @@ abstract class BaseFormRequest extends FormRequest
         return $this->dto($this->getWithUserId());
     }*/
 
-    public function getValidated(array $extraData = []): array
+//    public function getValidated(array $extraData = []): array
+//    {
+//        return array_merge($this->validated(), $extraData);
+//    }
+//
+//    public function getWithUserId(): array
+//    {
+//        return $this->getValidated(['user_id' => $this->user()->id]);
+//    }
+//
+//    protected function verifyUser(?BaseModel $model): bool
+//    {
+//        return $model && $model->user_id === $this->getUserId();
+//    }
+//
+//    protected function getUserId(): ?int
+//    {
+//        return auth()->id();
+//    }
+
+    public function withUserId()
     {
-        return array_merge($this->validated(), $extraData);
+        $this->withUserId = true;
+
+        $this->merge([
+            'user_id' => $this->user()->id
+        ]);
+
+        return $this;
     }
 
-    public function getWithUserId(): array
+    public function validated($key = null, $default = null): array
     {
-        return $this->getValidated(['user_id' => $this->user()->id]);
+        $validated = parent::validated($key, $default);
+
+        if ($this->withUserId && $this->user()) {
+            $validated['user_id'] = $this->user()->id;
+        }
+
+        return $validated;
     }
 
-    protected function verifyUser(?BaseModel $model): bool
-    {
-        return $model && $model->user_id === auth()->id();
-    }
+
 }

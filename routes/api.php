@@ -1,10 +1,10 @@
 <?php
 
 use App\Modules\Auth\Http\Controllers\Shared\AuthController;
+use App\Modules\FileStorage\Http\Controllers\User\FileStorageController;
 use App\Modules\Note\Http\Controllers\User\NoteCategoryController;
 use App\Modules\Note\Http\Controllers\User\NoteController;
 //use App\Modules\Product\Http\Controllers\User\ProductController;
-use App\Modules\Note\Http\Controllers\User\NoteFileController;
 use App\Modules\Patient\Http\Controllers\PatientController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\JwtMiddleware;
@@ -19,12 +19,8 @@ Route::middleware([JwtMiddleware::class])->group(function () {
     Route::get('users', [AuthController::class, 'users']);
 
 
-
-    Route::prefix('notes/{note}/files')->group(function () {
-        Route::post('/', [NoteFileController::class, 'store']);
-        Route::delete('/', [NoteFileController::class, 'destroy']);
-        Route::post('/tg', [NoteFileController::class, 'tg']);
-    });
+    Route::delete('files/{file}', [FileStorageController::class, 'delete']);
+    Route::post('notes/{note}/files', [NoteController::class, 'storeFile']);
 
     Route::patch('notes/{note}/add-categories', [NoteController::class, 'addCategories']);
 

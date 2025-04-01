@@ -30,20 +30,16 @@ export const SearchInput: React.FC<SearchInputProps> = ({ route, placeholder, va
 
     const fetchNameById = async (id: string) => {
         setLoading(true);
-        try {
-            //const response = await axios.get(route, { params: { id } });
-            const response = await api.safeRequest(route, {id: id});
 
-            if (response.data.success && response.data.length > 0) {
-                const item = response.data[0]; // Берём первый элемент массива
-                setOptions([{ value: item.id.toString(), label: item.name }]);
-                setSelectedValue(item.id.toString());
-            }
-        } catch (error) {
-            console.error('Failed to fetch item by ID:', error);
-        } finally {
-            setLoading(false);
+        const response = await api.safeRequest(route, {id: id});
+        if (response.success && response.data.length > 0) {
+            const item = response.data[0]; // Берём первый элемент массива
+            setOptions([{ value: item.id.toString(), label: item.name }]);
+            setSelectedValue(item.id.toString());
         }
+
+        setLoading(false);
+
     };
 
     const handleSearch = async (searchText: string) => {
@@ -53,24 +49,21 @@ export const SearchInput: React.FC<SearchInputProps> = ({ route, placeholder, va
         }
 
         setLoading(true);
-        try {
-            //const response = await axios.get(route, { params: { search: searchText } });
 
-            const response = await api.safeRequest(route, { search: searchText });
+        //const response = await axios.get(route, { params: { search: searchText } });
 
+        const response = await api.safeRequest(route, { search: searchText });
 
-            if (response.data.success) {
-                const fetchedOptions = response.data.data.map((item: any) => ({
-                    value: item.id.toString(),
-                    label: item.name,
-                }));
-                setOptions(fetchedOptions);
-            }
-        } catch (error) {
-            console.error('Failed to search items:', error);
-        } finally {
-            setLoading(false);
+        if (response.success) {
+            const fetchedOptions = response.data.data.map((item: any) => ({
+                value: item.id.toString(),
+                label: item.name,
+            }));
+            setOptions(fetchedOptions);
         }
+
+        setLoading(false);
+
     };
 
     const handleChange = (newValue: string) => {

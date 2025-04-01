@@ -32,8 +32,8 @@ export const NoteViewPage: React.FC = () => {
             if (!noteId) return; // Проверка на undefined
 
             const noteResponse = await api.safeRequest(`notes.show`, { note_id: noteId });
-            if (noteResponse && typeof noteResponse !== 'boolean' && noteResponse.data) {
-                const noteData = noteResponse.data.data;
+            if (noteResponse.success) {
+                const noteData = noteResponse.data.note;
                 setData(noteData);
                 editor.setValue(noteData.text);
                 brcr.removeLast();
@@ -45,18 +45,28 @@ export const NoteViewPage: React.FC = () => {
         fetchData();
     }, [noteId, reset]);
 
+    useEffect(() => {
+        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+            e.preventDefault();
+            e.returnValue = ''; // Пустая строка — браузер сам покажет сообщение
+        };
+
+        if (showSaveButton) {
+            window.addEventListener('beforeunload', handleBeforeUnload);
+            return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+        }
+    }, [showSaveButton]);
+
     const saveChanges = async () => {
         setLoading(true)
         const response = await api.safeRequest(
             `notes.editContent`,
             { note_id: noteId, text: editor.getValue()}
         );
-        if (response && typeof response !== 'boolean' && response.data) {
-            if (response.data.success) {
-                message.success('Data saved successfully');
-            } else {
-                message.error('Data was')
-            }
+        if (response.success) {
+            message.success('Data saved successfully');
+        } else {
+            message.error('Data was not saved')
         }
         setLoading(false)
         setShowSaveButton(false)
@@ -85,7 +95,7 @@ export const NoteViewPage: React.FC = () => {
                 onChange={() => setShowSaveButton(true)}
                 fileRoutes={{
                     save: {route: 'notes.files.add', data: {note_id: data?.id}},
-                    delete: {route: 'notes.files.delete', data: {note_id: data?.id}}
+                    delete: {route: 'files.delete'}
                 }}
             />
 

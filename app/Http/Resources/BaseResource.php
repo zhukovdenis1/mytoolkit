@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 
 abstract class BaseResource extends JsonResource
 {
+
     /**
      * Transform the resource into an array.
      *
@@ -35,6 +36,13 @@ abstract class BaseResource extends JsonResource
 //        );
 //
 //    }
+
+    public function with(Request $request)
+    {
+        return [
+            'api' => true,
+        ];
+    }
 
     public function withTimeStamps(array $data, Request $request): array
     {

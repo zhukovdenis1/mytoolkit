@@ -4,84 +4,131 @@ declare(strict_types=1);
 
 namespace App\Modules\Note\Http\Controllers\User;
 
+use App\Exceptions\ErrorException;
 use App\Http\Controllers\BaseController;
-use App\Modules\Note\Http\Requests\UpdateContentNoteRequest;
+use App\Http\Resources\AnonymousResource;
+use App\Modules\FileStorage\Http\Requests\StoreFileRequest;
+use App\Modules\FileStorage\Services\FileStorageService;
 use App\Modules\Note\Http\Requests\User\AddCategoriesToNoteRequest;
-use App\Modules\Note\Http\Requests\User\DestroyNoteRequest;
 use App\Modules\Note\Http\Requests\User\DropDownNoteRequest;
 use App\Modules\Note\Http\Requests\User\SearchNoteRequest;
-use App\Modules\Note\Http\Requests\User\TreeNoteRequest;
-use App\Modules\Note\Models\Note;
-use App\Modules\Note\Services\NoteService;
 use App\Modules\Note\Http\Requests\User\StoreNoteRequest;
+use App\Modules\Note\Http\Requests\User\TreeNoteRequest;
+use App\Modules\Note\Http\Requests\User\UpdateContentNoteRequest;
 use App\Modules\Note\Http\Requests\User\UpdateNoteRequest;
 use App\Modules\Note\Http\Resources\User\NoteResource;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use App\Http\Resources\AnonymousResource;
+use App\Modules\Note\Http\Resources\User\NoteResourceCollection;
+use App\Modules\Note\Models\Note;
+use App\Modules\Note\Services\NoteService;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class NoteController extends BaseController
 {
-    protected NoteService $noteService;
+    public function __construct(private readonly NoteService $noteService) {}
 
-    public function __construct(NoteService $noteService)
+    public function index(SearchNoteRequest $request): NoteResourceCollection
     {
-        $this->noteService = $noteService;
-    }
-
-    public function index(SearchNoteRequest $request): AnonymousResourceCollection
-    {
-        return $this->noteService->findNotes($request->getWithUserId());
+        $notes = $this->noteService->findNotesPaginated(
+            $request->withUserId()->validated()
+        );
+        return new NoteResourceCollection($notes);
     }
 
     public function getDropDown(DropDownNoteRequest $request): AnonymousResource
     {
-        return new AnonymousResource($this->noteService->getDropDownNotes($request->getWithUserId()));
+        return new AnonymousResource(
+            $this->noteService->getDropDownNotes(
+                $request->withUserId()->validated()
+            )
+        );
     }
 
-    public function tree(TreeNoteRequest $request): array
+    public function tree(TreeNoteRequest $request): AnonymousResource
     {
-        return ['data' => $this->noteService->tree($request->getWithUserId())];
+        return new AnonymousResource(
+            $this->noteService->tree(
+                $request->withUserId()->validated()
+            )
+        );
     }
 
-    public function store(StoreNoteRequest $request): array //NoteResource
+    public function store(StoreNoteRequest $request): NoteResource
     {
-        $data = $this->noteService->createNote($request->getWithUserId());
-        //return (new NoteResource($data['note']))->additional(['success' => $data['success']]);
-        return $data;
+        $note = $this->noteService->create(
+            $request->withUserId()->validated()
+        );
+        return new NoteResource($note);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function show(int $id): NoteResource
     {
         //$note = Note::with('categories')->findOrFail($id);
         $note = Note::with('categories:id')->findOrFail($id);
-        $this->abortWrongUser($note);
+        $this->authorize('show', $note);
         return new NoteResource($note);
     }
 
-    public function update(UpdateNoteRequest $request, Note $note): array// NoteResource
+    /**
+     * @throws AuthorizationException
+     * @throws ErrorException
+     */
+    public function update(UpdateNoteRequest $request, Note $note): NoteResource
     {
-        $data = $this->noteService->updateNote($request->validated(), $note);
-        //return  (new NoteResource($data['note']))->additional(['success' => $data['success']]);
-        return $data;
+        $this->authorize('update', $note);
+        $note = $this->noteService->update(
+            $note,
+            $request->validated()
+        );
+        return new NoteResource($note);
     }
 
-    public function updateContent(UpdateContentNoteRequest $request, Note $note): array// NoteResource
+    /**
+     * @throws AuthorizationException
+     * @throws ErrorException
+     */
+    public function updateContent(UpdateContentNoteRequest $request, Note $note): NoteResource
     {
-        $data = $this->noteService->updateNoteContent($request->validated(), $note);
-        return  $data;
+        $this->authorize('update', $note);
+        $note = $this->noteService->updateContent(
+            $request->validated(),
+            $note
+        );
+        return new NoteResource($note);
     }
 
-    public function destroy(DestroyNoteRequest $request, Note $note): JsonResponse
+    /**
+     * @throws ErrorException
+     * @throws AuthorizationException
+     */
+    public function destroy(Note $note): AnonymousResource
     {
-        $wasDeleted = $note->delete();
-        return $this->jsonResponse(['success' => $wasDeleted]);
+        $this->authorize('destroy', $note);
+        $this->noteService->destroy($note);
+        return new AnonymousResource(["success" => true]);
     }
 
-    public function addCategories(AddCategoriesToNoteRequest $request, Note $note): JsonResponse
+    /**
+     * @throws AuthorizationException
+     */
+    public function addCategories(AddCategoriesToNoteRequest $request, Note $note): NoteResource
     {
+        $this->authorize('update', $note);
         $categoryIds = $request->category_ids;
         $note->categories()->syncWithoutDetaching($categoryIds);
-        return $this->jsonResponse($note->load('categories')->toArray());
+        //return $this->jsonResponse($note->load('categories')->toArray());
+        return new NoteResource($note);
+    }
+
+    /**
+     * @throws ErrorException
+     * @throws AuthorizationException
+     */
+    public function storeFile(StoreFileRequest $request, Note $note, FileStorageService $service): AnonymousResource
+    {
+        $this->authorize('storeFile', $note);
+        return new AnonymousResource($service->saveByRequest($request, (int)$note->id, 'note'));
     }
 }

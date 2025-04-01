@@ -11,10 +11,6 @@ use App\Http\Requests\BaseSearchRequest;
 class SearchNoteRequest extends BaseSearchRequest
 {
     protected array $sortableFields = ['id', 'title'];
-    public function authorize(): bool
-    {
-        return true;
-    }
 
     public function rules(): array
     {

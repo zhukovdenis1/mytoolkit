@@ -19,9 +19,12 @@ class JsonUnescapeUnicode
     {
         $response = $next($request);
 
-        // Проверяем, что ответ - это JSON
         if ($response instanceof JsonResponse) {
             $response->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+
+//            $data = $response->getData();
+//            $data->api = true;
+//            $response->setData($data);
         }
 
         return $response;

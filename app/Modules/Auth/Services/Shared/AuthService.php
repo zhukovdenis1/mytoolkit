@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Auth\AuthenticationException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Validator;
+//use Illuminate\Support\Facades\Auth; // для web авторизации
 
 class AuthService extends BaseService
 {
@@ -23,6 +24,8 @@ class AuthService extends BaseService
         if (!$accessToken = auth()->attempt($credentials)) {
             throw new AuthenticationException('Invalid credentials');
         }
+
+        //Auth::guard('web')->login(auth()->user()); // для web авторизации
 
         $refreshToken = Str::random(64);
 
@@ -69,6 +72,11 @@ class AuthService extends BaseService
         }
         $token->delete();
         //$this->finishCurrentSession();
+
+        // Выход из веб-сессии
+//        if ($userId) {
+//            Auth::guard('web')->logout();
+//        }
 
         return ['message' => 'Successfully logged out'];
     }

@@ -39,19 +39,20 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
             let noteResponse;
             if (isEditPage) {
                 noteResponse = await api.safeRequest(`notes.show`, { note_id: noteId });
-                if (noteResponse && typeof noteResponse !== 'boolean' && noteResponse.data) {
-                    form.setFieldsValue(noteResponse.data.data);
-                    editor.setValue(noteResponse.data.data.text);
+                if (noteResponse.success) {
+                    form.setFieldsValue(noteResponse.data.note);
+                    editor.setValue(noteResponse.data.note.text);
                 }
             } else {
                 form.setFieldsValue(modal.data);
             }
             modal.setLoading(false);
+
             const categoriesTreeResponse = await api.safeRequest("notes.categories.tree");
-            if ((noteResponse && noteResponse.data.success === false) || categoriesTreeResponse.data.success === false) {
+            if (!noteResponse.success || !categoriesTreeResponse.success) {
                 modal.close();
             }
-            if (categoriesTreeResponse && typeof categoriesTreeResponse !== 'boolean' && categoriesTreeResponse.data) {
+            if (categoriesTreeResponse.success) {
                 setCategoriesTree(convertTreeData(categoriesTreeResponse.data.data, { id: 'value', name: 'title' }));
             }
         };
@@ -65,7 +66,6 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
             ...values,
             text: editor.getValue(),
         };
-        let success = false;
 
         const response = isEditPage
             ? await api.safeRequest(`notes.edit`, {
@@ -78,13 +78,13 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
                 categories: form.getFieldValue('categories') ?? null,
             });
 
-        if (response.data.success) {
+        if (response.success) {
             message.success("Note saved successfully!");
         } else {
             message.error("Data wasn't changed");
         }
 
-        if (values.exit && success) {
+        if (values.exit && response.success) {
             exit({ reload: values.exit == 2 });
         } else {
             reload();

@@ -1,4 +1,0 @@
-GET {{url}}/api/notes/getDropDown?search=111&id=28
-Accept: application/json
-Authorization: Bearer {{access_token}}
-Content-Type: application/json

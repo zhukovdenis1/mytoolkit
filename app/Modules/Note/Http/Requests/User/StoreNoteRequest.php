@@ -9,10 +9,6 @@ use App\Http\Requests\BaseFormRequest;
 
 class StoreNoteRequest extends BaseFormRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
 
     public function rules(): array
     {

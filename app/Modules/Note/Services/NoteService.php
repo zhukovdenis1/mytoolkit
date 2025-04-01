@@ -4,56 +4,55 @@ declare(strict_types=1);
 
 namespace App\Modules\Note\Services;
 
-use App\DTOs\DTO;
-use App\DTOs\DTOInterface;
-use App\Modules\Note\DTOs\User\CreateNoteResponseDTO;
-use App\Modules\Note\Http\Resources\User\NoteResource;
+use App\Exceptions\ErrorException;
+use App\Models\BaseModel;
 use App\Modules\Note\Models\Note;
-use App\Modules\Note\DTOs\NoteDTO;
 use App\Modules\Note\Models\NoteCategory;
-use App\Modules\Note\DTOs\User\CreateNoteRequestDTO;
-use App\Modules\Note\Models\NoteNoteCategory;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Services\BaseService;
+use Faker\Provider\Base;
 use Illuminate\Database\Eloquent\Builder;
 
-class NoteService
+class NoteService extends BaseService
 {
-    public function createNote(array $validatedData): array
+    public function create(array $validatedData): Note
     {
         $note =  Note::create($validatedData);
 
         $note->categories()->sync($validatedData['categories']);
 
         //$note->categories = NoteNoteCategory::where('note_id', $note->id)->pluck('note_category_id')->toArray();
-
-        return [
-            //'note' => $note,
-            'success' => $note->exists
-        ];
+        //$note->refresh();
+        return $note;
     }
 
-    public function updateNote(array $validatedData, Note $note): array
+    public function update(BaseModel $model, array $attributes): BaseModel
     {
-        $note->update($validatedData);
+        $model->update($attributes);
 
         $categoriesChanged = false;
-        if (isset($validatedData['categories'])) {
-            $synced = $note->categories()->sync($validatedData['categories']);
+        if (isset($attributes['categories'])) {
+            $synced = $model->categories()->sync($attributes['categories']);
             $categoriesChanged = !empty($synced['attached']) || !empty($synced['detached']) || !empty($synced['updated']);
         }
 
-        return [
-            'success' => $note->wasChanged() || $categoriesChanged
-        ];
+        if (!$model->wasChanged() && !$categoriesChanged) {
+            throw new ErrorException('Data was not changed');
+        }
+
+        //$note->refresh();
+
+        return $model;
     }
 
-    public function updateNoteContent(array $validatedData, Note $note): array
+    public function updateContent(array $validatedData, Note $note): Note
     {
         $note->update($validatedData);
 
-        return [
-            'success' => $note->wasChanged()
-        ];
+        if (!$note->wasChanged()) {
+            throw new ErrorException('Data was not changed');
+        }
+
+        return $note;
     }
 
     public function getDropDownNotes(array $validatedData): array
@@ -123,7 +122,7 @@ class NoteService
         return $tree;
     }
 
-    public function findNotes(array $validatedData): AnonymousResourceCollection
+    public function findNotesPaginated(array $validatedData): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         $notes = Note::with('categories:id,name')
             ->where('user_id', $validatedData['user_id']);
@@ -176,13 +175,23 @@ class NoteService
         //Пагинация
         $notesPaginated = $notes->paginate($limit, ['*'], 'page', $page);
 
-        return NoteResource::collection($notesPaginated);
-    }
+        return $notesPaginated;
 
+//        return [
+//            'items' => $notesPaginated->items(),
+//            'current_page' => $notesPaginated->currentPage(),
+//            'per_page' => $notesPaginated->perPage(),
+//            'total' => $notesPaginated->total()
+//
+//        ];
+
+    }
 
 //    public function assignCategories(Note $note, array $categoryIds): void
 //    {
 //        $categories = NoteCategory::find($categoryIds);
 //        $note->categories()->sync($categories);
 //    }
+
+
 }

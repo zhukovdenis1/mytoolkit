@@ -1,8 +1,18 @@
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosError, InternalAxiosRequestConfig, isAxiosError } from "axios";
 import Cookies from "js-cookie";
 import routes from "@/services/apiRoutes";
 import { message } from "ui";
 import config from '@/config/config';
+
+interface ResultType {
+    success: boolean;
+    status?: number;
+    data: {
+        success: boolean,
+        errors: {},
+        [key: string]: any;
+    };
+}
 
 export const apiAxios = axios.create({
     baseURL: config.apiBaseUrl,
@@ -84,7 +94,11 @@ const resolveRoute = (routeKey: string, params: Record<string, string | number> 
     return { path, params: queryParams, method };
 };
 
+
+
+
 export const api = {
+
     request: (route: string, data = {}, formData = {}) => {
         const config: any = {};
 
@@ -139,43 +153,62 @@ export const api = {
         }
     },
 
-    safeRequest: async (route: string, data = {}, formData = {}) => {
-        let result;
+    safeRequest: async (route: string, data = {}, formData = {}): Promise<ResultType> => {
+        let result: ResultType;
         try {
-            //console.log(route, data, formData);
             const response = await api.request(route, data, formData);
 
-            const success = (
-                (!response.data.errors || response.data.errors.length === 0) &&
-                !response.data.message
-            );
-
+            const success = (response.status >= 200 && response.status < 300) && (response.data.api == true);
             result =  {
-                ...response,
+                success: success,
+                status: response.status,
                 data: {
-                    errors: false, warnings: false, success: success, data: {}, message: '',
+                    errors: null,
+                    success: null,
                     ...response.data,
-
                 }
             };
         } catch (err) {
             console.error("API Request Error:", err);
-            //message.error("Error while requesting data");
-            result = {data: {errors: true, warnings: false, success: false, data: {}, message: ''}};
+
+            if (isAxiosError(err)) {
+                result = {
+                    success: false,
+                    status: err.response?.status,
+                    data: {
+                        errors: true,
+                        success: false,
+                        ...err.response?.data
+                    }
+                };
+            } else {
+                result = {
+                    success: false,
+                    status: 500,
+                    data: {
+                        errors: true,
+                        success: false,
+                        message: 'Unknown error occurred'
+                    }
+                };
+            }
+
+
         }
 
         return result;
     },
 
-    safeRequestWithAlert: async (route: string, data = {}, formData = {}) => {
+    safeRequestWithAlert: async (route: string, data = {}, formData = {}): Promise<ResultType> => {
+
         const result =  await api.safeRequest(route, data, formData);
 
-        if (Array.isArray(result.data.errors) && result.data.errors.length) {
-            message.error(`${result.data.errors.map((error: string) => `${error}`).join('\r\n')}`);
-        }
+        if (result.data.errors) {
+            const allErrors = Object.values(result.data.errors)
+                .flat()
+                .filter(Boolean);
 
-        if (Array.isArray(result.data.warnings) && result.data.warnings.length) {
-            message.warning(`${result.data.warnings.map((warning: string) => `${warning}`).join('\r\n')}`);
+            allErrors.forEach((error) => message.error(error));
         }
 
         return result;

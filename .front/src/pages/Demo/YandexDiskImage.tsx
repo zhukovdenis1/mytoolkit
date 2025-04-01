@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 
-const CLIENT_ID = "cfccbe2a17574a87ab4379df39c18007";
-const REDIRECT_URI = "https://mytoolkit.loc:3000/demo/yandex";
+// const CLIENT_ID = "cfccbe2a17574a87ab4379df39c18007";
+// const REDIRECT_URI = "https://mytoolkit.loc:3000/demo/yandex";
 
 const YandexDiscImage = () => {
     const [publicUrl, setPublicUrl] = useState<string>("");

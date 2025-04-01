@@ -8,11 +8,6 @@ use App\Http\Requests\BaseFormRequest;
 
 class UpdateNoteRequest extends BaseFormRequest
 {
-    public function authorize(): bool
-    {
-        return $this->verifyUser($this->route('note'));
-    }
-
     public function rules(): array
     {
         return [

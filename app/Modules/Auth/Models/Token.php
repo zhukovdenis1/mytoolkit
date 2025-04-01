@@ -2,7 +2,9 @@
 
 namespace App\Modules\Auth\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Token extends Model
 {
@@ -26,4 +28,9 @@ class Token extends Model
         'created_at' => 'datetime',
         'used' => 'boolean',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -108,8 +108,8 @@ export const NoteSearchPage: React.FC<NoteSearchPageProps> = ({ action = '' }) =
         }
 
         const response = await api.safeRequest("notes.search", params);
-        if (response.data.success) {
-            setData(response.data.data);
+        if (response.success) {
+            setData(response.data.notes);
             setPagination((prev) => ({
                 ...prev,
                 current: response.data.meta.current_page,
@@ -153,7 +153,7 @@ export const NoteSearchPage: React.FC<NoteSearchPageProps> = ({ action = '' }) =
 
     const deleteNote = async (noteId: number) => {
         const response = await api.safeRequest(`notes.delete`, { note_id: noteId });
-        if (response && typeof response !== 'boolean' && response.data?.success) {
+        if (response.success) {
             reload();
             message.success('Note was deleted successfully');
         } else {

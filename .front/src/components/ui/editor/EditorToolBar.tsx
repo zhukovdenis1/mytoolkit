@@ -1,6 +1,6 @@
 import React from "react";
 import {EditorHandle} from "./Editor";
-import {Space, Dropdown, Menu} from "ui"
+import {Space, Dropdown, Confirmable} from "ui"
 import {ArrowUpOutlined, ArrowDownOutlined, PlusOutlined, DeleteOutlined, VideoCameraOutlined, PictureOutlined, CodeOutlined, EyeOutlined} from "./icons"
 
 
@@ -21,17 +21,20 @@ const EditorToolBar: React.FC<EditorToolBarProps> = ({ boxKey, boxType, editor, 
         editor?.edit(boxKey, { type: "code", data: { language } });
     };
 
-    // Меню для выпадающего списка "Code"
-    const codeMenu = (
-        <Menu>
-            <Menu.Item key="html" onClick={() => handleCodeMenuClick("html")}>
-                HTML
-            </Menu.Item>
-            <Menu.Item key="php" onClick={() => handleCodeMenuClick("php")}>
-                PHP
-            </Menu.Item>
-        </Menu>
-    );
+    const codeMenu = ({
+        items: [
+            {
+                key: "html",
+                label: "HTML",
+                onClick: () => handleCodeMenuClick("html"),
+            },
+            {
+                key: "php",
+                label: "PHP",
+                onClick: () => handleCodeMenuClick("php"),
+            }
+        ]
+    });
 
     return (
         <div className="editor-tooltip">
@@ -45,7 +48,7 @@ const EditorToolBar: React.FC<EditorToolBarProps> = ({ boxKey, boxType, editor, 
                 >
                     <EyeOutlined />
                 </button>
-                <Dropdown overlay={codeMenu} trigger={["click"]}>
+                <Dropdown menu={codeMenu} trigger={["click"]}>
                     <button
                         type="button"
                         title="Code"
@@ -92,11 +95,11 @@ const EditorToolBar: React.FC<EditorToolBarProps> = ({ boxKey, boxType, editor, 
                     <PlusOutlined/>
                 </button>
 
-                <button onClick={() => {
-                    editor?.delete(boxKey)
-                }} type="button" title="Delete this block">
+                <Confirmable onConfirm={() => editor?.delete(boxKey)}>
+                <button type="button" title="Delete this block">
                     <DeleteOutlined/>
                 </button>
+                </Confirmable>
 
                 {/*<button onClick={() => {*/}
                 {/*    editor.beautify(boxKey)*/}

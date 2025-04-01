@@ -7,13 +7,13 @@ namespace App\Modules\FileStore\Http\Controllers\User;
 use App\Http\Controllers\BaseController;
 use App\Modules\FileStore\Http\Requests\User\StoreFileRequest;
 use App\Modules\FileStore\Http\Resources\User\FileResource;
-use App\Modules\FileStore\Services\FileStoreService;
+use App\Modules\FileStore\Services\FileStorageService;
 
 class FileStoreController extends BaseController
 {
-    protected FileStoreService $fsService;
+    protected FileStorageService $fsService;
 
-    public function __construct(FileStoreService $fsService)
+    public function __construct(FileStorageService $fsService)
     {
         $this->fsService = $fsService;
     }

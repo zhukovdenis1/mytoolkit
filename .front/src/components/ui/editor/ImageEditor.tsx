@@ -1,16 +1,18 @@
-import React, {useEffect, useState} from "react";
-import {Button, Input, Space, Upload, message} from "ui";
+import React, {useContext, useEffect, useState} from "react";
+import {Button, Input, Select, Space, Upload, message} from "ui";
 import config from '@/config/config';
 import {PaperClipOutlined, UploadOutlined} from "@ui/icons"
+import { FolderOutlined, SendOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import {api} from "api"
 import {UploadFile} from "antd";
 import {FileRouts} from './types'
+import {AuthContext} from "@/modules/auth/AuthProvider.tsx";//времменное решение
 
 export type ImageEditorData = {
     src: string;
     width?: string;
     height?: string;
-    storeId?: number;
+    fileId?: number;
     origWidth?: number;
     origHeight?: number;
     size?: number;
@@ -25,8 +27,10 @@ type ImageEditorProps = {
     routes: FileRouts;
 };
 
+
 const ImageEditor: React.FC<ImageEditorProps> = ({ data, onChange, disabled, mode, routes }) => {
     disabled;
+    const authContext = useContext(AuthContext);
 
     const initialFile: UploadFile<any> = {
         uid: '-1', // Уникальный идентификатор
@@ -37,37 +41,45 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ data, onChange, disabled, mod
     };
 
     const [link, setLink] = useState('');
+    const [isPrivate, setIsPrivate] = useState(0);
+    const [storageId, setstorageId] = useState(3);
     const [file, setFile] = useState<UploadFile<any>>(initialFile);
-
     const [image, setImage] = useState(data);
 
     useEffect(() => {
         if (data != image) {
             onChange(image)
         }
+        if (authContext?.user?.id === 1001) {
+            setstorageId(1);
+        }
+
     }, [image]);
 
 
+    //const imgSrc = getImgSrc(image);
     const imgSrc = getImgSrc(image);
     const img = imgSrc
         ? <img alt="" width={image.width ?? ''} height={image.height ?? ''} src={imgSrc} />
         : '';
 
     const uploadAndUpdateImg = async () => {
-        const response = await uploadImg(link, file, routes);
+        const response = await uploadImg(storageId, isPrivate, link, file, routes);
+
         if (response.success) {
-            const data = response.data
+            const data = response.data?.data;
+            //console.log(data)
             setImage({
                 ...image,
-                src: data.path,
-                origWidth: data.width,
-                origHeight: data.height,
-                size: data.size,
-                storeId: data.store_id,
+                src: data?.url_inline,
+                origWidth: data?.extra.width,
+                origHeight: data?.extra.height,
+                size: data?.size,
+                fileId: data?.id,
             })
         } else {
-            setFile(initialFile);
-            setLink('');
+            // setFile(initialFile);
+            // setLink('');
         }
     };
 
@@ -78,7 +90,7 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ data, onChange, disabled, mod
                 <Space wrap={true}>
                     <Input
                         placeholder="URL"
-                        disabled={!!image.storeId}
+                        disabled={!!image.src}
                         value={image.src}
                         onChange={(e) => {setImage({...image, src: e.target.value})}}
                     />
@@ -94,8 +106,34 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ data, onChange, disabled, mod
                     />
                 </Space>
 
-                {image.storeId ? '' : (
+                {image.src ? '' : (
                     <Space wrap={true}>
+                        {authContext?.user?.id !== 1001 ? (<Input type="hidden" value="3" />) : (
+                            <Select
+                                title="Store type"
+                                value={storageId.toString()}
+                                onChange={(value) => setstorageId(parseInt(value))}
+                            >
+                                <Select.Option value="1" title="hosting">
+                                    <FolderOutlined />
+                                </Select.Option>
+                                <Select.Option value="2" title="telegram">
+                                    <SendOutlined />
+                                </Select.Option>
+                            </Select>
+                        )}
+                        <Select
+                            title="Publicity"
+                            value={isPrivate ? "1" : "0"}
+                            onChange={(value) => setIsPrivate(value == "1" ? 1 : 0)}
+                        >
+                            <Select.Option value="1" title="private">
+                                <LockOutlined />
+                            </Select.Option>
+                            <Select.Option value="0" title="public">
+                                <UnlockOutlined />
+                            </Select.Option>
+                        </Select>
                         <Button
                             type="dashed"
                             htmlType="button"
@@ -131,26 +169,33 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ data, onChange, disabled, mod
 }
 
 
-const uploadImg = async (link: string, file: UploadFile<any>, routes: FileRouts) => {
+const uploadImg = async (storageId: number, isPrivate: number, link: string, file: UploadFile<any>, routes: FileRouts) => {
 
     if (!link && !file) {
         message.error('Link or file required');
-        return;
+        return {
+            success: false,
+            data: null
+        };
     }
     const formData = file?.originFileObj ? {file: file.originFileObj} : {};
-    //const data = {store_id: 1, note_id: 3, link: file?.originFileObj ? '' : link, type: 'image'}
-    const data = {store_id: 1,...routes.save.data, link: file?.originFileObj ? '' : link, type: 'image'}
+    //const data = {storage_id: 1, note_id: 3, link: file?.originFileObj ? '' : link, type: 'image'}
+    const data = {
+        storage_id: storageId,
+        ...routes.save.data,
+        link: file?.originFileObj ? '' : link,
+        private: isPrivate,
+        type: 'image'
+    }
     //const response = await api.safeRequest("notes.files.add", data, formData);
-    const response = await api.safeRequestWithAlert(routes.save.route, data, formData);
-
-    return response.data;
+    return await api.safeRequestWithAlert(routes.save.route, data, formData);
 };
 
 const getImgSrc = (image: ImageEditorData): string => {
     var src = '';
     if (image.src) {
-        if (image.storeId == 1) {
-            src = `${config.baseUrl}/${image.src}`;
+        if (image.src[0] == '/') {
+            src = `${config.baseUrl}${image.src}`;
         } else {
             src = image.src;
         }

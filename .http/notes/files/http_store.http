@@ -1,10 +1,11 @@
-POST {{url}}/api/notes/3/files
+POST {{url}}/api/notes/60/files
 Accept: application/json
 Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
 {
-    "store_id": 1,
+    "storage_id": 2,
+    "private": 1,
     "type": "image",
     "link": "https://disk.yandex.ru/i/1l27j1wXGp03BA"
 }

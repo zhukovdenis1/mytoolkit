@@ -9,6 +9,7 @@ use App\Http\Resources\BaseResource;
 
 class NoteResource extends BaseResource
 {
+    public static $wrap = 'note';
     public function toArray($request): array
     {
         $data = parent::toArray($request);

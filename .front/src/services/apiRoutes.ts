@@ -20,7 +20,7 @@ const apiRoutes: Record<string, [string, string]> = {
     "notes.categories.add": ["notes/categories", "post"],
     "notes.categories.delete": ["notes/categories/:category_id", "delete"],
     "notes.files.add": ["notes/:note_id/files", "post"],
-    "notes.files.delete": ["notes/:note_id/files", "delete"]
+    "files.delete": ["files/:file_id", "delete"]
 };
 
 export default apiRoutes;

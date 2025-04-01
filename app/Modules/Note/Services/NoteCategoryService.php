@@ -4,9 +4,28 @@ declare(strict_types=1);
 
 namespace App\Modules\Note\Services;
 use App\Modules\Note\Models\NoteCategory;
+use App\Services\BaseService;
 
-class NoteCategoryService
+class NoteCategoryService extends BaseService
 {
+
+    public function __construct(NoteCategory $category)
+    {
+        $this->model = $category;
+    }
+    public function find(array $validatedData): array
+    {
+        $categories = NoteCategory::where('user_id', $validatedData['user_id']);
+        if ($search = $validatedData['search']) {
+            $categories->where('name', 'like', '%' . $search . '%');
+        }
+
+        $categories->where('parent_id', $validatedData['parent_id']);
+
+        return $categories->get();
+    }
+
+
     public function tree(int $userId): array
     {
         $categories = NoteCategory::where('user_id', $userId)
