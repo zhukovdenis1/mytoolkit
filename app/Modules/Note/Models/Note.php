@@ -48,10 +48,20 @@ class Note extends BaseModel
         'id' => 'integer',
         'parent_id' => 'integer',
         'user_id' => 'integer',
-        'text' => 'array',
+        'text' => 'string',//array
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+//    public function getTextAttribute($value)
+//    {
+//        return is_string($value) ? json_decode($value, true) : $value;
+//    }
+//
+//    public function setTextAttribute($value)
+//    {
+//        $this->attributes['text'] = is_string($value) ? $value : json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+//    }
 
     public function categories(): BelongsToMany
     {
