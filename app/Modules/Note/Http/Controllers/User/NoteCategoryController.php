@@ -30,9 +30,9 @@ class NoteCategoryController extends BaseController
         return new NoteCategoryResourceCollection($categories->get());
     }
 
-    public function tree(): AnonymousResource
+    public function tree(): NoteCategoryResourceCollection
     {
-        return new AnonymousResource($this->noteCategoryService->tree(auth()->id()));
+        return new NoteCategoryResourceCollection($this->noteCategoryService->tree(auth()->id()));
     }
 
     public function index(SearchNoteCategoryRequest $request): NoteCategoryResourceCollection

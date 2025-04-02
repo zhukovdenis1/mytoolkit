@@ -49,7 +49,7 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
             modal.setLoading(false);
 
             const categoriesTreeResponse = await api.safeRequest("notes.categories.tree");
-            if (!noteResponse.success || !categoriesTreeResponse.success) {
+            if ((noteResponse && !noteResponse.success) || !categoriesTreeResponse.success) {
                 modal.close();
             }
             if (categoriesTreeResponse.success) {

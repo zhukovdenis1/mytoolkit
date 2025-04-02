@@ -16,8 +16,8 @@ export const NoteCategoryListPage: React.FC = () => {
 
     const fetchCategories = async () => {
         const response = await api.safeRequest("notes.categories.tree");
-        if (response.data.success) {
-            const data = convertTreeData(response.data.data || [], { id: "key", name: "title" });
+        if (response.success) {
+            const data = convertTreeData(response.data.categories || [], { id: "key", name: "title" });
             setOriginalTreeData(data);
             searchInTree('', data);
         }
@@ -176,7 +176,7 @@ const nodeHtml = (id: string, title: React.ReactNode, reload: () => void = () =>
 
 const deleteCategory = async (categoryId: string, reload: () => void) => {
     const response = await api.safeRequest(`notes.categories.delete`, { category_id: categoryId });
-    if (response && typeof response !== 'boolean' && response.data && response.data.success) {
+    if (response.success || response.status == 404) {
         reload();
         message.success('Category was deleted successfully');
     } else {

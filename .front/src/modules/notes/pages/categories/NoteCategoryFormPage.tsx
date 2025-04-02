@@ -41,19 +41,21 @@ export const NoteCategoryFormPage: React.FC<NoteCategoryFormPageProps> = ({ moda
             let categoryResponse;
             if (isEditPage) {
                 categoryResponse = await api.safeRequest(`notes.categories.show`, { category_id: categoryId });
-                if (categoryResponse.data.success) {
-                    form.setFieldsValue(categoryResponse.data.data);
+                if (categoryResponse.success) {
+                    form.setFieldsValue(categoryResponse.data.category);
                 }
             } else if (parentId) {
                 form.setFieldValue('parent_id', parentId);
             }
             modal.setLoading(false);
             const treeResponse = await api.safeRequest("notes.categories.tree");
-            if ((categoryResponse && !categoryResponse.data.success) || !treeResponse.data.success) {
+
+            if ((categoryResponse && !categoryResponse.success) || !treeResponse.success) {
                 modal.close();
             }
-            if (treeResponse && typeof treeResponse !== 'boolean' && treeResponse.data) {
-                setCategoriesTree(convertTreeData(treeResponse.data.data, { id: "value", name: "title" }));
+
+            if (treeResponse.success) {
+                setCategoriesTree(convertTreeData(treeResponse.data.categories, { id: "value", name: "title" }));
             }
         };
 
@@ -62,7 +64,6 @@ export const NoteCategoryFormPage: React.FC<NoteCategoryFormPageProps> = ({ moda
 
     const handleSave = async (values: any) => {
         modal.setLoading(true);
-        let success = false;
 
         const response = isEditPage
             ? await api.safeRequest(`notes.categories.edit`, {
@@ -73,16 +74,13 @@ export const NoteCategoryFormPage: React.FC<NoteCategoryFormPageProps> = ({ moda
                 ...form.getFieldsValue()
             });
 
-        if (response && typeof response !== 'boolean' && response.data) {
-            success = response.data.success;
-            if (success) {
-                message.success("Category saved successfully!");
-            } else {
-                message.error("Data wasn't changed");
-            }
+        if (response.success) {
+            message.success("Category saved successfully!");
+        } else {
+            message.error("Data wasn't changed");
         }
 
-        if (values.exit && success) {
+        if (values.exit && response.success) {
             exit({ reload: values.exit == 2 });
         } else {
             reload();

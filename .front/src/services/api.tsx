@@ -208,7 +208,7 @@ export const api = {
                 .flat()
                 .filter(Boolean);
 
-            allErrors.forEach((error) => message.error(error));
+            allErrors.forEach((error) => message.error(error?.toString() ?? 'An unknown error occurred'));
         }
 
         return result;
