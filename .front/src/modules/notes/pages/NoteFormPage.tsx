@@ -53,7 +53,7 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
                 modal.close();
             }
             if (categoriesTreeResponse.success) {
-                setCategoriesTree(convertTreeData(categoriesTreeResponse.data.data, { id: 'value', name: 'title' }));
+                setCategoriesTree(convertTreeData(categoriesTreeResponse.data.categories, { id: 'value', name: 'title' }));
             }
         };
 
