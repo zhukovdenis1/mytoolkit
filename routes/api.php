@@ -18,7 +18,6 @@ Route::middleware([JwtMiddleware::class])->group(function () {
     Route::get('me', [AuthController::class, 'me']);
     Route::get('users', [AuthController::class, 'users']);
 
-
     Route::delete('files/{file}', [FileStorageController::class, 'delete']);
     Route::post('notes/{note}/files', [NoteController::class, 'storeFile']);
 

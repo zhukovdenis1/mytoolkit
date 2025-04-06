@@ -9,6 +9,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,6 +44,14 @@ class AppServiceProvider extends ServiceProvider
 
         $this->loadMigrationsFrom(base_path('app/Modules/Note/Database/Migrations'));
         $this->loadMigrationsFrom(base_path('app/Modules/FileStorage/Database/Migrations'));
+        $this->loadMigrationsFrom(base_path('app/Modules/Shop/Database/Migrations'));
+
+        $this->loadViewsFrom(app_path('Modules/Shop/Resources/views'), 'Shop');
+        // Регистрируем компоненты модуля Shop
+        Blade::anonymousComponentNamespace(
+            'Shop::components', // Путь относительно зарегистрированного views
+            'shop' // Префикс для компонентов (<x-shop::... />)
+        );
 
         // Для всех моделей в директории app/Models
 //        foreach (glob(app_path('Models/*.php')) as $modelFile) {
