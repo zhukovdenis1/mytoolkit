@@ -8,7 +8,7 @@ Route::get('/console/{command}', [ConsoleController::class, 'runCommand']);
 
 $domain = request()->getHost();
 
-if ($domain === 'deshevyi.loc') {
+if ($domain === 'deshevyi.loc' || $domain === 'deshevyi.ru') {
     require __DIR__ . '/shop.php';
 } else {
     Route::middleware([\App\Http\Middleware\WebAuthMiddleware::class])->group(function () {
