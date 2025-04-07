@@ -89,6 +89,14 @@ class DeployCommand extends Command
 
         $result = exec("php ../artisan migrate 2>&1", $r2);
 
+        exec("php ../artisan config:clear");
+        exec("php ../artisan route:clear");
+        exec("php ../artisan view:clear");
+
+        exec("php ../artisan config:cache");
+        exec("php ../artisan route:cache");
+        exec("php ../artisan view:cache");
+
         foreach ($r2 as $line) {
             $output .= $line . "\n";
         }

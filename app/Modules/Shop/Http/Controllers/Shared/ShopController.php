@@ -135,14 +135,15 @@ class ShopController extends Controller
         $size = 200;
         $data = $product['photo'];
         $img = [];
-//        for ($i = 0; $i < count($data); $i++)
-//        {
-//            if (env('APP_DEBUG')) {
-//                $img[] = '/img/1.jpg';
-//            } else {
-//                $img[] = $data[$i];
-//            }
-//        }
+        for ($i = 0; $i < count($data); $i++)
+        {
+            $img[] = $data[$i];
+            /*if (env('APP_DEBUG')) {
+                $img[] = '/img/1.jpg';
+            } else {
+                $img[] = $data[$i];
+            }*/
+        }
 
         $attachment = json_decode($product->vk_attachment, 1);
 
