@@ -29,7 +29,8 @@ export type EditorHandle = {
     debug: (key: string) => void;
     beautify: (key: string) => void;
     getValue: () => string;
-    getBoxType: (key: string) => string;
+    getBox: (key: string) => string;
+    //getBoxType: (key: string) => string;
     //onChange: () => void;
     undo: () => void;
     redo: () => void;
@@ -55,10 +56,11 @@ const useEditor = (): {
     setHistoryIndex: (value: (((prevState: number) => number) | number)) => void;
 
     getValue: () => string;
+    getBox: () => string;
     isRedoAvailable: () => boolean;
     undo: () => void;
     getHistoryIndex: () => number;
-    getBoxType: () => string;
+    //getBoxType: () => string;
     getHistory: () => Record<string, StructureItem>[];
     setValue: (value: (((prevState: string) => string) | string)) => void
 } => {
@@ -294,6 +296,10 @@ const EditorComponent: React.FC<EditorProps> = ({
         );
         if (value == '[{"type":"visual","data":{"text":""}}]') value = '';
         return value;
+    };
+
+    editor.getBox = (key: string) => {
+        return structure[key];
     };
 
     editor.setValue = (newValue) => {

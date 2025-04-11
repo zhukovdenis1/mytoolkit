@@ -3,6 +3,8 @@ import { html } from "@codemirror/lang-html";
 import { javascript } from "@codemirror/lang-javascript";
 import { css } from "@codemirror/lang-css";
 import { php } from "@codemirror/lang-php";
+import { json } from "@codemirror/lang-json";
+import { sql } from "@codemirror/lang-sql";
 import { LanguageSupport } from "@codemirror/language"; // Импортируем LanguageSupport
 
 export type CodeEditorData = {
@@ -33,6 +35,12 @@ function CodeEditor({data, onChange, disabled }: CodeEditorProps) {
             break;
         case 'php':
             extensions.push(php());
+            break;
+        case 'json':
+            extensions.push(json());
+            break;
+        case 'sql':
+            extensions.push(sql());
             break;
         default:
             extensions.push(html());

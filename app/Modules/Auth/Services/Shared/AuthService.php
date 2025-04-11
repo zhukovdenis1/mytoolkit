@@ -103,13 +103,18 @@ class AuthService extends BaseService
             $this->triggerMaliciousActivity($userId);
         }
 
-        if ($token->access_token !== $accessToken) {
+        if ($token->access_token !== $accessToken || !$token->access_token) {
             $this->triggerMaliciousActivity($token->user_id);
         }
 
         if ($token->expires_at->isPast()) {
             throw new AuthenticationException('Refresh token expired.');
         }
+
+        //для того чтобы при повторном запросе на обнолвение refresh_token выкидывало ошибку
+        Token::where('refresh_token', $refreshToken)->update([
+            'access_token' => '',
+        ]);
 
         $newRefreshToken = Str::random(64);
         $newAccessToken = auth()->refresh(null, null, null);  // Получаем новый Access Token

@@ -4,6 +4,8 @@ import routes from "@/services/apiRoutes";
 import { message } from "ui";
 import config from '@/config/config';
 
+let refreshErrorCounter = 0;
+
 interface ResultType {
     success: boolean;
     status?: number;
@@ -37,24 +39,45 @@ apiAxios.interceptors.request.use((config) => {
 });
 
 // Обрабатываем 401 и обновляем токен
+
 apiAxios.interceptors.response.use(
     (response) => response,
     async (error: AxiosError) => {
+
         const originalRequest = error.config as CustomAxiosRequestConfig;
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        if (error.response?.status === 401 && !originalRequest._retry && (window.location.pathname !== '/' + config.loginPath)) {
             originalRequest._retry = true;
             try {
+
                 const refreshToken = Cookies.get("refresh_token");
-                if (!refreshToken) throw new Error("No refresh token");
 
-                const { data } = await apiAxios.post<{ access_token: string; refresh_token: string }>(
-                    "/auth/refresh",
-                    { refresh_token: refreshToken }
-                );
+                if (!refreshToken || refreshToken == 'undefined') {
+                    logOut();
+                    return;
+                    //throw new Error("No refresh token");
+                } else {
+                    let data;
+                    try {
+                        if (refreshErrorCounter) {
+                            logOut();
+                            return;
+                        }
+                        refreshErrorCounter++;
 
-                localStorage.setItem("access_token", data.access_token);
-                Cookies.set("refresh_token", data.refresh_token);
+                        const response  = await apiAxios.post<{ access_token: string; refresh_token: string }>(
+                            "/auth/refresh",
+                            { refresh_token: refreshToken }
+                        );
 
+                        data = response.data;
+                    } catch (e) {
+                        //await new Promise(res => setTimeout(res, 1000)); // Пауза 1 сек
+                        throw e;
+                    }
+
+                    localStorage.setItem("access_token", data.access_token);
+                    Cookies.set("refresh_token", data.refresh_token);
+                }
                 return apiAxios(originalRequest);
             } catch (refreshError) {
                 console.error("Token refresh failed:", refreshError);
@@ -64,6 +87,11 @@ apiAxios.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+const logOut = () => {
+    //очистить localStorage и прочие конфиденциальные данные
+    window.location.href = '/' + config.loginPath;
+}
 
 // Функция для получения пути и параметров
 const resolveRoute = (routeKey: string, params: Record<string, string | number> = {}) => {
@@ -93,8 +121,6 @@ const resolveRoute = (routeKey: string, params: Record<string, string | number> 
 
     return { path, params: queryParams, method };
 };
-
-
 
 
 export const api = {

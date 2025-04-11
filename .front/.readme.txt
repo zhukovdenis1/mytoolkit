@@ -65,6 +65,7 @@ npm install - переустановить
 <!--npm uninstall @codemirror/basic-setup @codemirror/gutter @codemirror/rangeset @codemirror/text - удаляем устаревшие-->
 
 npm install codemirror @codemirror/view @codemirror/state @codemirror/language @codemirror/lang-javascript @codemirror/lang-html @codemirror/lang-css @codemirror/lang-php @codemirror/lang-xml @codemirror/lang-java @codemirror/commands @codemirror/autocomplete @codemirror/lint
+npm install @codemirror/lang-json @codemirror/lang-sql
 
 npm install @codemirror/theme-one-dark
 npm install @codemirror/lang-markdown

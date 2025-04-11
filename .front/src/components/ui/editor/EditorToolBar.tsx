@@ -17,24 +17,47 @@ const EditorToolBar: React.FC<EditorToolBarProps> = ({ boxKey, boxType, editor, 
     }
 
     // Обработчик для выбора языка в выпадающем меню
-    const handleCodeMenuClick = (language: string) => {
-        editor?.edit(boxKey, { type: "code", data: { language } });
+    const handleCodeMenuClick = (language: string, text: string) => {
+        editor?.edit(boxKey, { type: "code", data: { language: language, text: text } });
     };
 
-    const codeMenu = ({
-        items: [
-            {
-                key: "html",
-                label: "HTML",
-                onClick: () => handleCodeMenuClick("html"),
-            },
-            {
-                key: "php",
-                label: "PHP",
-                onClick: () => handleCodeMenuClick("php"),
-            }
-        ]
-    });
+    const getCodeMenu = (boxKey: string) => {
+        const language = (editor.getBox(boxKey)).data?.language ?? '';
+        const text = (editor.getBox(boxKey)).data?.text ?? '';
+        return ({
+            items: [
+                {
+                    key: "php",
+                    label: "PHP",
+                    onClick: () => handleCodeMenuClick("php", text),
+                },
+                {
+                    key: "sql",
+                    label: "SQL",
+                    onClick: () => handleCodeMenuClick("sql", text),
+                },
+                {
+                    key: "html",
+                    label: "HTML",
+                    onClick: () => handleCodeMenuClick("html", text),
+                },
+                {
+                    key: "css",
+                    label: "CSS",
+                    onClick: () => handleCodeMenuClick("css", text),
+                },
+                {
+                    key: "json",
+                    label: "JSON",
+                    onClick: () => handleCodeMenuClick("json", text),
+                },
+            ],
+            selectedKeys: [language]
+        });
+    }
+
+
+    //const codeMenu = {};
 
     return (
         <div className="editor-tooltip">
@@ -48,7 +71,7 @@ const EditorToolBar: React.FC<EditorToolBarProps> = ({ boxKey, boxType, editor, 
                 >
                     <EyeOutlined />
                 </button>
-                <Dropdown menu={codeMenu} trigger={["click"]}>
+                <Dropdown menu={getCodeMenu(boxKey)} trigger={["click"]}>
                     <button
                         type="button"
                         title="Code"

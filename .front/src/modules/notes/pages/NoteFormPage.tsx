@@ -77,7 +77,8 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
                 ...formData,
                 categories: form.getFieldValue('categories') ?? null,
             });
-
+// console.log(response)
+// alert('hi');
         if (response.success) {
             message.success("Note saved successfully!");
         } else {

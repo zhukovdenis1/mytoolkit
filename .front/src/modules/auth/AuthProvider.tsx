@@ -44,24 +44,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     // Функция для обновления токенов
+    /*
     const refreshAccessToken = async () => {
+
         const refreshToken = Cookies.get("refresh_token"); // Получаем refresh токен из cookies
         if (!refreshToken) {
+
             console.error("No refresh token available.");
             handleSignOut();
             return;
         }
 
         try {
+
             const response = await api.request("auth.refresh", { refresh_token: refreshToken }) as {
                 data: { access_token: string; refresh_token: string };
                 status: number;
             };
 
+
             if (response.status !== 200 || !response.data) {
                 console.error("Token refresh failed. Logging out...");
                 handleSignOut();
                 return;
+            } else {
+                console.log('xxx')
             }
 
             const { access_token, refresh_token } = response.data;
@@ -76,7 +83,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             }
             handleSignOut();
         }
-    };
+    };*/
 
     // Функция для выхода из системы
     const handleSignOut = () => {
@@ -86,6 +93,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     // Функция для настройки перехватчиков запросов (для обработки 401 ошибок)
+    /*
     const setupInterceptors = () => {
         let isRefreshing = false; // Флаг для проверки, обновляется ли токен
         let failedQueue: Array<(error?: Error) => void> = []; // Очередь неудачных запросов
@@ -139,7 +147,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             }
         );
     };
-
+*/
     // Функция для входа пользователя
     const signin = async (credentials: { email: string; password: string }, cb: () => void) => {
         try {
@@ -173,7 +181,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     useEffect(() => {
-        setupInterceptors();
+        //setupInterceptors();
 
         const accessToken = localStorage.getItem("access_token");
         if (accessToken) {
