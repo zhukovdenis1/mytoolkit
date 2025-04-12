@@ -29,7 +29,7 @@ export type EditorHandle = {
     debug: (key: string) => void;
     beautify: (key: string) => void;
     getValue: () => string;
-    getBox: (key: string) => string;
+    getBox: (key: string) => StructureItem;
     //getBoxType: (key: string) => string;
     //onChange: () => void;
     undo: () => void;
@@ -54,9 +54,8 @@ const useEditor = (): {
     setHistory: (value: (((prevState: Record<string, StructureItem>[]) => Record<string, StructureItem>[]) | Record<string, StructureItem>[])) => void;
     delete: () => void;
     setHistoryIndex: (value: (((prevState: number) => number) | number)) => void;
-
     getValue: () => string;
-    getBox: () => string;
+    getBox: () => StructureItem;
     isRedoAvailable: () => boolean;
     undo: () => void;
     getHistoryIndex: () => number;
@@ -78,7 +77,8 @@ const useEditor = (): {
         debug: () => {},
         beautify: () => {},
         getValue: () => value,
-        getBoxType: () => "",
+        getBox: () => ({ key: '', order: 0, type: '', data: {} }),
+        //getBoxType: () => "",
         //onChange: () => null,
         undo: () => {},
         redo: () => {},

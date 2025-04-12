@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react";
 import { api, apiAxios } from "@/services/api"; // импортируем API для взаимодействия с сервером
 import Cookies from "js-cookie"; // для работы с cookies
-import axios from "axios"; // Импортируем axios, чтобы корректно проверить isAxiosError
+//import axios from "axios"; // Импортируем axios, чтобы корректно проверить isAxiosError
 
 // Интерфейс для пользователя
 interface User {
