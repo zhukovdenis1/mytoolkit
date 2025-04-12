@@ -70,7 +70,15 @@ class AuthService extends BaseService
         if (!$token) {
             $this->triggerMaliciousActivity($userId);
         }
+
         $token->delete();
+        //для того чтобы при повторном запросе на обнолвение refresh_token выкидывало ошибку
+        //это излишне, достаточно вместо этого delete
+//        Token::where('refresh_token', $refreshToken)->update([
+//            'access_token' => '',
+//        ]);
+
+
         //$this->finishCurrentSession();
 
         // Выход из веб-сессии
@@ -112,9 +120,13 @@ class AuthService extends BaseService
         }
 
         //для того чтобы при повторном запросе на обнолвение refresh_token выкидывало ошибку
-        Token::where('refresh_token', $refreshToken)->update([
-            'access_token' => '',
-        ]);
+
+        //Эт не нужно т.к. если refresh_token не найден - значит это запрос от злоумышленника и можно делать логаут со всех устройств
+//        Token::where('refresh_token', $refreshToken)->update([
+//            'access_token' => '',
+//        ]);
+
+
 
         $newRefreshToken = Str::random(64);
         $newAccessToken = auth()->refresh(null, null, null);  // Получаем новый Access Token
@@ -126,6 +138,8 @@ class AuthService extends BaseService
             'expires_at' => Carbon::now()->addMinutes((int) config('jwt.refresh_ttl')),
             'created_at' => Carbon::now(),
         ]);
+
+        $token->delete();
 
         return [
             'access_token' => $newAccessToken,
@@ -151,7 +165,9 @@ class AuthService extends BaseService
      */
     private function invalidateAllUserTokens(int $userId): void
     {
-        Token::where('user_id', $userId)->update(['expires_at' => DB::raw('created_at')]);
+        //Token::where('user_id', $userId)->update(['expires_at' => DB::raw('created_at')]);
+        Token::where('user_id', $userId)->delete();
+
         //$this->finishCurrentSession();
     }
 

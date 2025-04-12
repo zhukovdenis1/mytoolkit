@@ -66,7 +66,9 @@ class NoteService extends BaseService
         if ($id) {
             $notes->where('id', $id);
         } elseif ($search) {
-            $notes->where('title', 'like', '%' . $search . '%');
+            $notes
+                ->where('title', 'like', '%' . $search . '%')
+                ->orWhere('text', 'like', '%' . $search . '%');
         }
         $notes->limit(100)->orderBy('title', 'asc');
 
