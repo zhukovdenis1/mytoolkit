@@ -33,7 +33,7 @@ class AuthService extends BaseService
             'refresh_token' => $refreshToken,
             'user_id' => auth()->id(),
             'access_token' => $accessToken,
-            'expires_at' => Carbon::now()->addMinutes((int) env('JWT_REFRESH_TTL')),
+            'expires_at' => Carbon::now()->addMinutes((int) config('jwt.refresh_ttl')),
             'created_at' => Carbon::now(),
         ]);
 
@@ -123,7 +123,7 @@ class AuthService extends BaseService
             'refresh_token' => $newRefreshToken,
             'user_id' => $token->user_id,
             'access_token' => $newAccessToken,
-            'expires_at' => Carbon::now()->addMinutes((int) env('JWT_REFRESH_TTL')),
+            'expires_at' => Carbon::now()->addMinutes((int) config('jwt.refresh_ttl')),
             'created_at' => Carbon::now(),
         ]);
 
