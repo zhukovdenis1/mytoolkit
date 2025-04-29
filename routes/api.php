@@ -6,12 +6,15 @@ use App\Modules\Note\Http\Controllers\User\NoteCategoryController;
 use App\Modules\Note\Http\Controllers\User\NoteController;
 //use App\Modules\Product\Http\Controllers\User\ProductController;
 use App\Modules\Patient\Http\Controllers\PatientController;
+use App\Modules\Shop\Http\Controllers\Shared\ShopParseController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\JwtMiddleware;
 
 Route::post('auth/login', [AuthController::class, 'login'])->name('auth.login');
 Route::post('auth/refresh', [AuthController::class, 'refresh'])->name('auth.refresh');
 Route::post('auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
+
+
 
 Route::middleware([JwtMiddleware::class])->group(function () {
 
@@ -49,6 +52,9 @@ Route::middleware([JwtMiddleware::class])->group(function () {
         Route::get('/', [PatientController::class, 'index']);
     });
 });
+
+Route::get('shop/get-product-for-parse', [ShopParseController::class, 'getProductForParse']);
+Route::post('shop/set-parsed-product', [ShopParseController::class, 'setParsedProduct']);
 
 //Route::get('products', [ProductController::class, 'index']);
 //Route::post('products', [ProductController::class, 'store']);

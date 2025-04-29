@@ -1,10 +1,15 @@
 <?php
 
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 use App\Modules\Console\Http\Controllers\User\ConsoleController;
 use App\Modules\FileStorage\Http\Controllers\User\FileStorageController;
 
-Route::get('/console/{command}', [ConsoleController::class, 'runCommand']);
+Route::any('/console/{category}/{command}', [ConsoleController::class, 'runCommand'])
+    ->withoutMiddleware(VerifyCsrfToken::class);
+Route::any('/console/{command}', [ConsoleController::class, 'runCommand'])
+    ->withoutMiddleware(VerifyCsrfToken::class);
+
 
 $domain = request()->getHost();
 

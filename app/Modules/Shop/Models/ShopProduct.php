@@ -11,14 +11,43 @@ class ShopProduct extends BaseModel
 {
     use HasFactory;
 
-    protected $table = 'ali_product';
+    protected $table = 'shop_products';
 
     protected $connection = 'mysql_shop';
+
+    protected $fillable = [
+        'id',
+        'id_ae',
+        'source',
+        'vk_category',
+        'epn_category_id',
+        'category_id',
+        'category_0',
+        'category_1',
+        'category_2',
+        'category_3',
+        'title_ae',
+        'title',
+        'hru',
+        'price',
+        'price_from',
+        'price_to',
+        'description',
+        'characteristics',
+        'reviews',
+        'photo',
+        'video',
+        'vk_attachment',
+        'rating',
+        'info',
+        'deleted_at',
+    ];
 
     protected $casts = [
         'photo' => 'array',
         'reviews' => 'array',
         'video' => 'array',
+        'info' => 'array',
     ];
 
     public static function filter($page = 1, $category = 0, $search = '')
@@ -29,8 +58,7 @@ class ShopProduct extends BaseModel
 
         $query = ShopProduct::query()
             ->select('id', 'title', 'title_ae', 'photo', 'rating', 'price', 'price_from', 'price_to', 'hru')
-            ->where('del', 0)
-            ->where('moderated', 1)
+            ->whereNull('deleted_at')
             ->whereNotIn('category_0', [16002,1309])
             ->orderBy('id', 'desc')
             ->offset($offset)
@@ -55,12 +83,32 @@ class ShopProduct extends BaseModel
         return $query->get();
     }
 
-    /*public static function getRules(): array
+    public static function saveProduct(array $data)
     {
-        return [
-            'page'     => ['nullable', 'integer', 'min:1', 'max:100'],
-            'category' => ['nullable', 'integer'],
-            'search'   => ['nullable', 'string', 'max:50'],
-        ];
-    }*/
+        return static::create([
+            'id_ae' => $data['id_ae'] ?? null,
+            'source' => $queueItem['source'] ?? null,
+            'vk_category' => $queueItem['category'] ?? null,
+            'epn_category_id' => $queueItem['info']['attributes']['goodsCategoryId'] ?? null,
+            'category_id' => $data['category_id'] ?? null,
+            'category_0' => $data['category_0'] ?? null,
+            'category_1' => $data['category_1'] ?? null,
+            'category_2' => $data['category_2'] ?? null,
+            'category_3' => $data['category_3'] ?? null,
+            'title_ae' => $data['title_ae'] ?? null,
+            'title' => $data['title'] ?? null,
+            'hru' => $data['hru'] ?? null,
+            'price' => $data['price'] ?? 0,
+            'price_from' => $data['price_from'] ?? 0,
+            'price_to' => $data['price_to'] ?? 0,
+            'description' => $data['description'] ?? null,
+            'characteristics' => $data['characteristics'] ?? null,
+            'reviews' => $data['reviews'] ?? null,
+            'photo' => $data['photo'] ?? null,
+            'video' => $data['video'] ?? null,
+            'vk_attachment' => $queueItem['info']['vk_attachment'] ?? null,
+            'rating' => $data['rating'] ?? 0,
+            'info' => $queueItem['info'] ?? null,
+        ]);
+    }
 }

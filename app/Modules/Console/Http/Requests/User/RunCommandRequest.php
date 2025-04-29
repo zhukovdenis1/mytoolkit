@@ -9,22 +9,19 @@ use App\Http\Requests\BaseFormRequest;
 
 class RunCommandRequest extends BaseFormRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     protected function prepareForValidation()
     {
         $this->merge([
             'command' => $this->route('command'),
+            'category' => $this->route('category'),
         ]);
     }
 
     public function rules(): array
     {
         return [
-            'command' => 'required|string|in:deploy,test',
+            'category' => 'nullable|string|in:shop',
+            'command' => 'required|string|in:deploy,test,epnHot,getProductForParse,setParsedProduct',
         ];
     }
 }

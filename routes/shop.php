@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Shop\Http\Controllers\Shared\ShopController;
+use App\Modules\Shop\Http\Controllers\Shared\ShopParseController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('', [ShopController::class, 'index'])->name('home');
@@ -15,3 +16,4 @@ Route::get('/p-{productId}/{productHru?}', [ShopController::class, 'detail'])->n
     ->where(['categoryId' => '[0-9]+']);
 Route::get('/pa-{id_ae}', [ShopController::class, 'aedetail'])->name('aedetail')
     ->where(['id_ae' => '[0-9]+']);
+

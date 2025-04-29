@@ -7,6 +7,8 @@ namespace App\Modules\Console\Http\Controllers\User;
 use App\Http\Controllers\BaseController;
 use App\Modules\Console\Http\Requests\User\RunCommandRequest;
 use Illuminate\Support\Facades\Artisan;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 
 class ConsoleController extends BaseController
@@ -14,11 +16,30 @@ class ConsoleController extends BaseController
     public function runCommand(RunCommandRequest $request)//: \Illuminate\Http\JsonResponse
     {
 
-        // Вызов команды и захват вывода
-        Artisan::call($request->command, [
-            //'argument' => $request->input('argument'), // Передача аргумента
-            //'--option' => $request->input('option'),    // Передача опции
-        ]);
+        $command = $request->category ? $request->category . ':' . $request->command : $request->command;
+
+        $allData = $request->all();
+
+        $symfonyCommand = Artisan::all()[$command];
+
+        $arguments = $symfonyCommand->getDefinition()->getArguments();
+        $options = $symfonyCommand->getDefinition()->getOptions();
+        $argumentNames = array_map(fn (InputArgument $arg) => $arg->getName(), $arguments);
+        $optionNames = array_map(fn (InputOption $arg) => $arg->getName(), $options);
+
+        $filteredArguments = array_filter($allData, function($key) use ($argumentNames) {
+            return in_array($key, $argumentNames);
+        }, ARRAY_FILTER_USE_KEY);
+
+        $filteredOptions = array_filter($allData, function($key) use ($optionNames) {
+            return in_array($key, $optionNames);
+        }, ARRAY_FILTER_USE_KEY);
+
+
+
+        $params = array_merge($filteredArguments, $this->addPrefixToKeys($filteredOptions));
+
+        Artisan::call($command, $params);
 
         // Получение вывода команды
         $output = Artisan::output();
@@ -28,7 +49,17 @@ class ConsoleController extends BaseController
 //            'output' => $output,
 //        ]);
         // Возврат HTML-вывода
-        return response("<pre>{$output}</pre>", 200)
+        return response($output, 200)
             ->header('Content-Type', 'text/html');
+    }
+
+    private function addPrefixToKeys(array $array, string $prefix = '--'): array
+    {
+        $newArray = [];
+        foreach ($array as $key => $value) {
+            $newKey = $prefix . $key;
+            $newArray[$newKey] = $value;
+        }
+        return $newArray;
     }
 }

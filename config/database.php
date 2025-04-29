@@ -82,6 +82,26 @@ return [
             ]) : [],
         ],
 
+        'mysql_ali' => [
+            'driver' => 'mysql',
+            'url' => env('DB_ALI_URL'),
+            'host' => env('DB_ALI_HOST', '127.0.0.1'),
+            'port' => env('DB_ALI_PORT', '3306'),
+            'database' => env('DB_ALI_DATABASE', 'laravel'),
+            'username' => env('DB_ALI_USERNAME', 'root'),
+            'password' => env('DB_ALI_PASSWORD', ''),
+            'unix_socket' => env('DB_ALI_SOCKET', ''),
+            'charset' => env('DB_ALI_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_ALI_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),

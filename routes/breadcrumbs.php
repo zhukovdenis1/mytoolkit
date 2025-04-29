@@ -37,5 +37,5 @@ Breadcrumbs::for('detail', function (BreadcrumbTrail $trail, $productId): void {
         $trail->push($c['title'], route('category', ['categoryId' => $c['id_ae'], 'categoryHru' => $c['hru']]));
     }
 
-    $trail->push($pd->title, '');
+    $trail->push($pd->title ?? '', '');
 });

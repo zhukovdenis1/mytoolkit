@@ -6,8 +6,8 @@ if(true || $_SERVER['HTTP_HOST'] == 'deshevyi.ru')
 {
     /* ADMIN REDIRECT */
     $redirect = isset($_GET['r']) ? intval($_GET['r']) : 0;
-    $agent = $_SERVER['HTTP_USER_AGENT'];
-    @$referer = $_SERVER['HTTP_REFERER'];
+    $agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+    $referer = $_SERVER['HTTP_REFERER'] ?? '';
 
     if ($redirect && !(strpos($agent, 'Bot/') || strpos($agent, 'bot/'))) {
         $siteId = $redirect;

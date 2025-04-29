@@ -37,9 +37,8 @@ class ShopController extends Controller
     {
 
         $query = ShopProduct::query()
-            ->select('id', 'hru','date_add')
-            ->where('del', 0)
-            ->where('moderated', 1)
+            ->select('id', 'hru','created_at')
+            ->whereNull('deleted_at')
             ->whereNotIn('category_0', [16002,1309])
             ->orderBy('id', 'desc')
             ->limit(10000);
@@ -108,7 +107,7 @@ class ShopController extends Controller
     {
         $query = ShopCategory::query()
             ->select('id_ae', 'title', 'hru')
-            ->where('parent_id', 0)
+            ->whereNull('parent_id')
             ->where('hidden', 0)
             ->orderBy('title', 'asc');
 
@@ -128,6 +127,10 @@ class ShopController extends Controller
 
         $product = ShopProduct::query()->findOrFail($productId);
 
+        if (is_string($product->reviews)) {
+            $product['reviews'] = json_decode($product->reviews);
+        }
+
         if ($productHru != $product['hru']) {
             return redirect()->route('detail', ['productId' => $product->id, 'productHru' => $product->hru]);
         }
@@ -145,7 +148,7 @@ class ShopController extends Controller
             }*/
         }
 
-        $attachment = json_decode($product->vk_attachment, 1);
+        $attachment = json_decode($product->vk_attachment, 1) ?: [];
 
         $vkAttachment = '';
         foreach ($attachment as $a)

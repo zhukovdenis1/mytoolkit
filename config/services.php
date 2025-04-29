@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'epn' => [
+        'client_id' => env('EPN_CLIENT_ID'),
+        'client_secret' => env('EPN_CLIENT_SECRET'),
+        'check_ip' => env('EPN_CHECK_IP', false),
+    ],
+
 ];
