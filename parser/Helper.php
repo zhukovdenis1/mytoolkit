@@ -162,8 +162,13 @@ class Helper
 //                $i++;
 //            }
 //        }
+        $reviewBasic = null;
+        $i=0;
+        while (!$reviewBasic && $i<20) {
+            $reviewBasic = $json["widgets"][$i]["state"]["data"]["reviews"] ?? null;
+            $i++;
+        }
 
-        $reviewBasic = $json["widgets"]["2"]["state"]["data"]["reviews"] ?? null;
         if ($reviewBasic) {
             $data['reviews'] = json_encode($reviewBasic, JSON_UNESCAPED_UNICODE);
         }
@@ -176,6 +181,7 @@ class Helper
 //            }
 //            $data['properties'] .= '</ul>';
 //        }
+
         return $data;
     }
 
@@ -195,11 +201,10 @@ class Helper
 
     private static function findDescription($json): array|string|null
     {
-        $templates = [
-            ["widgets", "0","state","data","html"],
-            ["widgets", "10","state","data","html"],
-            ["widgets", "11","state","data","html"],
-        ];
+        $templates = [];
+        for ($i=0; $i<20; $i++) {
+            $templates[] = ["widgets", strval($i),"state","data","html"];
+        }
 
         foreach ($templates as $t) {
             $tArr = static::buildArray($json, $t);
@@ -274,21 +279,21 @@ class Helper
             if ($image['videoUrl'] && !is_numeric($image['videoUrl']))
                 $video[] = $image['videoUrl'];
         }
-        //////////////////////////
-//        $propsList = $basic["children"]["8"]["children"]["1"]["children"]["0"]["children"]["3"]["children"]["0"]["children"]["1"]["props"]["groups"]["0"]["properties"];
-//        $props = '';
-//        if (is_array($propsList) && count($propsList))
-//        {
-//            $props = '<ul class="product-property-list">';
-//            foreach ($propsList as $p)
-//            {
-//                $props .= '<li class="property-item">';
-//                $props .= '<span class="propery-title">' . (isset($p['title']) ? $p['title'] : $p['name'])  . ':</span>';
-//                $props .= '<span class="propery-des">' . $p['value'] . '</span>';
-//                $props .= '</li>';
-//            }
-//            $props .= '</ul>';
-//        }
+        ////////////////////////
+        $propsList = $basic["children"]["8"]["children"]["1"]["children"]["0"]["children"]["3"]["children"]["0"]["children"]["1"]["props"]["groups"]["0"]["properties"];
+        $props = '';
+        if (is_array($propsList) && count($propsList))
+        {
+            $props = '<ul class="product-property-list">';
+            foreach ($propsList as $p)
+            {
+                $props .= '<li class="property-item">';
+                $props .= '<span class="propery-title">' . (isset($p['title']) ? $p['title'] : $p['name'])  . ':</span>';
+                $props .= '<span class="propery-des">' . $p['value'] . '</span>';
+                $props .= '</li>';
+            }
+            $props .= '</ul>';
+        }
         ////////////////////////////
 //        $reviewList = $basic["props"]["reviews"];
 //        $reviews = [];
@@ -334,7 +339,7 @@ class Helper
                     'rating' => $rating,
                     'photo' => $img,
                     'video' => $video,
-                    //'properties' => $props,
+                    'characteristics' => $props,
                     //'reviews' => $reviews
                 ]
         ];
@@ -356,7 +361,7 @@ class Helper
             $errors[] = 'no category_id';
          }
 
-         if (!$aliData['description'] && !$aliData['properties'] && !$aliData['reviews']) {
+         if (!$aliData['description'] && !$aliData['characteristics'] && !$aliData['reviews']) {
               $errors[] = 'empty description and properties and reviews';
          }
 

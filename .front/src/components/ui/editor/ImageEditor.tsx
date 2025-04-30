@@ -51,7 +51,7 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ data, onChange, disabled, mod
             onChange(image)
         }
         if (authContext?.user?.id === 1001) {
-            setstorageId(1);
+            setstorageId(2);
         }
 
     }, [image]);

@@ -9,6 +9,7 @@ if (!$config['debug']) sleep(mt_rand(0,15));
 
 $parseUrl = '';
 $data = ['id' => 1];//for debug case
+
 try {
     if ($config['debug'] && $config['debug_source'] == 'file') {
         $parseUrl = 'file:' . $config['debug_file'];
@@ -52,8 +53,8 @@ try {
         }
 
     }
-    $extraData = Helper::parseExtraContent($extraContent);
 
+    $extraData = Helper::parseExtraContent($extraContent);
 
     $aliData = array_merge($baseData, $extraData);
 
@@ -68,14 +69,18 @@ try {
         throw new Exception(ParserError::EmptyIdQueue->value);
     }
 
-    $response = Helper::request($config['url'] . $config['set_uri'],
-        ['id_queue' => $data['id'], 'data' => $aliData, 'brcr' => $brcr]
-    );
-    file_put_contents('response.html', $response);
+    if ($config['debug']) {
+        var_dump(['id_queue' => $data['id'], 'data' => $aliData, 'brcr' => $brcr]);
+    } else {
+        $response = Helper::request($config['url'] . $config['set_uri'],
+            ['id_queue' => $data['id'], 'data' => $aliData, 'brcr' => $brcr]
+        );
+        file_put_contents('response.html', $response);
 
-    $responseData = json_decode($response, true);
+        $responseData = json_decode($response, true);
 
-    echo 'ok: ' . $config['url_shop'] . '/p-' . $responseData['data']['id'] . '/';
+        echo 'ok: ' . $config['url_shop'] . '/p-' . $responseData['data']['id'] . '/';
+    }
 } catch (Exception $e) {
     $message = $e->getMessage();
     $errorCode = 0;
@@ -84,14 +89,17 @@ try {
         $message = ParserError::getMessageByCode($errorCode);
     }
 
-    $json = Helper::request($config['url'] . $config['set_uri'], [
-        'id_queue' => $data['id'],
-        'error_code' => $errorCode
-    ]);
+    if (!$config['debug']) {
+        $json = Helper::request($config['url'] . $config['set_uri'], [
+            'id_queue' => $data['id'],
+            'error_code' => $errorCode
+        ]);
+    }
 
     echo $message . ' url:' . $parseUrl;
 }
 
+echo PHP_EOL;
 
 
 
