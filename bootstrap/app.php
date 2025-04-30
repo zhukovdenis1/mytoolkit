@@ -5,6 +5,7 @@ use App\Http\Middleware\JsonUnescapeUnicode;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\DebugMode;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,8 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         //$middleware->append(JwtMiddleware::class);
+        $middleware->append(DebugMode::class);
         $middleware->append(JsonUnescapeUnicode::class);
-
         $middleware->append(\App\Http\Middleware\HandleCors::class);
     })
     ->withExceptions(new ExceptionHandler()/*function (Exceptions $exceptions) {

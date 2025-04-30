@@ -27,3 +27,4 @@ yarn-error.log
 /tmp
 readme_cicd.txt
 .editorconfig
+deploy.php

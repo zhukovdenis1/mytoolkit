@@ -18,6 +18,12 @@ use Throwable;
 class ExceptionHandler
 {
     protected int $jsonFlags = JSON_UNESCAPED_UNICODE;
+    protected bool $showDetailInfo = false;
+
+    public function __construct()
+    {
+        $this->showDetailInfo = app()->hasDebugModeEnabled();
+    }
 
     public function __invoke(BaseExceptions $exceptions): BaseExceptions
     {
@@ -166,9 +172,10 @@ class ExceptionHandler
 
     protected function prepareErrorDetails(Throwable $e): array
     {
-        $details = ['message' => $e->getMessage()];
+        $details = [];
 
-        if (!app()->isProduction()) {
+        if ($this->showDetailInfo) {
+            $details = ['message' => $e->getMessage()];
             $details['debug'] = [
                 'exception' => get_class($e),
                 'file' => $e->getFile(),
