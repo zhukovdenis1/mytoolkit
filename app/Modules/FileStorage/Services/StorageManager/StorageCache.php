@@ -44,7 +44,7 @@ class StorageCache
         if (!$this->allowed($file)) {
             return false;
         }
-        return file_put_contents($this->getFullPath($file), file_get_contents($path));
+        return (bool)file_put_contents($this->getFullPath($file), file_get_contents($path));
     }
 
     public function delete(File $file): bool

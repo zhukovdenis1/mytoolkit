@@ -202,7 +202,7 @@ readonly class FileStorageService
 
         $downloadPath = $storageManager->getDownloadPath($file);
 
-        if (!$storageManager->cache?->exist($file) && $storageManager->cache?->allowed($file)) {
+        if (!$storageManager->cache?->exists($file) && $storageManager->cache?->allowed($file)) {
             $storageManager->cache->refresh($file, $downloadPath);
             $file->requested_at = now();
             $file->request_counter +=1;
