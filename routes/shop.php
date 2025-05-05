@@ -9,6 +9,7 @@ Route::get('more', [ShopController::class, 'more'])->name('more');
 Route::get('search', [ShopController::class, 'search'])->name('search');
 Route::get('sitemap.xml', [ShopController::class, 'sitemap'])->name('sitemap');
 Route::get('go', [ShopController::class, 'go'])->name('go');
+Route::any('new-order', [ShopController::class, 'newOrder'])->name('go');
 Route::get('robots.txt', [ShopController::class, 'robots'])->name('robots');
 Route::get('get-categories', [ShopController::class, 'getCategories'])->name('getCategories');
 Route::get('c-{categoryId}/{categoryHru?}', [ShopController::class, 'category'])->name('category');

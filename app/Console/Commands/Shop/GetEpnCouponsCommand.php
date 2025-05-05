@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Shop;
 
-use App\Modules\Shop\Models\ShopCoupons;
+use App\Modules\Shop\Models\ShopCoupon;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use App\Modules\Shop\Services\EpnApiClient;
@@ -89,7 +89,7 @@ class GetEpnCouponsCommand extends Command
                     'created_at' => Carbon::now(),
                 ], $chunk);
 
-                $insertedCount += ShopCoupons::insertOrIgnore($rows);
+                $insertedCount += ShopCoupon::insertOrIgnore($rows);
         }
 
         return $insertedCount;

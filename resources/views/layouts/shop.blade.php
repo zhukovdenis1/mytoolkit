@@ -5,6 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="/shop/img/favicon.png" type="image/png">
     @yield('meta',
         '<title>Недорогой интернет-магазин с бесплатной доставкой / DealExtreme на русском языке</title>
          <meta name="description" content="Недорогой интернет-магазин DealExtreme. Посредник DealExtreme по России и СНГ. DealExtreme - китайский интернет-магазин дешевых товаров. Основным преимуществом DealExtreme помимо низких цен является бесплатная доставка по всему миру." />

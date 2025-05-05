@@ -45,7 +45,7 @@ class RefreshCommand extends Command
         exec("php ../artisan view:clear");
 
         exec("php ../artisan config:cache");
-        exec("php ../artisan route:cache");
+        //exec("php ../artisan route:cache");
         exec("php ../artisan view:cache");
 
 

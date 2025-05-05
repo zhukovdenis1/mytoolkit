@@ -5,7 +5,7 @@ require_once 'ParseError.php';
 
 $config = include 'config.php';
 
-if (!$config['debug']) sleep(mt_rand(0,15));
+if (!$config['debug']) sleep(mt_rand(0,25));
 
 $parseUrl = '';
 $data = ['id' => 1];//for debug case
@@ -79,7 +79,7 @@ try {
 
         $responseData = json_decode($response, true);
 
-        echo 'ok: ' . $config['url_shop'] . '/p-' . $responseData['data']['id'] . '/';
+        echo date('H:i:s ') . 'ok: ' . $config['url_shop'] . '/p-' . $responseData['data']['id'] . '/';
     }
 } catch (Exception $e) {
     $message = $e->getMessage();
@@ -89,14 +89,18 @@ try {
         $message = ParserError::getMessageByCode($errorCode);
     }
 
-    if (!$config['debug']) {
+    if (!$config['debug'] && is_numeric($message)) {
         $json = Helper::request($config['url'] . $config['set_uri'], [
             'id_queue' => $data['id'],
             'error_code' => $errorCode
         ]);
     }
 
-    echo $message . ' url:' . $parseUrl;
+    if ($message == 'Captcha') {
+        sleep(180);
+    }
+
+    echo date('H:i:s ') . 'er: ' . $message . ' url:' . $parseUrl;
 }
 
 echo PHP_EOL;

@@ -7,8 +7,8 @@ enum ParserError: int
     case WrongPage = 3;
     case OutOfStock = 4;
     case ValidationError = 5;
-
     case SQLError = 6;
+
 
     public function message(): string
     {
@@ -18,7 +18,7 @@ enum ParserError: int
             self::WrongPage  => 'Не является детальной страницей товара',
             self::OutOfStock => 'Товар закончился',
             self::ValidationError => 'Ошибка валидации полученных данных',
-            self::SQLError => 'Ошибка сохранения данных в бд'
+            self::SQLError => 'Ошибка сохранения данных в бд',
         };
     }
 

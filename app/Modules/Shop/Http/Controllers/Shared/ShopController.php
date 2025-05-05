@@ -7,6 +7,8 @@ use App\Modules\Shop\Models\ShopCategory;
 use App\Modules\Shop\Models\ShopProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
 
 class ShopController extends Controller
 {
@@ -263,6 +265,17 @@ class ShopController extends Controller
             . 'Disallow: /?r=*';
         die;
 
+    }
+
+    public function newOrder(Request $request)
+    {
+        $data = (json_encode($request->all(), JSON_UNESCAPED_UNICODE));
+        Storage::append('orders.txt', date('Y-m-d H:i:s ') . $data);
+        Mail::raw(date('Y-m-d H:i:s ') . $data, function ($message) {
+            $message->to('zd1@list.ru')
+                ->subject('Новый заказ');
+        });
+        return response()->json($data);
     }
 
 
