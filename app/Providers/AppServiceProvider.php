@@ -10,6 +10,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -45,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(base_path('app/Modules/Note/Database/Migrations'));
         $this->loadMigrationsFrom(base_path('app/Modules/FileStorage/Database/Migrations'));
         $this->loadMigrationsFrom(base_path('app/Modules/Shop/Database/Migrations'));
+        $this->loadMigrationsFrom(base_path('app/Modules/ShopArticles/Database/Migrations'));
 
         $this->loadViewsFrom(app_path('Modules/Shop/Resources/views'), 'Shop');
         // Регистрируем компоненты модуля Shop
@@ -69,5 +71,7 @@ class AppServiceProvider extends ServiceProvider
 //        ]);
 
         //SimpleResource::withoutWrapping();
+
+        Paginator::defaultView('pagination::default');
     }
 }

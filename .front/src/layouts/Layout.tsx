@@ -20,7 +20,8 @@ export const Layout: React.FC = () => {
                     <nav>
                         {/*<Link to="/about">About</Link> |{" "} |*/}
                         <Link to={route('notes')}>Notes</Link> |
-                        <Link to={route('notes.categories')}>Categories</Link>
+                        <Link to={route('notes.categories')}>Categories</Link> |
+                        <Link to={route('shop')}>Shop</Link>
                         {/*<Link to="/demo">Demos</Link> |*/}
                     </nav>
                     {authContext?.user ? (

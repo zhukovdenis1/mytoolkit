@@ -28,9 +28,6 @@ class ExceptionHandler
 
     protected function registerHandlers(BaseExceptions $exceptions): void
     {
-        // Глобальный обработчик для всех исключений
-        $this->renderThrowable($exceptions);
-
         // Специфичные обработчики для конкретных исключений
         $this->renderUnauthenticated($exceptions);
         $this->renderUnauthorized($exceptions);
@@ -38,6 +35,9 @@ class ExceptionHandler
         $this->renderCustomError($exceptions);
         $this->renderValidationErrors($exceptions);
         $this->renderQueryErrors($exceptions);
+
+        // Глобальный обработчик для всех исключений
+        $this->renderThrowable($exceptions);
     }
 
     protected function renderThrowable(BaseExceptions $exceptions): void

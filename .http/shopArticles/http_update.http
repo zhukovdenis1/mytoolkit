@@ -1,0 +1,9 @@
+PUT {{url}}/api/admin/shop/articles/1
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "title": "Article 2",
+    "text": "Article text 2"
+}

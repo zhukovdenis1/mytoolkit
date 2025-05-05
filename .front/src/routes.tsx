@@ -7,6 +7,7 @@ import {RequireAuth} from "@/modules/auth/components/RequireAuth.tsx";
 import {LoginLayout} from "@/layouts/LoginLayout.tsx";
 import {LoginPage} from "@/modules/auth/pages/LoginPage.tsx";
 import {notesRoutes} from '@/modules/notes/routes';
+import {shopRoutes} from '@/modules/shop/routes';
 import { BreadcrumbsProvider } from "@/components/BreadCrumbs";
 import {Outlet} from "react-router-dom";
 
@@ -114,6 +115,7 @@ export const routes: IRoute[] = [
                 ],
             },
             notesRoutes,
+            shopRoutes,
         ],
     },
     {

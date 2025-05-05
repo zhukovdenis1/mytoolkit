@@ -9,6 +9,16 @@ Breadcrumbs::for('home', function (BreadcrumbTrail $trail): void {
     $trail->push('Главная', route('home'));
 });
 
+Breadcrumbs::for('coupons', function (BreadcrumbTrail $trail): void {
+    $trail->push('Главная', route('home'));
+    $trail->push('Купоны', route('coupons'));
+});
+
+Breadcrumbs::for('coupon.detail', function (BreadcrumbTrail $trail): void {
+    $trail->push('Главная', route('home'));
+    $trail->push('Купоны', route('coupons'));
+});
+
 Breadcrumbs::for('category', function (BreadcrumbTrail $trail, $categoryId): void {
     $query = ShopCategory::query()
         ->select('id_ae', 'title', 'hru', 'parents')

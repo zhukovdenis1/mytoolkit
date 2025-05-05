@@ -187,6 +187,17 @@ header .cart:hover {
     color: #EF775B;
     background-position: 0 -625px;
 }
+nav.center-menu {
+    width: 100%;
+    font-size: 1.2em;
+    display: flex;
+    flex-flow: row;
+    justify-content: right;
+    }
+    nav.center-menu a {
+        padding: 5px;
+    }
+
 .cart span {
     position: absolute;
     top: 0px;
@@ -471,6 +482,11 @@ ul.prod-list li:hover a {
 .detail-menu a.buy-button2 {
     background: #60bc03;
 }
+.detail-menu a.coupon-button {
+    background: #fff;
+    border: 1px solid #e62e04;
+    color: #e62e04;
+}
 .detail-menu a:hover {
     background: #000;
 }
@@ -575,6 +591,11 @@ ul.reviews {
             margin-right: 10px;
         }
 
+@media (min-width: 1500px) {
+    .center-wrap {
+        width: 1905px;
+    }
+}
 @media (max-width: 900px) {
     header .right {display: none}
     header .middle {margin-right: 0}
@@ -649,3 +670,107 @@ ul.reviews {
         overflow-x: scroll;
     }
 }
+
+/** pagination */
+nav .pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 2em 0 0 0;
+    gap: 4px;
+    justify-content: left;
+}
+
+.pagination li {
+    display: inline-block;
+}
+
+.pagination li a,
+.pagination li span {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 14px;
+    text-decoration: none;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.pagination li a:hover {
+    background-color: #f2f2f2;
+}
+
+.pagination li.active span {
+    background-color: #e62e04;
+    color: #fff;
+    border-color: #e62e04;
+    cursor: default;
+}
+
+.pagination li.disabled span {
+    color: #6c757d;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+    cursor: not-allowed;
+}
+
+/* end pagination*/
+
+/*coupon*/
+.coupons-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Расстояние между блоками */
+    padding: 20px 0 0 0;
+}
+
+.coupon {
+    flex: 1 1 calc(50% - 20px); /* 2 колонки с учетом gap */
+    box-sizing: border-box;
+    padding: 20px; /* Паддинг внутри каждого блока */
+    min-width: 0; /* Фикс для переполнения контента */
+    border: 1px #ccc dotted;
+    border-radius: 5px;
+    }
+    .coupon img {
+        width: 50%;
+        max-width: 200px;
+        float: left;
+    }
+    .coupon .date {
+        color: gray;
+        font-size: 1.2em;
+        margin: 10px 0;
+        float: right;
+    }
+    .coupon .code {
+        float: right;
+        clear: right;
+        color: gray;
+        padding: 10px;
+        border: 1px dashed gray;
+    }
+    .coupon .info {
+        clear: left;
+        padding: 0 0 10px 0;
+    }
+    .coupon .button {
+        color: #000;
+        padding: 10px 50px;
+        border: 1px solid #000;
+        border-radius: 3px;
+        text-decoration: none;
+        clear: both;
+        font-size: 1.2em;
+    }
+    .coupon .button:hover {
+        background: #000;
+        color: #fff;
+    }
+
+@media (max-width: 1000px) {
+    .coupon {
+        flex: 1 1 100%; /* 1 колонка на узких экранах */
+    }
+}
+/*end coupon*/

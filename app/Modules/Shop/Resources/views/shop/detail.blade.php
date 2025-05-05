@@ -4,7 +4,6 @@
     <title><x-shop::product_title :product="$p" />  — купить онлайн / Недорогой интернет-магазин</title>
     <meta name="description" content="Недорогой интернет-магазин DealExtreme. {{ $p->title ?: $p->title_ae }}. Посредник DealExtreme по России и СНГ. DealExtreme - китайский интернет-магазин дешевых товаров. Основным преимуществом DealExtreme помимо низких цен является бесплатная доставка по всему миру." />
     <meta name="keywords" content="{{ $p->title ?: $p->title_ae }}. Недорогой интернет-магазин DealExtreme, Dealextreme на русском, dialextrim, dealextream, дешевый интернет-магазин, недорогой интернет-магазин, интернет магазин китайских товаров с бесплатной доставкой, китайские интернет магазины на русском языке, dealextreme аналог Россия СНГ, китайский интернет магазин на русском" />
-
 @endsection
 
 @section('content')
@@ -26,7 +25,8 @@
     @if ($p->reviews)
         <a href="#reviews">Отзывы</a>
     @endif
-    <a href="/?r=3&aid={{ $p->id_ae }}&st=" target="_blank" class="buy-button2">Купить на AliExpress</a>
+    <a href="{{ route('go', ['aid' => $p->id_ae]) }}" target="_blank" class="buy-button2">Купить на AliExpress</a>
+    <a href="{{ route('coupons') }}" target="_blank" class="coupon-button">Купоны</a>
 </div>
 
 <div class="detail-inner">
@@ -34,7 +34,6 @@
     <div id="vkGroup" class="vk-group-widget"></div>
 
     <h1>{{$p->title ?: $p->title_ae}}</h1>
-
 
     <div class="img-wrap">
         @if ($images)
@@ -50,6 +49,11 @@
             {{ $p->title_ae }}
         </h2>
         @endif
+        @if ($p->title_source)
+            <h2 class="title">
+                {{ $p->title_source }}
+            </h2>
+        @endif
         <x-shop::rating :rating="$p->rating" />
 
         <div class="price">
@@ -59,7 +63,7 @@
             Цена: <strong><x-shop::price :product="$p" /></strong>
         </div>
 
-        <a href="/?r=3&aid={{ $p->id_ae }}&st=" target="_blank" class="ae-link">Купить на AliExpress</a>
+        <a href="{{ route('go', ['aid' => $p->id_ae]) }}" target="_blank" class="ae-link">Купить на AliExpress</a>
     </div>
 
     <div class="images" id="photo">

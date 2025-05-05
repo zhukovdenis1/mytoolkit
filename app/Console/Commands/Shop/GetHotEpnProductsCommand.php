@@ -42,15 +42,10 @@ class GetHotEpnProductsCommand extends Command
      */
     public function handle()
     {
-//        $api = new EpnApiClient(
-//            config('services.epn.client_id'),
-//            config('services.epn.client_secret'),
-//            config('services.epn.check_ip', false)
-//        );
         $api = new EpnApiClient(
-            'TdWjx8APQLzpa6RMoZbu1NvfhkXsK2V7', // client_id
-            'XB5DUmhu70virdJ9tTW8My4SpVxAGCeR', // client_secret
-            false // check_ip
+            config('epn.id'), // client_id
+            config('epn.secret'), // client_secret
+            config('epn.check_ip') // check_ip
         );
 
         $products = [];

@@ -126,6 +126,7 @@ class EpnApiClient
                 $options = [
                     'headers' => [
                         'X-ACCESS-TOKEN' => $this->accessToken,
+                        'ACCEPT-LANGUAGE' => 'ru',
                     ],
                 ];
 

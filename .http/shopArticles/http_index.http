@@ -1,0 +1,4 @@
+GET {{url}}/api/admin/shop/articles
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json

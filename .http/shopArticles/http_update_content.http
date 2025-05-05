@@ -1,0 +1,8 @@
+PUT {{url}}/api/admin/shop/articles/1/edit-content
+Accept: application/json
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+    "text": "asdf"
+}

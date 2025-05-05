@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Shop\Http\Controllers\Shared;
 
 use App\Http\Controllers\Controller;
@@ -82,6 +84,7 @@ class ShopParseController extends Controller
                     $data,
                     [
                         'source' => $queueItem['source'] ?? null,
+                        'title_source' => $queueItem['info']['attributes']['titleRu'] ?? null,
                         'vk_category' => $queueItem['info']['vk_category'] ?? null,
                         'epn_category_id' => $queueItem['info']['attributes']['goodsCategoryId'] ?? null,
                         'vk_attachment' => $queueItem['info']['vk_attachment'] ?? null,

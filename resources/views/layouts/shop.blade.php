@@ -5,12 +5,15 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @yield('meta')
-    <meta name="description" content="Недорогой интернет-магазин DealExtreme. Посредник DealExtreme по России и СНГ. DealExtreme - китайский интернет-магазин дешевых товаров. Основным преимуществом DealExtreme помимо низких цен является бесплатная доставка по всему миру." />
-    <meta name="keywords" content="Недорогой интернет-магазин DealExtreme, Dealextreme на русском, dialextrim, dealextream, дешевый интернет-магазин, недорогой интернет-магазин, интернет магазин китайских товаров с бесплатной доставкой, китайские интернет магазины на русском языке, dealextreme аналог Россия СНГ, китайский интернет магазин на русском" />
+    @yield('meta',
+        '<title>Недорогой интернет-магазин с бесплатной доставкой / DealExtreme на русском языке</title>
+         <meta name="description" content="Недорогой интернет-магазин DealExtreme. Посредник DealExtreme по России и СНГ. DealExtreme - китайский интернет-магазин дешевых товаров. Основным преимуществом DealExtreme помимо низких цен является бесплатная доставка по всему миру." />
+         <meta name="keywords" content="Недорогой интернет-магазин DealExtreme, Dealextreme на русском, dialextrim, dealextream, дешевый интернет-магазин, недорогой интернет-магазин, интернет магазин китайских товаров с бесплатной доставкой, китайские интернет магазины на русском языке, dealextreme аналог Россия СНГ, китайский интернет магазин на русском" />'
+    )
     <link rel="stylesheet" href="/shop/css/main.css" />
     <link rel="stylesheet" href="/shop/css/colorbox.css" />
     @stack('css')
+    <meta name="yandex-verification" content="5d0ecdba6a014fcc" />
 </head>
 <body>
 <div class="wrapper">
@@ -33,11 +36,14 @@
                 </div>
             </div>
             <div class="right">
-                <div class="account"><a href="https://deshevyi.ru/?r=2&aid=0&st={login}" rel="nofollow">Войти</a><br /><a href="https://deshevyi.ru/?r=2&aid=0&st={login}" rel="nofollow">Регистрация</a></div>
-                <a class="wish" href="https://deshevyi.ru/?r=2&aid=0&st={wishlist}" rel="nofollow">Мои<br />желания</a>
-                <a class="cart" href="https://deshevyi.ru/?r=2&aid=0&st={basket}" rel="nofollow"><span class="counter">0</span>Корзина</a>
+                <div class="account"><a href="{{ route('go', ['search' => '{login}']) }}" rel="nofollow" target="_blank">Войти</a><br /><a href="{{ route('go', ['search' => '{login}']) }}" rel="nofollow" target="_blank">Регистрация</a></div>
+                <a class="wish" href="{{ route('go', ['search' => '{wishlist}']) }}" target="_blank" rel="nofollow">Мои<br />желания</a>
+                <a class="cart" href="{{ route('go', ['search' => '{basket}']) }}" target="_blank" rel="nofollow"><span class="counter">0</span>Корзина</a>
             </div>
         </header>
+        <nav class="center-menu">
+            <a href="/coupons">Купоны</a>
+        </nav>
         <main>
             <article>
                 @if(!Route::is('home')) {{ Breadcrumbs::render() }} @else <ol class="brcr"></ol> @endif
@@ -46,7 +52,7 @@
             <!--aside>Asided</aside-->
 
         </main>
-        <footer>&copy;{{ date('Y') }}</footer>
+        <footer>Подборка товаров с Алиэкспресс &copy;{{ date('Y') }}</footer>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="/js/jquery.colorbox-min.js"></script>

@@ -41,9 +41,9 @@ if(true || $_SERVER['HTTP_HOST'] == 'deshevyi.ru')
 
 
         if ($searchText == '{basket}') {
-            $redirectUrl = 'https://shoppingcart.aliexpress.ru/shopcart/shopcartDetail.htm';
+            $redirectUrl = 'https://aliexpress.ru/cart';
         } elseif ($searchText == '{wishlist}') {
-            $redirectUrl = 'https://my.aliexpress.ru/wishlist/wish_list_product_list.htm';
+            $redirectUrl = 'https://aliexpress.ru/wishlist';
         } elseif ($searchText == '{login}') {
             $redirectUrl = 'https://login.aliexpress.ru/';
         } elseif (!$aliProductId && $sText) {
@@ -55,10 +55,12 @@ if(true || $_SERVER['HTTP_HOST'] == 'deshevyi.ru')
             $redirectUrl = 'https://aliexpress.ru/item/' . $aliProductId . '.html';
         }
 
+        //header('Location: ' . 'https://shopnow.pub/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl);//krutye-veshi link EPN - d-x.su
+        header('Location: ' . 'http://click.deshevyi.ru/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl);//krutye-veshi link EPN - d-x.su
+
 
         //header('Location: ' . 'https://alitems.site/g/1e8d11449443646eb20616525dc3e8/?ulp=' . $redirectUrl);//admitad
         //header('Location: ' . 'http://epnredirect.ru/redirect/cpa/o/8a20f237c0ba70728802f3ed17f7c5dc?to=' . $redirectUrl);//krutye-veshi link EPN - d-x.su
-        header('Location: ' . 'https://shopnow.pub/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl);//krutye-veshi link EPN - d-x.su
         //header('Location: ' . 'http://epnredirect.ru/redirect/cpa/o/7c5d917e448a69c032c6222eef78c780?to=https://ru.aliexpress.com/item/xxx/'. $aliProductId .'.html');//desh-mag
         die();
     }
