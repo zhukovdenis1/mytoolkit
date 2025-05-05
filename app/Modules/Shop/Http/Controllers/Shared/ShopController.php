@@ -271,9 +271,14 @@ class ShopController extends Controller
     {
         $data = (json_encode($request->all(), JSON_UNESCAPED_UNICODE));
         Storage::append('orders.txt', date('Y-m-d H:i:s ') . $data);
-        Mail::raw(date('Y-m-d H:i:s ') . $data, function ($message) {
+//        Mail::raw(date('Y-m-d H:i:s ') . $data, function ($message) {
+//            $message->to('zd1@list.ru')
+//                ->subject('Новый заказ');
+//        });
+        Mail::send([], [], function ($message) use ($data) {
             $message->to('zd1@list.ru')
-                ->subject('Новый заказ');
+                ->subject('Новый заказ')
+                ->text(date('Y-m-d H:i:s ') . $data); // или ->html('<p>HTML content</p>')
         });
         return response()->json($data);
     }
