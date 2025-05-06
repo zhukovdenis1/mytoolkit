@@ -25,7 +25,7 @@
                         </span>
 
                         <x-shop::rating :rating="$product->rating" />
-                        <span class="title">{{$product->title ?: $product->title_ae}}</span>
+                        <span class="title">{{$product->title ? Str::limit($product->title, 90): Str::limit($product->title_ae, 90)}}</span>
                         <span class="price"><x-shop::price :product="$product" /></span>
                     </a>
                 </li>

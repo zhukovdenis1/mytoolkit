@@ -283,5 +283,56 @@ class ShopController extends Controller
         return response()->json($data);
     }
 
+    public function oldDetail(Request $request, $productHru, $lang = null)
+    {
+        if ($lang == 'ali') {
+            $html = file_get_contents('https://old.deshevyi.ru/ali/'. $productHru);
+            var_dump($html);die;
+            $idAe = str_replace('redirect_to_id_ae=', '', $html);
+            $data = ShopProduct::query()->where('id_ae', $idAe)->first();
+            var_dump($idAe);die;
+            var_dump($idAe);die;
+        } else {
+            $html = $lang
+                ? file_get_contents('https://old.deshevyi.ru/p/'. $productHru . '/' . $lang)
+                : file_get_contents('https://old.deshevyi.ru/p/'. $productHru);
+        }
+
+
+        $result = [];
+
+        // Извлечение содержимого тега <title>
+        preg_match('/<title>(.*?)<\/title>/is', $html, $titleMatches);
+        $result['title'] = $titleMatches[1] ?? null;
+
+        // Извлечение content из meta description
+        preg_match('/<meta\s+name="description"\s+content="(.*?)"\s*\/?>/is', $html, $descMatches);
+        $result['description'] = $descMatches[1] ?? null;
+
+        // Извлечение content из meta keywords
+        preg_match('/<meta\s+name="keywords"\s+content="(.*?)"\s*\/?>/is', $html, $keywordsMatches);
+        $result['keywords'] = $keywordsMatches[1] ?? null;
+
+        // Извлечение содержимого div с id="ru-title"
+        preg_match('/<!--contentstrat-->(.*?)<!--contentend-->/is', $html, $contentMatches);
+        $result['content'] = $contentMatches[1] ?? null;
+
+        preg_match('/<h1>(.*?)<\/h1>/is', $result['content'], $contentMatches);
+        $result['h1'] = $contentMatches[1] ?? null;
+
+        return view('Shop::shop.detailOld', [
+            'title' => $result['title'],
+            'description' => $result['description'],
+            'keywords' => $result['keywords'],
+            'content' => $result['content'],
+            'h1' => $result['h1']
+        ]);
+
+
+    }
+
+
+
+
 
 }

@@ -9,6 +9,11 @@ Breadcrumbs::for('home', function (BreadcrumbTrail $trail): void {
     $trail->push('Главная', route('home'));
 });
 
+Breadcrumbs::for('oldDetail', function (BreadcrumbTrail $trail): void {
+    $trail->push('Главная', route('home'));
+    $trail->push('Страница товара', route('home'));
+});
+
 Breadcrumbs::for('coupons', function (BreadcrumbTrail $trail): void {
     $trail->push('Главная', route('home'));
     $trail->push('Купоны', route('coupons'));
