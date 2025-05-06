@@ -271,10 +271,10 @@ class ShopController extends Controller
     {
         $data = (json_encode($request->all(), JSON_UNESCAPED_UNICODE));
         Storage::append('orders.txt', date('Y-m-d H:i:s ') . $data);
-//        Mail::raw(date('Y-m-d H:i:s ') . $data, function ($message) {
-//            $message->to('zd1@list.ru')
-//                ->subject('Новый заказ');
-//        });
+        Mail::raw(date('Y-m-d H:i:s ') . $data, function ($message) {
+            $message->to('zd1@list.ru')
+                ->subject('Новый заказ');
+        });
         Mail::send([], [], function ($message) use ($data) {
             $message->to('zd1@list.ru')
                 ->subject('Новый заказ')
@@ -287,12 +287,19 @@ class ShopController extends Controller
     {
         if ($lang == 'ali') {
             $html = file_get_contents('https://old.deshevyi.ru/ali/'. $productHru);
-            var_dump($html);die;
             $idAe = str_replace('redirect_to_id_ae=', '', $html);
-            $data = ShopProduct::query()->where('id_ae', $idAe)->first();
-            var_dump($idAe);die;
-            var_dump($idAe);die;
+            $product = ShopProduct::query()->where('id_ae', $idAe)->first();
+            if ($product) {
+                Storage::append('old_ali_found.txt', date('Y-m-d H:i:s ') . 'https://old.deshevyi.ru/ali/'. $productHru . ' ' . $html);
+                return redirect()->route('detail', ['productId' => $product->id, 'productHru' => $product->hru]);
+            } else {
+                Storage::append('old_ali_not_found.txt', date('Y-m-d H:i:s ') . 'https://old.deshevyi.ru/ali/'. $productHru . ' ' . $html);
+                return redirect()->route('home');
+            }
         } else {
+            $lang
+                ? Storage::append('old.txt', date('Y-m-d H:i:s ') . 'https://old.deshevyi.ru/p/'. $productHru . '/' . $lang)
+                : Storage::append('old.txt', date('Y-m-d H:i:s ') . 'https://old.deshevyi.ru/p/'. $productHru);
             $html = $lang
                 ? file_get_contents('https://old.deshevyi.ru/p/'. $productHru . '/' . $lang)
                 : file_get_contents('https://old.deshevyi.ru/p/'. $productHru);
@@ -331,8 +338,9 @@ class ShopController extends Controller
 
     }
 
-
-
-
-
+    public function oldCategory(Request $request, $categoryHru, $categoryHru2 = '', $categoryHru3 = '')
+    {
+        Storage::append('old_category.txt', date('Y-m-d H:i:s ') . "https://old.deshevyi.ru/c/$categoryHru/$categoryHru2/$categoryHru3");
+        return redirect()->route('home');
+    }
 }

@@ -26,6 +26,6 @@ Route::get('/ali/{productHru}', function (Request $request, $productHru) {
     return app()->make(ShopController::class)->oldDetail($request, $productHru, 'ali');
 });
 Route::get('/p/{productHru}/{lang?}', [ShopController::class, 'oldDetail']);
-Route::get('/c/{categoryHru}', [ShopController::class, 'oldCategory']);
+Route::get('/c/{categoryHru}/{categoryHru2?}/{categoryHru3?}', [ShopController::class, 'oldCategory']);
 
 
