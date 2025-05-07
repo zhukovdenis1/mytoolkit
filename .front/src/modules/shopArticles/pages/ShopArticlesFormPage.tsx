@@ -3,7 +3,6 @@ import {Button, Editor, Form, Input, message, Space} from "ui";
 import {api} from "@/services/api.tsx";
 import {route} from "api";
 import {useNavigate, useParams} from "react-router-dom";
-import {convertTreeData} from "@/utils/ui.ts";
 
 export const ShopArticlesFormPage: React.FC = ({}) => {
 

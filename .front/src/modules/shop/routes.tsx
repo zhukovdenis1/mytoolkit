@@ -3,7 +3,6 @@
 import {IRoute} from "@/routes";
 import {Outlet} from "react-router-dom";
 import {ShopIndexPage} from "./pages/ShopIndexPage";
-import React from "react";
 import {shopArticlesRoutes} from '@/modules/shopArticles/routes';
 
 export const shopRoutes: IRoute =

@@ -97,7 +97,7 @@ type EditorProps = {
     mode?: string;
     onChange?: () => void;
     //fileRoutes?: FileRouts
-    config: EditorConfig
+    config?: EditorConfig;
 };
 
 const uid = () => Math.random().toString(36).substr(2, 9);

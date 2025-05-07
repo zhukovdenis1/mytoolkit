@@ -4,7 +4,6 @@ import {IRoute} from "@/routes";
 import {Outlet} from "react-router-dom";
 import {ShopArticlesListPage} from "./pages/ShopArticlesListPage";
 import {ShopArticlesFormPage} from "./pages/ShopArticlesFormPage";
-import React from "react";
 
 export const shopArticlesRoutes: IRoute =
 {
