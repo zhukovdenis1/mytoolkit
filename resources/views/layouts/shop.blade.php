@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/shop/css/colorbox.css" />
     @stack('css')
     <meta name="yandex-verification" content="5d0ecdba6a014fcc" />
+    <meta name="google-site-verification" content="Eougu2REuO6g1AZkpyBbgV_VdahDZ_ffBBsXtiikB8c" />
 </head>
 <body>
 <div class="wrapper">
@@ -37,9 +38,11 @@
                 </div>
             </div>
             <div class="right">
+                <noindex>
                 <div class="account"><a href="{{ route('go', ['search' => '{login}']) }}" rel="nofollow" target="_blank">Войти</a><br /><a href="{{ route('go', ['search' => '{login}']) }}" rel="nofollow" target="_blank">Регистрация</a></div>
-                <a class="wish" href="{{ route('go', ['search' => '{wishlist}']) }}" target="_blank" rel="nofollow">Мои<br />желания</a>
-                <a class="cart" href="{{ route('go', ['search' => '{basket}']) }}" target="_blank" rel="nofollow"><span class="counter">0</span>Корзина</a>
+                    <a class="wish" href="{{ route('go', ['search' => '{wishlist}']) }}" target="_blank" rel="nofollow">Мои<br />желания</a>
+                    <a class="cart" href="{{ route('go', ['search' => '{basket}']) }}" target="_blank" rel="nofollow"><span class="counter">0</span>Корзина</a>
+                </noindex>
             </div>
         </header>
         <nav class="center-menu">

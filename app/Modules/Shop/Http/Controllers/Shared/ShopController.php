@@ -288,6 +288,7 @@ class ShopController extends Controller
         if ($lang == 'ali') {
             $html = file_get_contents('https://old.deshevyi.ru/ali/'. $productHru);
             $idAe = str_replace('redirect_to_id_ae=', '', $html);
+            $idAe = trim($idAe);
             $product = ShopProduct::query()->where('id_ae', $idAe)->first();
             if ($product) {
                 Storage::append('old_ali_found.txt', date('Y-m-d H:i:s ') . 'https://old.deshevyi.ru/ali/'. $productHru . ' ' . $html);
