@@ -79,12 +79,13 @@ class ExceptionHandler
     {
         $exceptions->renderable(function (ValidationException $e, Request $request) {
             $isApiRequest = $this->isApiRequest($request);
-
-            if ($isApiRequest) {
+             if ($isApiRequest) {
+                $errors = $e->validator->errors();
+                if (is_object($errors)) {$errors = $errors->toArray();}
                 return $this->buildJsonResponse(
                     message: 'Validation Failed',
                     code: 422,
-                    errors: $e->validator->errors()
+                    errors: $errors
                 );
             }
 

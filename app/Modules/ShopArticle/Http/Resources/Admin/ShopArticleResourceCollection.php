@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\ShopArticles\Http\Resources\Admin;
+namespace App\Modules\ShopArticle\Http\Resources\Admin;
 
 use App\Http\Resources\BaseResourceCollection;
 

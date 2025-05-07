@@ -1,7 +1,9 @@
 <?php
 
 use App\Modules\Shop\Models\ShopCategory;
+use App\Modules\Shop\Models\ShopCoupon;
 use App\Modules\Shop\Models\ShopProduct;
+use App\Modules\ShopArticle\Models\ShopArticle;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
@@ -19,26 +21,39 @@ Breadcrumbs::for('coupons', function (BreadcrumbTrail $trail): void {
     $trail->push('Купоны', route('coupons'));
 });
 
-Breadcrumbs::for('coupon.detail', function (BreadcrumbTrail $trail): void {
+Breadcrumbs::for('coupon.detail', function (BreadcrumbTrail $trail, ShopCoupon $coupon): void {
     $trail->push('Главная', route('home'));
     $trail->push('Купоны', route('coupons'));
+    $trail->push($coupon->title, route('home'));
 });
 
-Breadcrumbs::for('category', function (BreadcrumbTrail $trail, $categoryId): void {
-    $query = ShopCategory::query()
-        ->select('id_ae', 'title', 'hru', 'parents')
-        ->where('id_ae', $categoryId)
-        ->limit(1);
-    $category = $query->first();
+Breadcrumbs::for('articles', function (BreadcrumbTrail $trail): void {
+    $trail->push('Главная', route('home'));
+    $trail->push('Инфо', route('articles'));
+});
+
+Breadcrumbs::for('article.detail', function (BreadcrumbTrail $trail, ShopArticle $article): void {
+    $trail->push('Главная', route('home'));
+    $trail->push('Инфо', route('articles'));
+    $trail->push($article->name ?? '', route('home'));
+
+});
+
+Breadcrumbs::for('category', function (BreadcrumbTrail $trail, $category): void {
+//    $query = ShopCategory::query()
+//        ->select('id_ae', 'title', 'hru', 'parents')
+//        ->where('id_ae', $categoryId)
+//        ->limit(1);
+//    $category = $query->first();
 
     $trail->parent('home');
     $trail->push($category->title, '');
 
 });
 
-Breadcrumbs::for('detail', function (BreadcrumbTrail $trail, $productId): void {
-    $pd = ShopProduct::query()->find($productId, ['category_0','category_1','category_2','category_3', 'title']);
-    $categories = [$pd->category_0,$pd->category_1,$pd->category_2,$pd->category_3];
+Breadcrumbs::for('detail', function (BreadcrumbTrail $trail, ShopProduct $product): void {
+    //$pd = ShopProduct::query()->find($productId, ['category_0','category_1','category_2','category_3', 'title']);
+    $categories = [$product->category_0, $product->category_1, $product->category_2, $product->category_3];
 
     $trail->parent('home');
 
@@ -49,7 +64,7 @@ Breadcrumbs::for('detail', function (BreadcrumbTrail $trail, $productId): void {
         ->get();
 
     foreach ($categories as $c) {
-        $trail->push($c['title'], route('category', ['categoryId' => $c['id_ae'], 'categoryHru' => $c['hru']]));
+        $trail->push($c['title'], route('category', ['category' => $c, 'categoryHru' => $c['hru']]));
     }
 
     $trail->push($pd->title ?? '', '');

@@ -17,7 +17,17 @@ class Helper
         return substr($hex, 0, $length);
     }
 
-    public static function normalizeFileName($string) {
+    public static function normalizeFileName(string $string): string
+    {
+        $string = self::transliterate($string);
+
+        $string = substr($string, 0, 32);
+
+        return $string;
+    }
+
+    public static function transliterate(string $string): string
+    {
         // Транслитерация русских букв на английские
         $transliteration = [
             'а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ё' => 'yo',
@@ -38,7 +48,7 @@ class Helper
         // Приводим строку к нижнему регистру
         $string = mb_strtolower($string, 'UTF-8');
 
-        // Заменяем все символы, кроме английских букв и цифр, на _
+        // Заменяем все символы, кроме английских букв и цифр и -, на _
         $string = preg_replace('/[^a-z0-9\-]/', '_', $string);
 
         // Заменяем все подряд идущие _ на один символ _
@@ -47,7 +57,16 @@ class Helper
         // Убираем _ в начале и конце строки, если они есть
         $string = trim($string, '_');
 
-        $string = substr($string, 0, 32);
+        return $string;
+    }
+
+    public static function getUri(string $string): string
+    {
+        $string = self::transliterate($string);
+
+        $string = str_replace('_', '-', $string);
+        // Заменяем все подряд идущие - на один символ -
+        $string = preg_replace('/-+/', '-', $string);
 
         return $string;
     }

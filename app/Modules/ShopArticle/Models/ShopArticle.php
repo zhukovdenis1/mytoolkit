@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\ShopArticles\Models;
+namespace App\Modules\ShopArticle\Models;
 
 use App\Models\BaseModel;
 use App\Models\User;
@@ -27,6 +27,8 @@ class ShopArticle extends BaseModel
 
     protected $fillable = [
         'title',
+        'name',
+        'uri',
         'text',
     ];
 

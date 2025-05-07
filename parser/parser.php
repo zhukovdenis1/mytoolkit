@@ -22,7 +22,11 @@ try {
     } else {
         $json = Helper::request($config['url'] . $config['get_uri']);
         $data = json_decode($json, true);
+        if (empty($data['data'])) {
+            throw new Exception('Empty parse queue');
+        }
         $data = $data['data'];
+
         $queueItemId = $data['id'];
         if ($data['source'] == 'epn_hot') {
             $parseUrl = $data['info']['attributes']['directUrl'];
@@ -100,6 +104,8 @@ try {
     if ($message == 'Captcha') {
         $captchaCounter++;
         sleep(60*$captchaCounter);
+    } else {
+        $captchaCounter--;
     }
 
     echo date('H:i:s ') . 'er: ' . $message . ' url:' . $parseUrl;

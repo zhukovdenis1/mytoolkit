@@ -7,7 +7,7 @@ import VideoEditor, {VideoEditorData} from "./VideoEditor";
 import ImageEditor, {ImageEditorData} from "./ImageEditor";
 import { html } from "js-beautify";
 import {VisualEditorData} from './VisualEditor/types'
-import {FileRouts} from './types'
+import {EditorConfig} from './types'
 import {api} from "@/services/api.tsx";
 
 type DataObject = Record<string, any>;
@@ -96,7 +96,8 @@ type EditorProps = {
     disabled?: boolean;
     mode?: string;
     onChange?: () => void;
-    fileRoutes?: FileRouts
+    //fileRoutes?: FileRouts
+    config: EditorConfig
 };
 
 const uid = () => Math.random().toString(36).substr(2, 9);
@@ -106,9 +107,15 @@ const EditorComponent: React.FC<EditorProps> = ({
         disabled = false,
         mode = "edit",
         onChange = () => {},
-        fileRoutes = {
-            save: {route: '', data: {}},
-            delete: {route: '', data: {}}
+        // fileRoutes = {
+        //     save: {route: '', data: {}},
+        //     delete: {route: '', data: {}}
+        // },
+        config = {
+            fileRoutes: {
+                save: {route: '', data: {}},
+                delete: {route: '', data: {}}
+            }
         }
     }) => {
     const [structure, setStructure] = useState<Record<string, StructureItem>>({});
@@ -227,8 +234,8 @@ const EditorComponent: React.FC<EditorProps> = ({
         let success = false;
         if ((item.type == 'image' || item.type == 'video' ) && item.data.fileId) {
             success = false;
-            const data = {file_id: item.data.fileId, ...fileRoutes.delete.data, type: item.type, path: item.data.src}
-            const response = await api.safeRequestWithAlert(fileRoutes.delete.route, data);
+            const data = {file_id: item.data.fileId, ...config.fileRoutes.delete.data, type: item.type, path: item.data.src}
+            const response = await api.safeRequestWithAlert(config.fileRoutes.delete.route, data);
 
             if (response.success || response.status == 404) {
                 success = true;
@@ -338,7 +345,7 @@ const EditorComponent: React.FC<EditorProps> = ({
                             onChange={(val: ImageEditorData) => editor.edit(key, { data: val })}
                             disabled={disabled}
                             mode={mode}
-                            routes={fileRoutes}
+                            config={config}
                         />
                     ) : (
                         <CodeEditor

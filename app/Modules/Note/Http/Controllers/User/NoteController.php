@@ -129,6 +129,6 @@ class NoteController extends BaseController
     public function storeFile(StoreFileRequest $request, Note $note, FileStorageService $service): AnonymousResource
     {
         $this->authorize('storeFile', $note);
-        return new AnonymousResource($service->saveByRequest($request, (int)$note->id, 'note'));
+        return new AnonymousResource($service->saveByRequest($request, (int)$note->id, 'note', true));
     }
 }

@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Modules\ShopArticle\Http\Controllers\Shared;
+
+use App\Http\Controllers\Controller;
+use App\Modules\ShopArticle\Models\ShopArticle;
+use App\Modules\ShopArticle\Services\Shared\ShopArticleService;
+use Illuminate\Http\Request;
+
+class ShopArticleController extends Controller
+{
+    public function __construct(private readonly ShopArticleService $service) {}
+    public function index(Request $request)
+    {
+        $validated = $request->validate([
+            'search'        => ['nullable', 'string', 'min:1', 'max:100'],
+            'page'        => ['nullable', 'integer', 'min:1', 'max:100'],
+        ]);
+
+        $articles = $this->service->findPaginated($validated);
+
+        return view('Shop::shop.articles', [
+            'articles' => $articles,
+        ]);
+    }
+
+    public function detail(ShopArticle $article, string $articleHru='')
+    {
+        if ($articleHru != $article->uri) {
+            return redirect()->route('article.detail', ['article' => $article, 'articleHru' => $article->uri], 301);
+        }
+
+        return view('Shop::shop.article', [
+            'article' => $this->service->prepareForDisplay($article),
+        ]);
+    }
+}

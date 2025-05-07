@@ -128,3 +128,10 @@ ul.list li .buttons {
     text-align: center;
     margin: 0 auto;
 }
+
+.button-box {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px 0;
+    }
+

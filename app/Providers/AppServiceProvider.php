@@ -46,7 +46,7 @@ class AppServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(base_path('app/Modules/Note/Database/Migrations'));
         $this->loadMigrationsFrom(base_path('app/Modules/FileStorage/Database/Migrations'));
         $this->loadMigrationsFrom(base_path('app/Modules/Shop/Database/Migrations'));
-        $this->loadMigrationsFrom(base_path('app/Modules/ShopArticles/Database/Migrations'));
+        //$this->loadMigrationsFrom(base_path('app/Modules/ShopArticle/Database/Migrations'));
 
         $this->loadViewsFrom(app_path('Modules/Shop/Resources/views'), 'Shop');
         // Регистрируем компоненты модуля Shop

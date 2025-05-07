@@ -5,7 +5,7 @@ import {PaperClipOutlined, UploadOutlined} from "@ui/icons"
 import { FolderOutlined, SendOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import {api} from "api"
 import {UploadFile} from "antd";
-import {FileRouts} from './types'
+import {EditorConfig} from './types'
 import {AuthContext} from "@/modules/auth/AuthProvider.tsx";//времменное решение
 
 export type ImageEditorData = {
@@ -24,11 +24,12 @@ type ImageEditorProps = {
     disabled?: boolean;
     mode: string;
     uploadFilesUrl?: string;
-    routes: FileRouts;
+    //routes: FileRouts;
+    config: EditorConfig
 };
 
 
-const ImageEditor: React.FC<ImageEditorProps> = ({ data, onChange, disabled, mode, routes }) => {
+const ImageEditor: React.FC<ImageEditorProps> = ({ data, onChange, disabled, mode, config }) => {
     disabled;
     const authContext = useContext(AuthContext);
 
@@ -50,8 +51,12 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ data, onChange, disabled, mod
         if (data != image) {
             onChange(image)
         }
-        if (authContext?.user?.id === 1001) {
-            setstorageId(2);
+        // if (authContext?.user?.id === 1001) {
+        //     setstorageId(2);
+        // }
+
+        if (config.image?.storageId) {
+            setstorageId(config.image?.storageId ?? 3);
         }
 
     }, [image]);
@@ -64,7 +69,7 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ data, onChange, disabled, mod
         : '';
 
     const uploadAndUpdateImg = async () => {
-        const response = await uploadImg(storageId, isPrivate, link, file, routes);
+        const response = await uploadImg(storageId, isPrivate, link, file, config);
 
         if (response.success) {
             const data = response.data?.data;
@@ -169,7 +174,7 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ data, onChange, disabled, mod
 }
 
 
-const uploadImg = async (storageId: number, isPrivate: number, link: string, file: UploadFile<any>, routes: FileRouts) => {
+const uploadImg = async (storageId: number, isPrivate: number, link: string, file: UploadFile<any>, config: EditorConfig) => {
 
     if (!link && !file) {
         message.error('Link or file required');
@@ -182,13 +187,13 @@ const uploadImg = async (storageId: number, isPrivate: number, link: string, fil
     //const data = {storage_id: 1, note_id: 3, link: file?.originFileObj ? '' : link, type: 'image'}
     const data = {
         storage_id: storageId,
-        ...routes.save.data,
+        ...config.fileRoutes.save.data,
         link: file?.originFileObj ? '' : link,
         private: isPrivate,
         type: 'image'
     }
     //const response = await api.safeRequest("notes.files.add", data, formData);
-    return await api.safeRequestWithAlert(routes.save.route, data, formData);
+    return await api.safeRequestWithAlert(config.fileRoutes.save.route, data, formData);
 };
 
 const getImgSrc = (image: ImageEditorData): string => {

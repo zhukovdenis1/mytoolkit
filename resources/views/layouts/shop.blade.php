@@ -56,7 +56,7 @@
             <!--aside>Asided</aside-->
 
         </main>
-        <footer>Подборка товаров с Алиэкспресс &copy;{{ date('Y') }}</footer>
+        <footer>Подборка товаров с <a href="{{route('articles')}}">Алиэкспресс</a> &copy;{{ date('Y') }}</footer>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="/js/jquery.colorbox-min.js"></script>

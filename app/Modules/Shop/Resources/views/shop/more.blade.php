@@ -1,6 +1,6 @@
 @foreach($products as $product)
     <li>
-        <a href="{{ route('detail', ['productId' => $product->id, 'productHru' => $product->hru]) }}">
+        <a href="{{ route('detail', ['product' => $product, 'productHru' => $product->hru]) }}">
                         <span class="img-wrap">
                             <x-shop::preview :product="$product" />
                             <div class="bg"></div>

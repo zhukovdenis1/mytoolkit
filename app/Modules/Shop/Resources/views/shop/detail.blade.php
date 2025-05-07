@@ -194,7 +194,7 @@
         <ul class="prod-list">
              @foreach ($recommends as $r)
             <li>
-                <a href="{{ route('detail', ['productId' => $r['id']]) }}">
+                <a href="{{ route('detail', ['product' => $r['id']]) }}">
                     <span class="img-wrap"><x-shop::preview :product="(object) $r" /></span>
                     <x-shop::rating :rating="$r['rating']" />
                     <span class="title">{{ $r['title'] }}</span>

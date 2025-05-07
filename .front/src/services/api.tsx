@@ -185,6 +185,7 @@ export const api = {
             const response = await api.request(route, data, formData);
 
             const success = (response.status >= 200 && response.status < 300) && (response.data.api == true);
+
             result =  {
                 success: success,
                 status: response.status,
@@ -229,12 +230,17 @@ export const api = {
 
         const result =  await api.safeRequest(route, data, formData);
 
-        if (result.data.errors) {
-            const allErrors = Object.values(result.data.errors)
-                .flat()
-                .filter(Boolean);
+        //if (result.data.errors) {
+        if (!result.success) {
+            if (result.data.errors) {
+                const allErrors = Object.values(result.data.errors)
+                    .flat()
+                    .filter(Boolean);
 
-            allErrors.forEach((error) => message.error(error?.toString() ?? 'An unknown error occurred'));
+                allErrors.forEach((error) => message.error(error?.toString() ?? 'An unknown error occurred'));
+            } else {
+                message.error('Request error');
+            }
         }
 
         return result;

@@ -19,9 +19,15 @@ export const shopArticlesRoutes: IRoute =
         },
         {
             name: "shop.articles.add",
-            path: "articles",
+            path: "add",
             element:<ShopArticlesFormPage />,
-            title: "Add article"
+            title: "add"
         },
+        {
+            name: "shop.articles.edit",
+            path: ":article_id/edit",
+            element:<ShopArticlesFormPage />,
+            title: "edit"
+        }
     ]
 };

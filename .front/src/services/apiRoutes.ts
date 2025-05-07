@@ -20,7 +20,16 @@ const apiRoutes: Record<string, [string, string]> = {
     "notes.categories.add": ["notes/categories", "post"],
     "notes.categories.delete": ["notes/categories/:category_id", "delete"],
     "notes.files.add": ["notes/:note_id/files", "post"],
-    "files.delete": ["files/:file_id", "delete"]
+
+    "files.delete": ["files/:file_id", "delete"],
+
+    "admin.shop.articles.list": ["admin/shop/articles", "get"],
+    "admin.shop.articles.show": ["admin/shop/articles/:article_id", "get"],
+    "admin.shop.articles.add": ["admin/shop/articles", "post"],
+    "admin.shop.articles.edit": ["admin/shop/articles/:article_id", "put"],
+    "admin.shop.articles.editContent": ["admin/shop/articles/:article_id/edit-content", "put"],
+    "admin.shop.articles.delete": ["admin/shop/articles/:article_id", "delete"],
+    "admin.articles.files.add": ["admin/shop/articles/:article_id/files", "post"],
 };
 
 export default apiRoutes;

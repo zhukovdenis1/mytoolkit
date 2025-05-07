@@ -17,6 +17,7 @@ class BaseService
 //        $this->model = $model;
 //    }
 
+
     public function save(BaseModel $model, array $attributes): BaseModel
     {
         $model->fill($attributes);

@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\ShopArticles\Services;
+namespace App\Modules\ShopArticle\Services\Admin;
 
 use App\Exceptions\ErrorException;
-use App\Modules\ShopArticles\Models\ShopArticle;
+use App\Helpers\Helper;
+use App\Modules\ShopArticle\Models\ShopArticle;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -13,6 +14,7 @@ class ShopArticleService extends BaseService
 {
     public function create(array $validatedData): ShopArticle
     {
+        $validatedData['uri'] = $this->generateUri($validatedData);
         $article =  ShopArticle::create($validatedData);
         return $article;
     }
@@ -55,6 +57,12 @@ class ShopArticleService extends BaseService
         $articlesPaginated = $articles->paginate($limit, ['*'], 'page', $page);
 
         return $articlesPaginated;
+    }
+
+    public function generateUri(array $articleData): string
+    {
+        $uri = empty($articleData['title']) ? $articleData['name'] : $articleData['title'];
+        return Helper::getUri($uri);
     }
 
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\ShopArticles\Http\Resources\Admin;
+namespace App\Modules\ShopArticle\Http\Resources\Admin;
 
 use App\Http\Resources\BaseResource;
 

@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('shop_articles', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->json('text');
+            $table->string('title')->nullable();
+            $table->string('name');
+            $table->string('uri');
+            $table->json('text')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

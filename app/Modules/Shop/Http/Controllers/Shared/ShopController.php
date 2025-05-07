@@ -134,39 +134,44 @@ class ShopController extends Controller
         return view('Shop::shop.more', ['products' => $products]);
     }
 
-    public function category(Request $request, $categoryId = 0, $categoryHru='')
+    public function category(Request $request, ShopCategory $category, string $categoryHru='')
     {
-        $validator = Validator::make(array_replace($request->all(), ['category_id' => $categoryId]), [
+//        $validator = Validator::make(array_replace($request->all(), ['category_id' => $categoryId]), [
+//            'page'        => ['nullable', 'integer', 'min:1', 'max:100'],
+//            'category_id' => ['nullable', 'integer'],
+//            'search'      => ['nullable', 'string', 'max:50'],
+//        ]);
+        //$validated = $validator->validated();
+
+        $validated = $request->validate([
             'page'        => ['nullable', 'integer', 'min:1', 'max:100'],
             'category_id' => ['nullable', 'integer'],
             'search'      => ['nullable', 'string', 'max:50'],
         ]);
 
-        $validated = $validator->validated();
-
         $page = $validated['page'] ?? 0;
-        $category = $validated['category_id'] ?? 0;
+        //$category = $validated['category_id'] ?? 0;
         $search = $validated['search'] ?? '';
 
-        $categoryData = ShopCategory::query()
-            ->select('title','hru','id_ae')
-            ->where('id_ae', $category)
-            ->limit(1)->first();
+//        $categoryData = ShopCategory::query()
+//            ->select('title','hru','id_ae')
+//            ->where('id_ae', $category)
+//            ->limit(1)->first();
 
-        if (is_null($categoryData)) {
-            abort(404);
+//        if (is_null($categoryData)) {
+//            abort(404);
+//        }
+
+        if ($categoryHru != $category['hru']) {
+            return redirect()->route('category', ['category' => $category->id_ae, 'categoryHru' => $category->hru], 301);
         }
 
-        if ($categoryHru != $categoryData['hru']) {
-            return redirect()->route('category', ['categoryId' => $categoryData->id_ae, 'categoryHru' => $categoryData->hru]);
-        }
-
-        $products = ShopProduct::filter($page, $category, $search);
+        $products = ShopProduct::filter($page, $category->id_ae, $search);
 
         return view('Shop::shop.index', [
             'products' => $products,
-            'title' => $categoryData->title . '/ Недорогой интернет магазин' ?? 'Недорогой интернет магазин',
-            'category' => $category,
+            'title' => $category->title . '/ Недорогой интернет магазин' ?? 'Недорогой интернет магазин',
+            'category' => $category->id_ae,
             'search' => $search
         ]);
     }
@@ -185,22 +190,22 @@ class ShopController extends Controller
             ->json($categories, $status = 200, [], JSON_UNESCAPED_UNICODE);
     }
 
-    public function detail(Request $request, $productId = 0, $productHru='')
+    public function detail(Request $request, ShopProduct $product, string $productHru='')
     {
-        $validator = Validator::make(array_replace($request->all(), ['productId' => $productId]), [
-            'productId'        => ['required', 'integer'],
-        ]);
-
-        $validated = $validator->validated();
-
-        $product = ShopProduct::query()->findOrFail($productId);
+//        $validator = Validator::make(array_replace($request->all(), ['productId' => $productId]), [
+//            'productId'        => ['required', 'integer'],
+//        ]);
+//
+//        $validated = $validator->validated();
+//
+//        $product = ShopProduct::query()->findOrFail($productId);
 
         if (is_string($product->reviews)) {
             $product['reviews'] = json_decode($product->reviews);
         }
 
         if ($productHru != $product['hru']) {
-            return redirect()->route('detail', ['productId' => $product->id, 'productHru' => $product->hru]);
+            return redirect()->route('detail', ['product' => $product, 'productHru' => $product->hru], 301);
         }
 
         $size = 200;
@@ -251,7 +256,7 @@ class ShopController extends Controller
             abort(404);
         }
 
-        return redirect()->route('detail', ['productId' => $product->id, 'productHru' => $product->hru]);
+        return redirect()->route('detail', ['product' => $product, 'productHru' => $product->hru], 301);
     }
 
     public function robots()
@@ -292,7 +297,7 @@ class ShopController extends Controller
             $product = ShopProduct::query()->where('id_ae', $idAe)->first();
             if ($product) {
                 Storage::append('old_ali_found.txt', date('Y-m-d H:i:s ') . 'https://old.deshevyi.ru/ali/'. $productHru . ' ' . $html);
-                return redirect()->route('detail', ['productId' => $product->id, 'productHru' => $product->hru]);
+                return redirect()->route('detail', ['product' => $product, 'productHru' => $product->hru], 301);
             } else {
                 Storage::append('old_ali_not_found.txt', date('Y-m-d H:i:s ') . 'https://old.deshevyi.ru/ali/'. $productHru . ' ' . $html);
                 return redirect()->route('home');

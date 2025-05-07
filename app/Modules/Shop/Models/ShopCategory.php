@@ -20,6 +20,8 @@ class ShopCategory extends BaseModel
 
     protected $connection = 'mysql_shop';
 
+    protected $primaryKey = 'id_ae';
+
     protected $fillable = [
         'id_ae',
         'parent_id',

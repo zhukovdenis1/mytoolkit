@@ -7,7 +7,7 @@ use App\Modules\Note\Http\Controllers\User\NoteController;
 //use App\Modules\Product\Http\Controllers\User\ProductController;
 use App\Modules\Patient\Http\Controllers\PatientController;
 use App\Modules\Shop\Http\Controllers\Shared\ShopParseController;
-use App\Modules\ShopArticles\Http\Controllers\Admin\ShopArticleController;
+use App\Modules\ShopArticle\Http\Controllers\Admin\ShopArticleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\JwtMiddleware;
 use App\Http\Middleware\JwtAdminMiddleware;
@@ -24,6 +24,7 @@ Route::middleware([JwtMiddleware::class])->group(function () {
 
     Route::delete('files/{file}', [FileStorageController::class, 'delete']);
     Route::post('notes/{note}/files', [NoteController::class, 'storeFile']);
+
 
     Route::patch('notes/{note}/add-categories', [NoteController::class, 'addCategories']);
 
@@ -61,9 +62,11 @@ Route::middleware([JwtAdminMiddleware::class])->group(function () {
             Route::prefix('articles')->group(function () {
                 Route::get('/', [ShopArticleController::class, 'index']);
                 Route::post('/', [ShopArticleController::class, 'store']);
+                Route::get('{article}', [ShopArticleController::class, 'show']);
                 Route::put('{article}', [ShopArticleController::class, 'update']);
                 Route::put('{article}/edit-content', [ShopArticleController::class, 'updateContent']);
                 Route::delete('{article}', [ShopArticleController::class, 'destroy']);
+                Route::post('{article}/files', [ShopArticleController::class, 'storeFile']);
             });
         });
     });

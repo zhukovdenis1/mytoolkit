@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { useParams } from "react-router-dom";
 import { api, route } from "api";
 import {Spin, Editor, Button, Space, message} from "ui";
@@ -7,6 +7,7 @@ import { useBreadCrumbs } from "@/components/BreadCrumbs";
 import {SubNoteList} from "../components/SubNoteList";
 import '@/css/notes/detail.css';
 import { UndoOutlined, RedoOutlined, EyeOutlined, EditOutlined} from "@ui/icons"
+import {AuthContext} from "@/modules/auth/AuthProvider.tsx";//времменное решение
 
 interface NoteData {
     id: number;
@@ -25,6 +26,7 @@ export const NoteViewPage: React.FC = () => {
     const [editorMode, setEditorMode] = useState('view');
     const editor = Editor.useEditor();
     const brcr = useBreadCrumbs();
+    const authContext = useContext(AuthContext);
 
     useEffect(() => {
 
@@ -93,9 +95,14 @@ export const NoteViewPage: React.FC = () => {
                 disabled={loading}
                 mode={editorMode}
                 onChange={() => setShowSaveButton(true)}
-                fileRoutes={{
-                    save: {route: 'notes.files.add', data: {note_id: data?.id}},
-                    delete: {route: 'files.delete'}
+                config = {{
+                    fileRoutes: {
+                        save: {route: 'notes.files.add', data: {note_id: data?.id}},
+                        delete: {route: 'files.delete'}
+                    },
+                    image: {
+                        storageId: (authContext?.user?.id === 1001) ? 2 : 3
+                    }
                 }}
             />
 

@@ -29,7 +29,7 @@ class ShopCouponController extends Controller
     public function detail(ShopCoupon $coupon, string $couponHru='')
     {
         if ($couponHru != $coupon->uri) {
-            return redirect()->route('coupon.detail', ['coupon' => $coupon, 'couponHru' => $coupon->uri]);
+            return redirect()->route('coupon.detail', ['coupon' => $coupon, 'couponHru' => $coupon->uri], 301);
         }
 
         return view('Shop::shop.coupon', [

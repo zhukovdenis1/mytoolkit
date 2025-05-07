@@ -27,7 +27,7 @@ readonly class FileStorageService
     /**
      * @throws ErrorException
      */
-    public function saveByRequest(StoreFileRequest $request, int $moduleId, string $moduleName): array
+    public function saveByRequest(StoreFileRequest $request, int $moduleId, string $moduleName, bool $makeReserveFile): array
     {
         return $this->saveFile(
             (int) $request->input('storage_id'),
@@ -35,6 +35,7 @@ readonly class FileStorageService
             (int) $request->user()->id,
             $moduleId,
             $moduleName,
+            $makeReserveFile,
             $request->files->get('file')//$request->file('file')-так не работает с файлами через link
         );
     }
@@ -49,6 +50,7 @@ readonly class FileStorageService
         int $userId,
         int $moduleId,
         string $moduleName,
+        bool $makeReserveFile,
         UploadedFile $uploadedFile
     ): array {
 
@@ -121,7 +123,7 @@ readonly class FileStorageService
             }
 
             //Создаем резервный файл, если он предусмотрен
-            if ($storage->backup_id) {
+            if ($storage->backup_id && $makeReserveFile) {
                 /** @var Storage $backupStorage */
                 $backupStorage = $storage->backup()->first();
 //            if ($backupStorage->type == $storage->type) {
