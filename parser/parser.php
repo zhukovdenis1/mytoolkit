@@ -9,6 +9,7 @@ if (!$config['debug']) sleep(mt_rand(0,25));
 
 $parseUrl = '';
 $data = ['id' => 1];//for debug case
+$captchaCounter = 0;
 
 try {
     if ($config['debug'] && $config['debug_source'] == 'file') {
@@ -97,7 +98,8 @@ try {
     }
 
     if ($message == 'Captcha') {
-        sleep(180);
+        $captchaCounter++;
+        sleep(60*$captchaCounter);
     }
 
     echo date('H:i:s ') . 'er: ' . $message . ' url:' . $parseUrl;
