@@ -2,12 +2,14 @@
 
 namespace App\Helpers;
 
+use App\Modules\ShopArticle\Models\ShopArticle;
+
 class ArticleHelper
 {
-    public function __construct(private readonly DateTimeHelper $dateTimeHelper)
-    {
-
-    }
+    public function __construct(
+        private readonly DateTimeHelper $dateTimeHelper,
+        private readonly EditorHelper $editorHelper
+    ) {}
     public function replace(?string $text): ?string
     {
         if (is_null($text)) {
@@ -44,6 +46,28 @@ class ArticleHelper
         }
 
         return $text;
+    }
+
+    public function getDataByCode(string $code, int $introBlockAmount): array
+    {
+        $article = ShopArticle::query()->where('code', $code)->first();
+        $textData = json_decode($article->text ?? '', true);
+        $intro = '';
+        if ($introBlockAmount) {//туду не только 1
+            $introData = [array_shift($textData)];
+            $intro = $this->replace($this->editorHelper->arrayToHtml($introData)) ?? '';
+        }
+
+        $title = $article->title ?? $article->h1;
+
+        return [
+            'h1' => $this->replace($article->h1) ?? '',
+            'title' => $this->replace($title) ?? '',
+            'keywords' =>  $this->replace($article->keywords) ?? '',
+            'description' =>  $this->replace($article->description) ?? '',
+            'introduction' =>  $intro,
+            'content' =>  $this->replace($this->editorHelper->arrayToHtml($textData)) ?? '',
+        ];
     }
 
 }

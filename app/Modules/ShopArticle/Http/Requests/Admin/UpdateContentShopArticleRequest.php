@@ -11,7 +11,7 @@ class UpdateContentShopArticleRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'text' => 'nullable|string',
+            'text' => 'nullable|string|max:16000',
         ];
     }
 }

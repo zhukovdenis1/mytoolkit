@@ -14,9 +14,9 @@ class UpdateShopArticleRequest extends BaseFormRequest
             'name' => 'required|string|max:255',
             'h1' => 'required|string|max:255',
             'title' => 'nullable|string|max:255',
-            'keywords' => 'nullable|string|max:255',
+            'keywords' => 'nullable|string|max:16000',
             'description' => 'nullable|string|max:16000',
-            'text' => 'nullable|string',
+            'text' => 'nullable|string|max:16000',
             'code' => 'nullable|string|max:255',
         ];
     }

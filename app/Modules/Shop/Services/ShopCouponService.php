@@ -13,8 +13,7 @@ use Illuminate\Support\Carbon;
 class ShopCouponService extends BaseService
 {
     public function __construct(
-        private readonly \App\Helpers\EditorHelper $editorHelper,
-        private readonly ArticleHelper             $articleHelper
+        private readonly ArticleHelper $articleHelper
     ){}
 
     public function findPaginated(array $validatedData): \Illuminate\Contracts\Pagination\LengthAwarePaginator
@@ -48,16 +47,6 @@ class ShopCouponService extends BaseService
 
     public function getArticleData(): array
     {
-        $article = ShopArticle::query()->where('code', 'coupons')->first();
-        $textData = json_decode($article->text ?? '', true);
-        $introData = [array_shift($textData)];
-        return [
-            'h1' => $this->articleHelper->replace($article->h1) ?? 'Купоны',
-            'title' => $this->articleHelper->replace($article->title) ?? 'Купоны',
-            'keywords' =>  $this->articleHelper->replace($article->keywords) ?? 'Купоны',
-            'description' =>  $this->articleHelper->replace($article->description) ?? 'Купоны',
-            'introduction' =>  $this->articleHelper->replace($this->editorHelper->arrayToHtml($introData)),
-            'content' =>  $this->articleHelper->replace($this->editorHelper->arrayToHtml($textData)),
-        ];
+        return $this->articleHelper->getDataByCode('coupons', 1);
     }
 }

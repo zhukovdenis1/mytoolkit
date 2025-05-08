@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Http\Controllers\Shared;
 use App\Http\Controllers\Controller;
 use App\Modules\Shop\Models\ShopCategory;
 use App\Modules\Shop\Models\ShopProduct;
+use App\Modules\Shop\Services\ShopService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Mail;
 
 class ShopController extends Controller
 {
-
+    public function __construct(private readonly ShopService $service) {}
     public function go(Request $request)
     {
         $validated = $request->validate([
@@ -97,7 +98,8 @@ class ShopController extends Controller
             'products' => $products,
             'title' => 'Недорогой интернет-магазин с бесплатной доставкой / DealExtreme на русском языке',
             'category' => $category,
-            'search' => $search
+            'search' => $search,
+            'article' => $this->service->getArticleData()
         ]);
     }
 
