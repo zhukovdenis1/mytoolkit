@@ -71,7 +71,7 @@ export const ShopArticlesFormPage: React.FC = ({}) => {
                 <Form.Item name="name" label="Name" rules={[{ required: true, message: "Please input name!" }]}>
                     <Input disabled={loading}/>
                 </Form.Item>
-                <Form.Item name="h1" label="H1" rules={[{ required: true, message: "Please input h1!" }]}>
+                <Form.Item name="h1" label="H1" rules={[{ required: true, message: "Please input h1 !" }]}>
                     <Input disabled={loading}/>
                 </Form.Item>
                 <Form.Item name="title" label="Title">
