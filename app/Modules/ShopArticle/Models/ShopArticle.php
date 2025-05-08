@@ -27,8 +27,11 @@ class ShopArticle extends BaseModel
 
     protected $fillable = [
         'title',
+        'keywords',
+        'description',
         'name',
         'uri',
+        'code',
         'text',
     ];
 

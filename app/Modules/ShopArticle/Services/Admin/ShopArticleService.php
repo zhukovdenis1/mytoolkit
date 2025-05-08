@@ -6,12 +6,14 @@ namespace App\Modules\ShopArticle\Services\Admin;
 
 use App\Exceptions\ErrorException;
 use App\Helpers\Helper;
+use App\Helpers\StringHelper;
 use App\Modules\ShopArticle\Models\ShopArticle;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Builder;
 
 class ShopArticleService extends BaseService
 {
+    public function __construct(private readonly StringHelper $stringHelper) {}
     public function create(array $validatedData): ShopArticle
     {
         $validatedData['uri'] = $this->generateUri($validatedData);
@@ -62,7 +64,7 @@ class ShopArticleService extends BaseService
     public function generateUri(array $articleData): string
     {
         $uri = empty($articleData['title']) ? $articleData['name'] : $articleData['title'];
-        return Helper::getUri($uri);
+        return $this->stringHelper->buildUri($uri);
     }
 
 

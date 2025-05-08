@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Services;
+namespace App\Helpers;
 
 
-class EditorService
+class EditorHelper
 {
     public function jsonToHtml(?string $json): string
     {
@@ -13,6 +13,13 @@ class EditorService
 
         $data = json_decode($json, true);
 
+        return $this->arrayToHtml($data);
+
+
+    }
+
+    public function arrayToHtml(array $data): string
+    {
         $html = '';
 
         foreach ($data as $d) {

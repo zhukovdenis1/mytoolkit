@@ -3,13 +3,20 @@
 declare(strict_types=1);
 
 namespace App\Modules\Shop\Services;
+use App\Helpers\ArticleHelper;
 use App\Modules\Shop\Models\ShopCoupon;
+use App\Modules\ShopArticle\Models\ShopArticle;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 
 class ShopCouponService extends BaseService
 {
+    public function __construct(
+        private readonly \App\Helpers\EditorHelper $editorHelper,
+        private readonly ArticleHelper             $articleHelper
+    ){}
+
     public function findPaginated(array $validatedData): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         $articles = ShopCoupon::query();
@@ -17,7 +24,7 @@ class ShopCouponService extends BaseService
 
         $search = empty($validatedData['search']) ? '' : $validatedData['search'];
         $page = empty($validatedData['page']) ? 1 : intval($validatedData['page']);
-        $limit = empty($validatedData['_limit']) ? 10 : intval($validatedData['_limit']);
+        $limit = empty($validatedData['_limit']) ? 30 : intval($validatedData['_limit']);
         $sortColumn = $validatedData['_sort'] ?? 'id';
         $order = $validatedData['_order'] ?? 'desc';
 
@@ -37,5 +44,20 @@ class ShopCouponService extends BaseService
         $dataPaginated = $articles->paginate($limit, ['*'], 'page', $page);
 
         return $dataPaginated;
+    }
+
+    public function getArticleData(): array
+    {
+        $article = ShopArticle::query()->where('code', 'coupons')->first();
+        $textData = json_decode($article->text, true);
+        $introData = [array_shift($textData)];
+        return [
+            'name' => $this->articleHelper->replace($article->name) ?? 'Купоны',
+            'title' => $this->articleHelper->replace($article->title) ?? 'Купоны',
+            'keywords' =>  $this->articleHelper->replace($article->keywords) ?? 'Купоны',
+            'description' =>  $this->articleHelper->replace($article->description) ?? 'Купоны',
+            'introduction' =>  $this->articleHelper->replace($this->editorHelper->arrayToHtml($introData)),
+            'content' =>  $this->articleHelper->replace($this->editorHelper->arrayToHtml($textData)),
+        ];
     }
 }

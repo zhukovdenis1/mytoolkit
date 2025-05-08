@@ -22,6 +22,7 @@ class ShopCouponController extends Controller
         $coupons = $this->service->findPaginated($validated);
 
         return view('Shop::shop.coupons', [
+            'article' => $this->service->getArticleData(),
             'coupons' => $coupons,
         ]);
     }

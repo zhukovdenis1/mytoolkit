@@ -1,14 +1,14 @@
 @extends('layouts.shop')
 
 @section('meta')
-    <title>Купоны Алиэкспресс {{ date('Y') }}</title>
-    <meta name="description" content="Купоны Алиэкспресс {{ date('Y') }}" />
-    <meta name="keywords" content="Купоны Алиэкспресс {{ date('Y') }}" />
+    <title>{{ $article['title'] }}</title>
+    <meta name="description" content="{{ $article['keywords'] }}" />
+    <meta name="keywords" content="{{ $article['description'] }}" />
 @endsection
 
 @section('content')
 
-    <h1>Купоны Алиэкспресс {{ date('Y') }}</h1>
+    <h1>{{ $article['name'] }}</h1>
 
     {{-- Форма поиска --}}
     <form method="GET" action="">
@@ -23,15 +23,21 @@
     @if($coupons->isEmpty())
         <p>Купоны не найдены</p>
     @else
+        {!! $article['introduction'] !!}
+
         <div class="coupons-wrap">
-        @foreach($coupons as $coupon)
-                <x-shop::coupon :coupon="$coupon" />
-        @endforeach
+            @foreach($coupons as $coupon)
+                    <x-shop::coupon :coupon="$coupon" />
+            @endforeach
         </div>
+
+        @if($coupons->hasPages())
+            {{ $coupons->withQueryString()->links() }}
+        @endif
+
+        {!! $article['content'] !!}
     @endif
 
-    @if($coupons->hasPages())
-        {{ $coupons->withQueryString()->links() }}
-    @endif
+
 
 @endsection

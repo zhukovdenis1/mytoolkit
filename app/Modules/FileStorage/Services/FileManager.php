@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\FileStorage\Services;
 
 
+use App\Helpers\StringHelper;
 use App\Modules\FileStorage\Models\File;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -15,9 +16,11 @@ class FileManager
 {
     private const CHUNK_SIZE = 1048576; // 1MB для потоковой передачи
 
+    public function __construct(private readonly StringHelper $stringHelper) {}
+
     public function normalizeFileName($string): string
     {
-        return Helper::normalizeFileName($string);
+        return $this->stringHelper->normalizeFileName($string);
     }
 
     public function download(File $file, string $downloadLink, ?bool $attachment): StreamedResponse|BinaryFileResponse

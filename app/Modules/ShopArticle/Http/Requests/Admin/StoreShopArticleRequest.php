@@ -15,7 +15,10 @@ class StoreShopArticleRequest extends BaseFormRequest
         return [
             'name' => 'required|string|max:255',
             'title' => 'nullable|string|max:255',
-            'text' => 'nullable|string'
+            'keywords' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:16000',
+            'text' => 'nullable|string',
+            'code' => 'nullable|string|max:255',
         ];
     }
 }

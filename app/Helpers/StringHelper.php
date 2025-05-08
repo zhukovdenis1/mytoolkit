@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 namespace App\Helpers;
-class Helper
+class StringHelper
 {
-    public static function uid(int $length = 8): string
+    public function uid(int $length = 8): string
     {
         // Генерируем уникальную строку на основе текущего времени и случайных данных
         $uniquePart = uniqid('', true); // "префикс" + микросекунды
@@ -17,7 +17,7 @@ class Helper
         return substr($hex, 0, $length);
     }
 
-    public static function normalizeFileName(string $string): string
+    public function normalizeFileName(string $string): string
     {
         $string = self::transliterate($string);
 
@@ -26,7 +26,7 @@ class Helper
         return $string;
     }
 
-    public static function transliterate(string $string): string
+    public function transliterate(string $string): string
     {
         // Транслитерация русских букв на английские
         $transliteration = [
@@ -60,7 +60,7 @@ class Helper
         return $string;
     }
 
-    public static function getUri(string $string): string
+    public function buildUri(string $string): string
     {
         $string = self::transliterate($string);
 

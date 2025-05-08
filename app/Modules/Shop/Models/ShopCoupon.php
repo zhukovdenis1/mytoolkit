@@ -30,6 +30,7 @@ class ShopCoupon extends BaseModel
 
     protected $fillable = [
         'epn_id',
+        'pikabu_id',
         'code',
         'url',
         'date_from',

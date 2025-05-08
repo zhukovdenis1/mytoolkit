@@ -3,16 +3,16 @@
 declare(strict_types=1);
 
 namespace App\Modules\ShopArticle\Services\Shared;
+use App\Helpers\EditorHelper;
 use App\Modules\ShopArticle\Models\ShopArticle;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Builder;
-use App\Services\EditorService;
 
 class ShopArticleService extends BaseService
 {
     public function findPaginated(array $validatedData): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        $articles = ShopArticle::query()->withoutTrashed();
+        $articles = ShopArticle::query()->withoutTrashed()->whereNull('code');
 
 
         $search = empty($validatedData['search']) ? '' : $validatedData['search'];
@@ -44,7 +44,7 @@ class ShopArticleService extends BaseService
 
     public function prepareForDisplay(ShopArticle $article): ShopArticle
     {
-        $editorService = new EditorService();
+        $editorService = new EditorHelper();
         $article->text = $editorService->jsonToHtml($article->text);
         return $article;
     }

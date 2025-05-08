@@ -6,6 +6,7 @@ namespace App\Modules\FileStorage\Services;
 
 use App\Exceptions\ErrorException;
 use App\Helpers\Helper;
+use App\Helpers\StringHelper;
 use App\Modules\FileStorage\Http\Requests\StoreFileRequest;
 use App\Modules\FileStorage\Models\Enums\StorageType;
 use App\Modules\FileStorage\Models\File;
@@ -22,7 +23,10 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 readonly class FileStorageService
 {
-    public function __construct(private FileManager $fileManager) {}
+    public function __construct(
+        private readonly FileManager $fileManager,
+        private readonly StringHelper $stringHelper,
+    ) {}
 
     /**
      * @throws ErrorException
@@ -95,7 +99,7 @@ readonly class FileStorageService
             'type' => $type,
             'mime_type' => $mimeType,
             'size' => $size,
-            'private_hash' => $isPrivate ? Helper::uid(8) : null,
+            'private_hash' => $isPrivate ? $this->stringHelper->uid(8) : null,
             'cached_until' => ($type == StorageType::HOSTING) ? null : (Carbon::now())->addSeconds(Config::get('fileStorage.ttl'))
         ]);
 
