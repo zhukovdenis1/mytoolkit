@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('keywords')->nullable();
             $table->string('description')->nullable();
             $table->string('name');
+            $table->string('h1')->nullable();
             $table->string('uri');
             $table->string('code')->nullable();
             $table->json('text')->nullable();

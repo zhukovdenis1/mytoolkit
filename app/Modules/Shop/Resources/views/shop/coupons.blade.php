@@ -1,14 +1,14 @@
 @extends('layouts.shop')
 
 @section('meta')
-    <title>{{ $article['title'] }}</title>
+    <title>{{ $article['title'] ?: $article['h1'] }}</title>
     <meta name="description" content="{{ $article['keywords'] }}" />
     <meta name="keywords" content="{{ $article['description'] }}" />
 @endsection
 
 @section('content')
 
-    <h1>{{ $article['name'] }}</h1>
+    <h1>{{ $article['h1'] }}</h1>
 
     {{-- Форма поиска --}}
     <form method="GET" action="">

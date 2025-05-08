@@ -63,7 +63,7 @@ class ShopArticleService extends BaseService
 
     public function generateUri(array $articleData): string
     {
-        $uri = empty($articleData['title']) ? $articleData['name'] : $articleData['title'];
+        $uri = empty($articleData['title']) ? $articleData['h1'] : $articleData['title'];
         return $this->stringHelper->buildUri($uri);
     }
 

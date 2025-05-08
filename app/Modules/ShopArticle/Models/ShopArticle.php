@@ -30,6 +30,7 @@ class ShopArticle extends BaseModel
         'keywords',
         'description',
         'name',
+        'h1',
         'uri',
         'code',
         'text',

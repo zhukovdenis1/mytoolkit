@@ -49,10 +49,10 @@ class ShopCouponService extends BaseService
     public function getArticleData(): array
     {
         $article = ShopArticle::query()->where('code', 'coupons')->first();
-        $textData = json_decode($article->text, true);
+        $textData = json_decode($article->text ?? '', true);
         $introData = [array_shift($textData)];
         return [
-            'name' => $this->articleHelper->replace($article->name) ?? 'Купоны',
+            'h1' => $this->articleHelper->replace($article->h1) ?? 'Купоны',
             'title' => $this->articleHelper->replace($article->title) ?? 'Купоны',
             'keywords' =>  $this->articleHelper->replace($article->keywords) ?? 'Купоны',
             'description' =>  $this->articleHelper->replace($article->description) ?? 'Купоны',

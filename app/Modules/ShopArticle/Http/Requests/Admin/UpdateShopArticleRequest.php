@@ -12,6 +12,7 @@ class UpdateShopArticleRequest extends BaseFormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'h1' => 'required|string|max:255',
             'title' => 'nullable|string|max:255',
             'keywords' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:16000',
