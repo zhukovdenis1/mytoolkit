@@ -74,6 +74,8 @@ Route::middleware([JwtAdminMiddleware::class])->group(function () {
 
 Route::get('shop/get-product-for-parse', [ShopParseController::class, 'getProductForParse']);
 Route::post('shop/set-parsed-product', [ShopParseController::class, 'setParsedProduct']);
+Route::get('shop/get-coupon-for-parse', [ShopParseController::class, 'getCouponForParse']);
+Route::post('shop/set-parsed-coupon', [ShopParseController::class, 'setParsedCoupon']);
 
 //Route::get('products', [ProductController::class, 'index']);
 //Route::post('products', [ProductController::class, 'store']);

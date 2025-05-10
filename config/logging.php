@@ -127,6 +127,12 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'bot' => [
+            'driver' => 'single', // или 'daily' для ротации логов
+            'path' => storage_path('logs/bots.log'), // путь к файлу
+            'level' => 'debug', // минимальный уровень логирования
+        ],
+
     ],
 
 ];

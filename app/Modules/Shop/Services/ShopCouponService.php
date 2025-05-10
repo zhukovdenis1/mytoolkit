@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Modules\Shop\Services;
-use App\Helpers\ArticleHelper;
+use App\Helpers\ShopArticleHelper;
 use App\Modules\Shop\Models\ShopCoupon;
 use App\Modules\ShopArticle\Models\ShopArticle;
 use App\Services\BaseService;
@@ -13,7 +13,7 @@ use Illuminate\Support\Carbon;
 class ShopCouponService extends BaseService
 {
     public function __construct(
-        private readonly ArticleHelper $articleHelper
+        private readonly ShopArticleHelper $articleHelper
     ){}
 
     public function findPaginated(array $validatedData): \Illuminate\Contracts\Pagination\LengthAwarePaginator

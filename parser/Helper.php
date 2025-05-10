@@ -96,6 +96,30 @@ class Helper
     /**
      * @throws Exception
      */
+    public static function getJsonFromContent(string $content): array
+    {
+        $matches = [];
+        preg_match('/<script id="__AER_DATA__" type="application\/json">(.*?)<\/script><script src="https:\/\/st\.aestatic\.net\/mixer\/ssr\/1\/aer-assets\/system\.js">/isU', $content, $matches);
+        $jsonText = $matches[1] ?? null;
+
+        if (!$jsonText) {
+            throw new Exception('Не удалось выделить код json из документа');
+        }
+        $json = json_decode($jsonText, JSON_OBJECT_AS_ARRAY);
+
+        if (!$json) {
+            throw new Exception('Невалидный json в документе');
+        }
+
+        return $json;
+    }
+
+    /**
+     * Парсинг детальной страницы товара
+     * @param string $content
+     * @return array
+     * @throws Exception
+     */
     public static function parseContent(string $content): array
     {
         if (empty($content)) {
@@ -117,19 +141,7 @@ class Helper
             throw new Exception(ParserError::OutOfStock->value);
         }
 
-        $matches = [];
-        preg_match('/<script id="__AER_DATA__" type="application\/json">(.*?)<\/script><script src="https:\/\/st\.aestatic\.net\/mixer\/ssr\/1\/aer-assets\/system\.js">/isU', $content, $matches);
-        $jsonText = $matches[1] ?? null;
-
-        if (!$jsonText) {
-            throw new Exception('Не удалось выделить код json из документа');
-        }
-
-        $json = json_decode($jsonText, JSON_OBJECT_AS_ARRAY);
-
-        if (!$json) {
-            throw new Exception('Невалидный json в документе');
-        }
+        $json = self::getJsonFromContent($content);
 
         $basic = self::findBasic($json);
 

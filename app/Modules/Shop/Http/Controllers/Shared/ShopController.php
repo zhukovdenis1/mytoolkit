@@ -19,65 +19,11 @@ class ShopController extends Controller
         $validated = $request->validate([
             'url' => ['nullable', 'string', 'min:1', 'max:255'],
             'aid' => ['nullable', 'string', 'min:1', 'max:15'],
-            'search' => ['nullable', 'string', 'min:1', 'max:255'],
+            'coupon_id' => ['nullable', 'integer', 'min:1'],
+            'search' => ['nullable', 'string', 'min:1', 'max:1000'],
         ]);
 
-        $url = $validated['url'] ?? '';
-        $aliProductId = $validated['aid'] ?? 0;
-        $searchText = $validated['search'] ?? '';
-
-        $agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-
-        if (!(strpos($agent, 'Bot/') || strpos($agent, 'bot/'))) {
-            $sText = '';
-            if ($searchText && $searchText[0] !== '{') {
-                $sTextArr = explode(' ', $searchText);
-                $ssTextArr = [];
-                for ($i = 0; $i < 4; $i++) $ssTextArr[] = $sTextArr[$i];
-                $sText = implode('-', $ssTextArr);
-            } elseif ($searchText && $searchText[0] == '{') {
-                $sText = $searchText;
-            }
-
-            $ip = $_SERVER['REMOTE_ADDR'];
-
-            //mysqli_query($resource, "INSERT INTO ali_product_redirect (site_id,ali_product_id,search_text,url,ip,agent) VALUES ( $siteId,'$aliProductId','$mysqlsText','$referer','$ip','$agent')");
-
-            $redirectUrl = null;
-
-            if ($searchText == '{basket}') {
-                $redirectUrl = 'https://aliexpress.ru/cart';
-            } elseif ($searchText == '{wishlist}') {
-                $redirectUrl = 'https://aliexpress.ru/wishlist';
-            } elseif ($searchText == '{login}') {
-                $redirectUrl = 'https://login.aliexpress.ru/';
-            } elseif (!$aliProductId && $sText) {
-                //$redirectUrl = urlencode('http://aliexpress.com/wholesale?SearchText=' . $sText);
-                //$redirectUrl = urlencode('https://aliexpress.ru/wholesale?SearchText=' . $sText);
-                $redirectUrl = urlencode('https://aliexpress.ru/w/wholesale-' . $sText . '.html');
-            } elseif ($aliProductId) {
-                //$redirectUrl = 'https://aliexpress.com/item/xxx/'. $aliProductId .'.html';
-                $redirectUrl = 'https://aliexpress.ru/item/' . $aliProductId . '.html';
-            } elseif ($url) {
-                $redirectUrl = $url;
-            }
-
-            if (!$redirectUrl) {
-                header('Location: /');
-                die();
-            }
-
-            //header('Location: ' . 'https://shopnow.pub/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl);//krutye-veshi link EPN - d-x.su
-            header('Location: ' . 'http://click.deshevyi.ru/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl);//krutye-veshi link EPN - d-x.su
-
-            //header('Location: ' . 'https://alitems.site/g/1e8d11449443646eb20616525dc3e8/?ulp=' . $redirectUrl);//admitad
-            //header('Location: ' . 'http://epnredirect.ru/redirect/cpa/o/8a20f237c0ba70728802f3ed17f7c5dc?to=' . $redirectUrl);//krutye-veshi link EPN - d-x.su
-            //header('Location: ' . 'http://epnredirect.ru/redirect/cpa/o/7c5d917e448a69c032c6222eef78c780?to=https://ru.aliexpress.com/item/xxx/'. $aliProductId .'.html');//desh-mag
-            die();
-        } else {
-            header('Location: /');
-            die();
-        }
+        return redirect($this->service->getGoRedirectUrl($validated, $request));
     }
 
     public function index(Request $request)

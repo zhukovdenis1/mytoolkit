@@ -1,3 +1,5 @@
 composer require telegram-bot/api
 
 composer require diglactic/laravel-breadcrumbs
+
+composer require jaybizzle/crawler-detect

@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Helpers;
 
 use App\Modules\ShopArticle\Models\ShopArticle;
 
-class ArticleHelper
+class ShopArticleHelper
 {
     public function __construct(
         private readonly DateTimeHelper $dateTimeHelper,
@@ -18,7 +20,7 @@ class ArticleHelper
 
         $replacements = [
             'year' => date('Y'),
-            'month_text' => $this->dateTimeHelper->getMonthName(date('m'), 'nominative')
+            'month_text' => $this->dateTimeHelper->getMonthName((int)date('m'), 'nominative')
         ];
 
         foreach ($replacements as $key => $value) {

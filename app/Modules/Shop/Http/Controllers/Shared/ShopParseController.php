@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AnonymousResource;
 use App\Modules\Shop\Http\Requests\Shared\SetParsedProductRequest;
 use App\Modules\Shop\Models\ShopCategory;
+use App\Modules\Shop\Models\ShopCoupon;
 use App\Modules\Shop\Models\ShopProduct;
 use App\Modules\Shop\Models\ShopProductParseQueue;
 use Carbon\Carbon;
@@ -109,5 +110,29 @@ class ShopParseController extends Controller
             ]);
 
         return new AnonymousResource($newProduct);
+    }
+
+    public function getCouponForParse(Request $request): AnonymousResource
+    {
+        $data = ShopCoupon::query()
+            ->whereNotNull('pikabu_id')
+            ->whereNull('url')
+            ->orderBy('created_at')
+            ->first();
+
+        return new AnonymousResource($data);
+    }
+
+    public function setParsedCoupon(Request $request)
+    {
+        $validated = $request->validate([
+            'coupon_id' => ['required', 'integer'],
+            'url' => ['nullable', 'string', 'min:0', 'max:1000'],
+        ]);
+        $coupon = ShopCoupon::query()->findOrFail($validated['coupon_id']);
+        $coupon->url = $validated['url'];
+        $coupon->save();
+
+        return new AnonymousResource($coupon);
     }
 }

@@ -17,7 +17,7 @@
         @endif
 
     </div>
-    <a href="{{ route('go', ['url' => $coupon->url]) }}" target="_blank" class="button">
+    <a href="{{ route('go', ['coupon_id' => $coupon->id]) }}" target="_blank" class="button">
         Использовать купон
     </a>
 </div>

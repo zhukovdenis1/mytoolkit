@@ -38,7 +38,9 @@ class GetCouponsCommand extends Command
 //        }
 //    }
 
-    public function __construct(private readonly StringHelper $stringHelper) {}
+    public function __construct(private readonly StringHelper $stringHelper) {
+        parent::__construct();
+    }
 
     /**
      * Execute the console command.
@@ -86,7 +88,6 @@ class GetCouponsCommand extends Command
                     'title' => $item['attributes']['name'] ?? null,
                     'description' => $item['attributes']['description'] ?? null,
                     'info' => json_encode($item, JSON_UNESCAPED_UNICODE),
-                    'created_at' => Carbon::now(),
                 ];
             }
 
@@ -130,16 +131,15 @@ class GetCouponsCommand extends Command
                 $data[] = [
                     'pikabu_id' => $item['couponId'],
                     'code' => $item['promoCode'] ?? null,
-                    'url' => '',
+                    'url' => null,
                     'uri' => $this->stringHelper->buildUri($item['title']),
                     'date_from' => new Carbon($item['startDate']),
                     'date_to' => new Carbon($item['endDate']),
                     'title' => $item['title'] ?? null,
                     'description' => $item['description'] ?? null,
-                    'discount_amount' => $item['discountAmount'] ?? 0,
-                    'discount_percent' => $item['discountPercent'] ?? 0,
+                    'discount_amount' => (int)$item['discountAmount'] ?? 0,
+                    'discount_percent' => (int)$item['discountPercent'] ?? 0,
                     'info' => json_encode($item, JSON_UNESCAPED_UNICODE),
-                    'created_at' => $now,
                 ];
             }
         }
@@ -153,7 +153,7 @@ class GetCouponsCommand extends Command
 
     private function addCoupons(array $data, string $primaryKeyName): int
     {
-        $chunkSize = 100;
+        $chunkSize = 1;
         $insertedCount = 0;
 
 

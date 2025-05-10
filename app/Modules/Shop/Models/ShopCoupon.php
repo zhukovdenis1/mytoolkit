@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property int $id Автоинкрементный ID (целое число)
  * @property int $epn_id
+ * @property int $pikabu_id
  * @property string $code Код купона (строка)
  * @property string $url
  * @property Carbon $date_from

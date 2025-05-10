@@ -41,7 +41,7 @@ class TelegramStorage
         try {
             $file = new CURLFile($filePath);
             $response = $this->bot->sendDocument($this->chatId, $file, $fileName);
-var_dump($response);die;
+//var_dump($response);die;
             return [
                 'file_id' => $response->getDocument()->getFileId(),
                 'message_id' => $response->getMessageId(),
