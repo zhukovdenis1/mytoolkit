@@ -15,6 +15,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property int $id Автоинкрементный ID (целое число)
  * @property string $title Заголовок заметки (строка)
+ * @property string $keywords
+ * @property string $description
+ * @property string $name
+ * @property string $h1
+ * @property string $code
+ * @property string $separation
  * @property array|null $text Текст заметки (массив в JSON, может быть null)
  * @property Carbon $created_at Время создания записи (дата и время)
  * @property Carbon $updated_at Время обновления записи (дата и время)
@@ -33,6 +39,7 @@ class ShopArticle extends BaseModel
         'h1',
         'uri',
         'code',
+        'separation',
         'text',
     ];
 

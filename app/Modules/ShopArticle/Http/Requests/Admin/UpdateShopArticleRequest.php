@@ -18,6 +18,7 @@ class UpdateShopArticleRequest extends BaseFormRequest
             'description' => 'nullable|string|max:16000',
             'text' => 'nullable|string|max:16000',
             'code' => 'nullable|string|max:255',
+            'separation' => 'nullable|string|max:255',
         ];
     }
 }

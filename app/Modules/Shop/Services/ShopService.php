@@ -20,7 +20,7 @@ class ShopService extends BaseService
 
     public function getArticleData(): array
     {
-       return $this->articleHelper->getDataByCode('home', 0);
+       return $this->articleHelper->getDataByCode('home');
     }
 
     public function getGoRedirectUrl(array $validated, Request $request): string

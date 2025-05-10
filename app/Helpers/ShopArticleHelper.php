@@ -25,7 +25,7 @@ class ShopArticleHelper
 
         foreach ($replacements as $key => $value) {
             // Ищем все варианты плейсхолдера в тексте
-            preg_match_all('/\{\*\*\*(' . preg_quote($key, '/') . ')\*\*\*\}/i', $text, $matches, PREG_SET_ORDER);
+            preg_match_all('/\{\*(' . preg_quote($key, '/') . ')\*\}/i', $text, $matches, PREG_SET_ORDER);
 
             foreach ($matches as $match) {
                 $originalPlaceholder = $match[0];
@@ -50,15 +50,21 @@ class ShopArticleHelper
         return $text;
     }
 
-    public function getDataByCode(string $code, int $introBlockAmount): array
+    public function getDataByCode(string $code): array
     {
         $article = ShopArticle::query()->where('code', $code)->first();
         $textData = json_decode($article->text ?? '', true);
-        $intro = '';
-        if ($introBlockAmount) {//туду не только 1
-            $introData = [array_shift($textData)];
-            $intro = $this->replace($this->editorHelper->arrayToHtml($introData)) ?? '';
+
+        $contentParts = [];
+
+        if ($article->separation) {//туду не только 1
+            $sepData = [array_shift($textData)];
+            $sep = $this->replace($this->editorHelper->arrayToHtml($sepData)) ?? '';
+
+            $contentParts[] = $sep;
         }
+
+        $content = array_merge([$this->replace($this->editorHelper->arrayToHtml($textData)) ?? ''], $contentParts);
 
         $title = $article->title ?? $article->h1;
 
@@ -67,8 +73,7 @@ class ShopArticleHelper
             'title' => $this->replace($title) ?? '',
             'keywords' =>  $this->replace($article->keywords) ?? '',
             'description' =>  $this->replace($article->description) ?? '',
-            'introduction' =>  $intro,
-            'content' =>  $this->replace($this->editorHelper->arrayToHtml($textData)) ?? '',
+            'content' =>  $content,
         ];
     }
 

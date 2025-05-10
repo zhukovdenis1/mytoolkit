@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('h1')->nullable();
             $table->string('uri');
             $table->string('code')->nullable();
+            $table->string('separation')->nullable();
             $table->json('text')->nullable();
             $table->timestamps();
             $table->softDeletes();

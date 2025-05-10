@@ -37,7 +37,7 @@
     @if(Route::is('home'))
     <div class="home-article">
         <h1>{{ $article['h1'] }}</h1>
-        {!! $article['content'] !!}
+        {!! $article['content'][0] ?? '' !!}
     </div>
     @endif
 @endsection

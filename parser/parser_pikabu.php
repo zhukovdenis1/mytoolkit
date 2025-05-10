@@ -63,7 +63,7 @@ try {
         'coupon_id' => $couponId
     ]);
     //echo $json.PHP_EOL;
-    echo date('H:i:s ') . 'ok: coupon_id:' . $couponId . ' url=' . $newUrl;
+    echo date('H:i:s ') . 'ok: coupon_id:' . $couponId . ' url=' . $newUrl . PHP_EOL;
 } catch (Exception $e) {
     $message = $e->getMessage();
     $errorCode = 0;
@@ -82,7 +82,7 @@ try {
         ]);
     }
 
-    echo date('H:i:s ') . 'er: ' . $message . ' coupon_id:' . $couponId;
+    echo date('H:i:s ') . 'er: ' . $message . ' coupon_id:' . $couponId . PHP_EOL;
 }
 
 

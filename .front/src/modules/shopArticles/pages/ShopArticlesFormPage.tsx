@@ -86,6 +86,9 @@ export const ShopArticlesFormPage: React.FC = ({}) => {
                 <Form.Item name="code" label="Code">
                     <Input disabled={loading}/>
                 </Form.Item>
+                <Form.Item name="separation" label="Separation. Ex: 1;-1">
+                    <Input disabled={loading}/>
+                </Form.Item>
                 {isEditPage && <Editor
                         editor={editor}
                         disabled={loading}

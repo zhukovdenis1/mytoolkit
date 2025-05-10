@@ -23,7 +23,7 @@
     @if($coupons->isEmpty())
         <p>Купоны не найдены</p>
     @else
-        {!! $article['introduction'] !!}
+        {!! $article['content'][1] ?? '' !!}
 
         <div class="coupons-wrap">
             @foreach($coupons as $coupon)
@@ -35,7 +35,7 @@
             {{ $coupons->withQueryString()->links() }}
         @endif
 
-        {!! $article['content'] !!}
+        {!! $article['content'][0] ?? '' !!}
     @endif
 
 

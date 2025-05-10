@@ -47,6 +47,6 @@ class ShopCouponService extends BaseService
 
     public function getArticleData(): array
     {
-        return $this->articleHelper->getDataByCode('coupons', 1);
+        return $this->articleHelper->getDataByCode('coupons');
     }
 }
