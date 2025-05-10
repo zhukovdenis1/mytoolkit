@@ -38,7 +38,7 @@ class ShopService extends BaseService
         $url = $validated['url'] ?? '';
         $aliProductId = $validated['aid'] ?? 0;
         $searchText = $validated['search'] ?? '';
-        $couponId = (int) $validated['coupon_id'] ?? 0;
+        $couponId = intval($validated['coupon_id'] ?? 0);
 
         $sText = '';
         if ($searchText && $searchText[0] !== '{') {
