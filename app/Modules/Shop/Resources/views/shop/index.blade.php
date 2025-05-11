@@ -1,9 +1,9 @@
 @extends('layouts.shop')
 
 @section('meta')
-    <title>{{ $article['title'] }}</title>
-    <meta name="keywords" content="{{ $article['keywords'] }}" />
-    <meta name="description" content="{{ $article['description'] }}" />
+    <title>{{ $article['title'] ?? $title }}</title>
+    <meta name="keywords" content="{{ $article['keywords'] ?? $title}}" />
+    <meta name="description" content="{{ $article['description'] ?? $title }}" />
 @endsection
 
 @section('content')
