@@ -62,7 +62,7 @@
                     page++;
                     $.ajax({
                         url: '/more',
-                        data: {page: page, categoryId: '{{ $category }}', search: '{{ $search }}'},
+                        data: {page: page, category_id: '{{ $category }}', search: '{{ $search }}'},
                         dataType: 'html',
                         success: function(data){
                             if (data.length == 0) {
