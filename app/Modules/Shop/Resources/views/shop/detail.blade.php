@@ -25,7 +25,11 @@
     @if ($p->reviews)
         <a href="#reviews">Отзывы</a>
     @endif
-    <noindex><a href="{{ route('go', ['aid' => $p->id_ae]) }}" target="_blank" rel="nofollow" class="buy-button2">Купить на AliExpress</a></noindex>
+    <noindex>
+        <x-shop::product-go-link :product="$p" class="buy-button2">
+            Купить на AliExpress
+        </x-shop::product-go-link>
+    </noindex>
     <a href="{{ route('coupons') }}" target="_blank" class="coupon-button">Купоны</a>
 </div>
 
@@ -63,7 +67,11 @@
             Цена: <strong><x-shop::price :product="$p" /></strong>
         </div>
 
-        <noindex><a href="{{ route('go', ['aid' => $p->id_ae]) }}" rel="nofollow" target="_blank" class="ae-link">Купить на AliExpress</a></noindex>
+        <noindex>
+            <x-shop::product-go-link :product="$p" class="ae-link">
+                Купить на AliExpress
+            </x-shop::product-go-link>
+        </noindex>
     </div>
 
     <div class="images" id="photo">

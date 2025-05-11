@@ -52,7 +52,7 @@ class ShopArticle extends BaseModel
     protected $casts = [
         'id' => 'integer',
         'text' => 'array',//string
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
+//        'created_at' => 'datetime',
+//        'updated_at' => 'datetime',
     ];
 }

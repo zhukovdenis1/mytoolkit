@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Services;
 use App\Helpers\ShopArticleHelper;
 use App\Helpers\ShopCouponHelper;
+use App\Helpers\StringHelper;
 use App\Services\BaseService;
 use Illuminate\Http\Request;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
@@ -15,6 +16,7 @@ class ShopService extends BaseService
     public function __construct(
         private readonly ShopArticleHelper $articleHelper,
         private readonly ShopCouponHelper $couponHelper,
+        private readonly StringHelper $stringHelper
     ){}
 
 
@@ -44,8 +46,12 @@ class ShopService extends BaseService
         if ($searchText && $searchText[0] !== '{') {
             $sTextArr = explode(' ', $searchText);
             $ssTextArr = [];
-            for ($i = 0; $i < 4; $i++) $ssTextArr[] = $sTextArr[$i];
+            for ($i = 0; $i < min(2, count($sTextArr)); $i++) {
+                $ssTextArr[] = $sTextArr[$i];
+            }
             $sText = implode('-', $ssTextArr);
+            //временно
+            $sText = $this->stringHelper->transliterate($sText);
         } elseif ($searchText && $searchText[0] == '{') {
             $sText = $searchText;
         }
@@ -63,8 +69,6 @@ class ShopService extends BaseService
         } elseif ($searchText == '{login}') {
             $redirectUrl = 'https://login.aliexpress.ru/';
         } elseif (!$aliProductId && $sText) {
-            //$redirectUrl = urlencode('http://aliexpress.com/wholesale?SearchText=' . $sText);
-            //$redirectUrl = urlencode('https://aliexpress.ru/wholesale?SearchText=' . $sText);
             $redirectUrl = urlencode('https://aliexpress.ru/w/wholesale-' . $sText . '.html');
         } elseif ($aliProductId) {
             //$redirectUrl = 'https://aliexpress.com/item/xxx/'. $aliProductId .'.html';
@@ -76,8 +80,8 @@ class ShopService extends BaseService
         }
 
         if ($redirectUrl && str_contains($redirectUrl, 'aliexpress.ru')) {
-            //header('Location: ' . 'https://shopnow.pub/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl);//krutye-veshi link EPN - d-x.su
-            $goUrl = 'http://click.deshevyi.ru/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl;
+             //$goUrl = 'https://shopnow.pub/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl;
+             $goUrl = 'http://click.deshevyi.ru/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl;
         } else {
             Log::channel('daily')->warning('Переход без афилиатной ссылки: ', ['url' => $redirectUrl]);
             $goUrl = $redirectUrl;

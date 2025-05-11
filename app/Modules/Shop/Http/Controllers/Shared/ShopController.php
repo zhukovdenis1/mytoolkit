@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Shop\Models\ShopCategory;
 use App\Modules\Shop\Models\ShopProduct;
 use App\Modules\Shop\Services\ShopService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -150,6 +151,16 @@ class ShopController extends Controller
 
         if (is_string($product->reviews)) {
             $product['reviews'] = json_decode($product->reviews);
+        }
+
+        //var_dump($_SERVER['HTTP_REFERER']);die;
+        $currentUrl = url()->current();
+        $referrer = $request->header('referer');
+        $referrer = strtok($referrer, '?');
+        if ($currentUrl === $referrer && !$product['not_found_at']) {
+            $product->not_found_at = Carbon::now();
+            $product->save();
+            return redirect()->route('go', ['search'=> $product->title]);
         }
 
         if ($productHru != $product['hru']) {

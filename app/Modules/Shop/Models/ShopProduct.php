@@ -5,11 +5,13 @@ namespace App\Modules\Shop\Models;
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class ShopProduct extends BaseModel
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'shop_products';
 
@@ -29,6 +31,7 @@ class ShopProduct extends BaseModel
         'title_ae',
         'title_source',
         'title',
+        'search_ae',
         'hru',
         'price',
         'price_from',
@@ -41,7 +44,14 @@ class ShopProduct extends BaseModel
         'vk_attachment',
         'rating',
         'info',
+        'not_found_at',
+    ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
         'deleted_at',
+        'not_found_at',
     ];
 
     protected $casts = [
