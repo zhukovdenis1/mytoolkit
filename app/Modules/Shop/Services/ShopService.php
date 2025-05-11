@@ -6,6 +6,7 @@ namespace App\Modules\Shop\Services;
 use App\Helpers\ShopArticleHelper;
 use App\Helpers\ShopCouponHelper;
 use App\Helpers\StringHelper;
+use App\Models\MyIp;
 use App\Modules\Shop\Models\ShopProduct;
 use App\Services\BaseService;
 use Illuminate\Http\Request;
@@ -93,5 +94,22 @@ class ShopService extends BaseService
 
 
         return $goUrl;
+    }
+
+    public function incViews(Request $request, int $productId): void
+    {
+        $detector = new CrawlerDetect();
+
+        if (!$detector->isCrawler($request->header('User-Agent'))) {
+            $ip = $request->ip();
+            if ($ip && $ip != '127.0.0.1') {
+                $ipExists = MyIp::where('ip', $ip)->exists();
+                if (!$ipExists) {
+                    ShopProduct::where('id', $productId)
+                        ->withoutTimestamps()
+                        ->increment('views');
+                }
+            }
+        }
     }
 }

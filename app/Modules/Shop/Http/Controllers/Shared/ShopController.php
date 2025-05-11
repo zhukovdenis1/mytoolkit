@@ -196,6 +196,9 @@ class ShopController extends Controller
             }
         }
 
+        $this->service->incViews($request, (int)$product->id);
+
+
         return view('Shop::shop.detail', ['p' => $product, 'images' => $img, 'plnk' => 'http://ya.ru', 'vkAttachment' => $vkAttachment, 'recommends' => []]);
     }
 
