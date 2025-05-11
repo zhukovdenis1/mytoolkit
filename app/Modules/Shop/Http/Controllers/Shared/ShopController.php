@@ -22,6 +22,7 @@ class ShopController extends Controller
             'aid' => ['nullable', 'string', 'min:1', 'max:15'],
             'coupon_id' => ['nullable', 'integer', 'min:1'],
             'search' => ['nullable', 'string', 'min:1', 'max:1000'],
+            'title' => ['nullable', 'string', 'min:1', 'max:1000'],
         ]);
 
         return redirect($this->service->getGoRedirectUrl($validated, $request));
@@ -226,6 +227,8 @@ class ShopController extends Controller
             . 'Disallow: /js/' . PHP_EOL
             . 'Disallow: /more*' . PHP_EOL
             . 'Disallow: /?search=*' . PHP_EOL
+            . 'Disallow: /go?*' . PHP_EOL
+            . 'Disallow: /coupons?page=*' . PHP_EOL
             . 'Disallow: /?r=*';
         die;
 

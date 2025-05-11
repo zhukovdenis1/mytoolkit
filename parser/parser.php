@@ -5,11 +5,10 @@ require_once 'ParseError.php';
 
 $config = include 'config.php';
 
-if (!$config['debug']) sleep(mt_rand(0,25));
+//if (!$config['debug']) sleep(mt_rand(0,25));
 
 $parseUrl = '';
 $data = ['id' => 1];//for debug case
-$captchaCounter = 0;
 
 try {
     if ($config['debug'] && $config['debug_source'] == 'file') {
@@ -99,13 +98,6 @@ try {
             'id_queue' => $data['id'],
             'error_code' => $errorCode
         ]);
-    }
-
-    if ($message == 'Captcha') {
-        $captchaCounter++;
-        sleep(60*$captchaCounter);
-    } else {
-        $captchaCounter--;
     }
 
     echo date('H:i:s ') . 'er: ' . $message . ' url:' . $parseUrl;

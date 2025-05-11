@@ -6,6 +6,7 @@ namespace App\Modules\Shop\Services;
 use App\Helpers\ShopArticleHelper;
 use App\Helpers\ShopCouponHelper;
 use App\Helpers\StringHelper;
+use App\Modules\Shop\Models\ShopProduct;
 use App\Services\BaseService;
 use Illuminate\Http\Request;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
@@ -39,21 +40,23 @@ class ShopService extends BaseService
 
         $url = $validated['url'] ?? '';
         $aliProductId = $validated['aid'] ?? 0;
-        $searchText = $validated['search'] ?? '';
+        $search = $validated['search'] ?? '';
+        $title = $validated['title'] ?? '';
         $couponId = intval($validated['coupon_id'] ?? 0);
 
-        $sText = '';
-        if ($searchText && $searchText[0] !== '{') {
-            $sTextArr = explode(' ', $searchText);
+        $searchText = $search;
+        if ($title) {
+            $sTextArr = explode(' ', $title);
             $ssTextArr = [];
             for ($i = 0; $i < min(2, count($sTextArr)); $i++) {
                 $ssTextArr[] = $sTextArr[$i];
             }
-            $sText = implode('-', $ssTextArr);
+            $searchText = implode(' ', $ssTextArr);
             //временно
-            $sText = $this->stringHelper->transliterate($sText);
-        } elseif ($searchText && $searchText[0] == '{') {
-            $sText = $searchText;
+            $searchText = $this->stringHelper->transliterate($searchText);
+        } elseif ($search) {
+            //временно
+            $searchText = $this->stringHelper->transliterate($search);
         }
 
         //$ip = $_SERVER['REMOTE_ADDR'];
@@ -68,8 +71,9 @@ class ShopService extends BaseService
             $redirectUrl = 'https://aliexpress.ru/wishlist';
         } elseif ($searchText == '{login}') {
             $redirectUrl = 'https://login.aliexpress.ru/';
-        } elseif (!$aliProductId && $sText) {
-            $redirectUrl = urlencode('https://aliexpress.ru/w/wholesale-' . $sText . '.html');
+        } elseif (!$aliProductId && $searchText) {
+            //$redirectUrl = 'https://aliexpress.ru/w/wholesale-' . urlencode($searchText) . '.html';
+            $redirectUrl = 'https://aliexpress.ru/wholesale?SearchText=' . urlencode($searchText);
         } elseif ($aliProductId) {
             //$redirectUrl = 'https://aliexpress.com/item/xxx/'. $aliProductId .'.html';
             $redirectUrl = 'https://aliexpress.ru/item/' . $aliProductId . '.html';
