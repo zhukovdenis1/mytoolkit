@@ -22,6 +22,7 @@ Route::get('a', [ShopArticleController::class, 'index'])->name('articles');
 Route::get('a-{article}/{articleHru?}', [ShopArticleController::class, 'detail'])->name('article.detail');
 Route::get('c-{category}/{categoryHru?}', [ShopController::class, 'category'])->name('category');
 Route::get('p-{product}/{productHru?}', [ShopController::class, 'detail'])->name('detail');
+Route::get('/s/{selectionName}/', [ShopController::class, 'selection']);
 //    ->where(['categoryId' => '[0-9]+']);
 Route::get('pa-{id_ae}', [ShopController::class, 'aedetail'])->name('aedetail')
     ->where(['id_ae' => '[0-9]+']);
@@ -29,10 +30,16 @@ Route::get('pa-{id_ae}', [ShopController::class, 'aedetail'])->name('aedetail')
 
 
 //old site pages
+Route::get('/c/flashlights-lasers-999/flashlight-parts-and-tools-917_143', function (Illuminate\Http\Request $request) {
+    return redirect('/s/flashlights', 301);
+});
 Route::get('/ali/{productHru}', function (Request $request, $productHru) {
     return app()->make(ShopController::class)->oldDetail($request, $productHru, 'ali');
 });
 Route::get('/p/{productHru}/{lang?}', [ShopController::class, 'oldDetail']);
 Route::get('/c/{categoryHru}/{categoryHru2?}/{categoryHru3?}', [ShopController::class, 'oldCategory']);
+
+
+
 
 

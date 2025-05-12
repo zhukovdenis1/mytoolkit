@@ -4,9 +4,7 @@ require_once 'Helper.php';
 require_once 'ParseError.php';
 $config = include 'config.php';
 
-$captchaCounter = 0;
-
-if (!$config['debug']) sleep(mt_rand(0,25));
+//if (!$config['debug']) sleep(mt_rand(0,25));
 
 $json = Helper::request($config['url_shop'] . $config['coupons']['get_uri']);
 
@@ -71,11 +69,7 @@ try {
         $errorCode = $message;
         $message = ParserError::getMessageByCode($errorCode);
     }
-    if ($message == 'Captcha') {
-        $captchaCounter++;
-        sleep(60*$captchaCounter);
-    } else {
-        $captchaCounter--;
+    if ($message != 'Captcha') {
         $json = Helper::request($config['url_shop'] . $config['coupons']['set_uri'], [
             'url' => '',
             'coupon_id' => $couponId

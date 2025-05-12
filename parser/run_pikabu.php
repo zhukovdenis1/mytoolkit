@@ -4,7 +4,7 @@ $captchaCounter = 0;
 $message = '';
 
 while (true) {
-    include 'parser.php';
+    include 'parser_pikabu.php';
     if ($message == 'Captcha') {
         $captchaCounter++;
         sleep(60*$captchaCounter);

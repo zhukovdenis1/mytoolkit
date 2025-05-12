@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('my_ips', function (Blueprint $table) {
-            $table->id();
             $table->string('ip');
             $table->timestamps();
 

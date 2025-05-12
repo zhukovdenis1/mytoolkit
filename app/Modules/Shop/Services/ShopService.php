@@ -10,6 +10,7 @@ use App\Models\MyIp;
 use App\Modules\Shop\Models\ShopProduct;
 use App\Services\BaseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use Illuminate\Support\Facades\Log;
 
@@ -106,8 +107,9 @@ class ShopService extends BaseService
                 $ipExists = MyIp::where('ip', $ip)->exists();
                 if (!$ipExists) {
                     ShopProduct::where('id', $productId)
-                        ->withoutTimestamps()
-                        ->increment('views');
+                        ->update([
+                            'views' => DB::raw('views + 1')
+                        ]);
                 }
             }
         }

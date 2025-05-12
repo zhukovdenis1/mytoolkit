@@ -314,4 +314,21 @@ class ShopController extends Controller
         Storage::append('old_category.txt', date('Y-m-d H:i:s ') . "https://old.deshevyi.ru/c/$categoryHru/$categoryHru2/$categoryHru3");
         return redirect()->route('home');
     }
+
+    public function selection(string $selectionName)
+    {
+        if ($selectionName == 'flashlights') {
+            $products = ShopProduct::filter(0, 0, 'фонар');
+
+            return view('Shop::shop.index', [
+                'products' => $products,
+                'title' => 'Фонари и запчати для фонарей / Недорогой интернет-магазин',
+                'category' => 0,
+                'search' => '',
+                'article' => null
+            ]);
+        } else {
+            abort(404);
+        }
+    }
 }
