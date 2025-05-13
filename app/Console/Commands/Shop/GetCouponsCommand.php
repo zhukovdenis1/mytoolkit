@@ -80,7 +80,7 @@ class GetCouponsCommand extends Command
             foreach ($result['data'] as $item) {
                 $data[] = [
                     'epn_id' => $item['id'],
-                    'code' => $item['attributes']['code'] ?? null,
+                    'code' => empty($item['attributes']['code']) ? null : $item['attributes']['code'],
                     'url' => $item['attributes']['url'] ?? null,
                     'uri' => $item['attributes']['slug'] ?? null,
                     'date_from' => $item['attributes']['dateFrom'] ?? null,
@@ -130,7 +130,7 @@ class GetCouponsCommand extends Command
             if ($item['shop']['id'] == 9) {
                 $data[] = [
                     'pikabu_id' => $item['couponId'],
-                    'code' => $item['promoCode'] ?? null,
+                    'code' => empty($item['promoCode']) ? null : $item['promoCode'],
                     'url' => null,
                     'uri' => $this->stringHelper->buildUri($item['title']),
                     'date_from' => new Carbon($item['startDate']),

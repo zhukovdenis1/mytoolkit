@@ -9,6 +9,10 @@ use App\Modules\Patient\Http\Controllers\PatientController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\JwtMiddleware;
 
+//shop
+use App\Http\Middleware\JwtAdminMiddleware;
+use App\Modules\ShopArticle\Http\Controllers\Admin\ShopArticleController;
+
 Route::post('auth/login', [AuthController::class, 'login'])->name('auth.login');
 Route::post('auth/refresh', [AuthController::class, 'refresh'])->name('auth.refresh');
 Route::post('auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
@@ -49,6 +53,22 @@ Route::middleware([JwtMiddleware::class])->group(function () {
     Route::prefix('patients')->group(function () {
         Route::post('/', [PatientController::class, 'store']);
         Route::get('/', [PatientController::class, 'index']);
+    });
+});
+
+Route::middleware([JwtAdminMiddleware::class])->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::prefix('shop')->group(function () {
+            Route::prefix('articles')->group(function () {
+                Route::get('/', [ShopArticleController::class, 'index']);
+                Route::post('/', [ShopArticleController::class, 'store']);
+                Route::get('{article}', [ShopArticleController::class, 'show']);
+                Route::put('{article}', [ShopArticleController::class, 'update']);
+                Route::put('{article}/edit-content', [ShopArticleController::class, 'updateContent']);
+                Route::delete('{article}', [ShopArticleController::class, 'destroy']);
+                Route::post('{article}/files', [ShopArticleController::class, 'storeFile']);
+            });
+        });
     });
 });
 

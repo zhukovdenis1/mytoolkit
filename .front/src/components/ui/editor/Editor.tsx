@@ -192,8 +192,10 @@ const EditorComponent: React.FC<EditorProps> = ({
     };
 
     editor.edit = (key: string, data) => {
+
         if (data?.type) {//если редактируется тип
-            if (structure[key].type == 'visual' && data.data && !data.data.text ) {//если был type = visual
+
+            if (structure[key].type == 'visual' && data.type == 'code'  && data.data) {//если был type = visual
                 data.data.text = beautify(structure[key].data.text);
             }
 

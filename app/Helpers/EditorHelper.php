@@ -24,7 +24,7 @@ class EditorHelper
         $html = '';
 
         foreach ($data as $d) {
-            if ($d['type'] == 'visual') {
+            if ($d['type'] == 'visual' || $d['type'] == 'code') {
                 $html .= $d['data']['text'] . PHP_EOL;
             } elseif ($d['type'] == 'image') {
                 //var_dump($d['data']);die;

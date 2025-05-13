@@ -767,6 +767,17 @@ nav .pagination {
         background: #000;
         color: #fff;
     }
+    a.coupon-type-lnk {
+        text-decoration: none;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin-left: 10px;
+        padding: 5px 10px;
+        }
+        a.coupon-type-lnk:hover, a.coupon-type-lnk.active {
+            background: #ccc;
+            color: #fff;
+        }
 
 @media (max-width: 1000px) {
     .coupon {
@@ -774,3 +785,29 @@ nav .pagination {
     }
 }
 /*end coupon*/
+
+#colorbox .modal-wrap {
+    margin: 0 10px 0 20px;
+}
+
+/*вслывашки под загловком*/
+.spoilers {
+
+    }
+    .spoilers details {
+        margin: 15px 0;
+    }
+    .spoilers article {
+        margin: 1em 0 0 2em;
+    }
+    .spoilers summary {
+        cursor: pointer;
+        font-size: 1.5em;
+        margin-left: 0;
+        }
+.spoilers summary h2 {
+    display: inline-block;
+    margin:0;
+}
+
+/* end вслывашки под загловком*/

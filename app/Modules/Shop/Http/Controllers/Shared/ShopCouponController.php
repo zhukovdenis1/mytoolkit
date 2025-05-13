@@ -15,15 +15,24 @@ class ShopCouponController extends Controller
     public function index(Request $request)
     {
         $validated = $request->validate([
-            'search'        => ['nullable', 'string', 'min:1', 'max:100'],
+            'search'      => ['nullable', 'string', 'min:1', 'max:100'],
+            'type'        => ['nullable', 'string', 'min:1', 'max:20'],
             'page'        => ['nullable', 'integer', 'min:1', 'max:100'],
         ]);
+
 
         $coupons = $this->service->findPaginated($validated);
 
         return view('Shop::shop.coupons', [
             'article' => $this->service->getArticleData(),
             'coupons' => $coupons,
+            'counts' => $this->service->getCounts(),
+            'type' => $validated['type'] ?? null,
+            'isIndexPage' => (
+                empty($validated['search'])
+                && empty($validated['type'])
+                && (empty($validated['page']) || $validated['page'] == 1)
+            )
         ]);
     }
 

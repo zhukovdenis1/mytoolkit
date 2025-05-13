@@ -87,6 +87,14 @@
             });
 
         });
+
+        //$('._modal').colorbox();
+
+        $('._modal_inline').colorbox({
+            inline:true,
+            width: $('.center-wrap').width(),
+            height: '90%'
+        });
     </script>
 
     @yield('js')
