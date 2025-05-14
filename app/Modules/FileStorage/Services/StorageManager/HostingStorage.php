@@ -21,7 +21,7 @@ class HostingStorage extends BaseStorage implements StorageInterface
             $success =  false;
         } else {
             if (!is_dir(dirname($fullPath))) {
-                mkdir(dirname($fullPath), 0644, true);
+                mkdir(dirname($fullPath), 0755, true);
             }
 
             copy($uploadedFilePath, $fullPath);

@@ -2,11 +2,12 @@ import '@/css/ui/editor.css';
 import React, { useState, useEffect } from "react";
 import CodeEditor, {CodeEditorData}  from "./CodeEditor";
 import VisualEditor from "./VisualEditor/VisualEditor";
+import VisualSourceEditor from "./VisualEditor/VisualSourceEditor";
 import EditorToolBar from "./EditorToolBar";
 import VideoEditor, {VideoEditorData} from "./VideoEditor";
 import ImageEditor, {ImageEditorData} from "./ImageEditor";
 import { html } from "js-beautify";
-import {VisualEditorData} from './VisualEditor/types'
+import {VisualEditorData, VisualSourceEditorData} from './VisualEditor/types'
 import {EditorConfig} from './types'
 import {api} from "@/services/api.tsx";
 
@@ -195,7 +196,8 @@ const EditorComponent: React.FC<EditorProps> = ({
 
         if (data?.type) {//если редактируется тип
 
-            if (structure[key].type == 'visual' && data.type == 'code'  && data.data) {//если был type = visual
+            if (structure[key].type == 'visual' && data.data && (data.type == 'code' || data.type == 'visualSource')) {
+                //если был type = visual
                 data.data.text = beautify(structure[key].data.text);
             }
 
@@ -334,7 +336,14 @@ const EditorComponent: React.FC<EditorProps> = ({
                             disabled={disabled}
                             mode={mode}
                         />
-                    ) : item.type === "video" ? (
+                    ) : item.type === "visualSource" ? (
+                        <VisualSourceEditor
+                            data={{text: item.data.text}}
+                            onChange={(val: VisualSourceEditorData) => editor.edit(key, { data: val })}
+                            disabled={disabled}
+                            mode={mode}
+                        />
+                    ): item.type === "video" ? (
                         <VideoEditor
                             data={item.data as VideoEditorData}
                             onChange={(val: VideoEditorData) => editor.edit(key, { data: val })}

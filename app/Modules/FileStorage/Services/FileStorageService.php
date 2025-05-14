@@ -87,6 +87,9 @@ readonly class FileStorageService
         /** @var File $file */
         $file = File::where($fileData)->first();
 
+        /** @var Storage $storage */
+        $storage = $file->storage()->first();
+
         if ($file) {
             throw new ErrorException('File already exists');
         }
@@ -100,7 +103,7 @@ readonly class FileStorageService
             'mime_type' => $mimeType,
             'size' => $size,
             'private_hash' => $isPrivate ? $this->stringHelper->uid(8) : null,
-            'cached_until' => ($type == StorageType::HOSTING) ? null : (Carbon::now())->addSeconds(Config::get('fileStorage.ttl'))
+            'cached_until' => ($storage->type == StorageType::HOSTING) ? null : (Carbon::now())->addSeconds(Config::get('fileStorage.ttl'))
         ]);
 
         if (!$file->exists) {
@@ -108,8 +111,6 @@ readonly class FileStorageService
         }
 
         try {
-            /** @var Storage $storage */
-            $storage = $file->storage()->first();
             $storageManager = StorageFactory::create($storage);
 
             //сохраняем файл

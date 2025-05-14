@@ -1,7 +1,7 @@
 import React from "react";
 import {EditorHandle} from "./Editor";
 import {Space, Dropdown, Confirmable} from "ui"
-import {ArrowUpOutlined, ArrowDownOutlined, PlusOutlined, DeleteOutlined, VideoCameraOutlined, PictureOutlined, CodeOutlined, EyeOutlined} from "./icons"
+import {ArrowUpOutlined, ArrowDownOutlined, PlusOutlined, DeleteOutlined, VideoCameraOutlined, PictureOutlined, CodeOutlined, EyeOutlined, EyeInvisibleOutlined} from "./icons"
 
 
 type EditorToolBarProps = {
@@ -69,7 +69,16 @@ const EditorToolBar: React.FC<EditorToolBarProps> = ({ boxKey, boxType, editor, 
                     type="button" title="Visual editor"
                     className={boxType == 'visual' ? 'active' : ''}
                 >
-                    <EyeOutlined />
+                    <EyeOutlined/>
+                </button>
+                <button
+                    onClick={() => {
+                        editor?.edit(boxKey, {type: 'visualSource'})
+                    }}
+                    type="button" title="Visual source editor"
+                    className={boxType == 'visualSource' ? 'active' : ''}
+                >
+                    <EyeInvisibleOutlined />
                 </button>
                 <Dropdown menu={getCodeMenu(boxKey)} trigger={["click"]}>
                     <button
@@ -77,7 +86,7 @@ const EditorToolBar: React.FC<EditorToolBarProps> = ({ boxKey, boxType, editor, 
                         title="Code"
                         className={boxType == "code" ? "active" : ""}
                     >
-                        <CodeOutlined />
+                        <CodeOutlined/>
                     </button>
                 </Dropdown>
 
@@ -119,9 +128,9 @@ const EditorToolBar: React.FC<EditorToolBarProps> = ({ boxKey, boxType, editor, 
                 </button>
 
                 <Confirmable onConfirm={() => editor?.delete(boxKey)}>
-                <button type="button" title="Delete this block">
-                    <DeleteOutlined/>
-                </button>
+                    <button type="button" title="Delete this block">
+                        <DeleteOutlined/>
+                    </button>
                 </Confirmable>
 
                 {/*<button onClick={() => {*/}
