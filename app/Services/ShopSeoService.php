@@ -16,7 +16,8 @@ class ShopSeoService
             $noIndex = true;
         } else {
             $noIndex = false;
-            if (!empty($request->all())) {
+            $routeName = $request->route()->getName();
+            if (!empty($request->all()) || $routeName == 'category') {
                 $noIndex = true;
             }
         }

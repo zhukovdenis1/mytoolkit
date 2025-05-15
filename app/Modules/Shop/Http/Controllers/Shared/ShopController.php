@@ -32,20 +32,19 @@ class ShopController extends Controller
     {
         $validated = $request->validate([
             'page'        => ['nullable', 'integer', 'min:1', 'max:100'],
-            'category_id' => ['nullable', 'integer'],
+            //'category_id' => ['nullable', 'integer'],
             'search'      => ['nullable', 'string', 'max:50'],
         ]);
 
         $page = $validated['page'] ?? 0;
-        $category = $validated['category_id'] ?? 0;
         $search = $validated['search'] ?? '';
 
-        $products = ShopProduct::filter($page, $category, $search);
+        $products = ShopProduct::filter($page, 0, $search);
 
         return view('Shop::shop.index', [
             'products' => $products,
             'title' => 'Недорогой интернет-магазин с бесплатной доставкой / DealExtreme на русском языке',
-            'category' => $category,
+            'category' => 0,
             'search' => $search,
             'article' => $this->service->getArticleData()
         ]);

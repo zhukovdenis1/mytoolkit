@@ -1,6 +1,6 @@
 @extends('layouts.shop')
 
-@section('title', $article['title'] ?: $title)
+@section('title', $article['title'] ?? $title)
 @section('keywords', $article['keywords'] ?? $title)
 @section('description',$article['description'] ?? $title)
 
