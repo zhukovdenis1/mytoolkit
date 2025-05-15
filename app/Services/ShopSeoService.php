@@ -27,7 +27,7 @@ class ShopSeoService
 
     public function getTitle(string $title, Request $request): string
     {
-        return empty($title) ? 'Недорогой интернет-магазин с бесплатной доставкой / DealExtreme на русском языке' : trim($title);
+        return empty($title) ? 'Недорогой интернет-магазин с бесплатной доставкой / DealExtreme на русском языке' : trim(str_replace("\n", ' ',$title));//\n на детальной странице товара
     }
 
     public function getKeywords(string $keywords, Request $request): string

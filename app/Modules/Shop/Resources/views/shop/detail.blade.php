@@ -1,7 +1,7 @@
 @extends('layouts.shop')
 
 @section('title')
-    <x-shop::product_title :product="$p" />x — купить онлайн / Недорогой интернет-магазин
+    <x-shop::product_title :product="$p" />— купить онлайн / Недорогой интернет-магазин
 @endsection
 @section('keywords', $p->title . ','. $p->title_ae  . 'Недорогой интернет-магазин DealExtreme, Dealextreme на русском')
 @section('description', $p->title . '. '. $p->title_ae . '. Купить недорого')
