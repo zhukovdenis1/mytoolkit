@@ -1,10 +1,10 @@
 @extends('layouts.shop')
 
-@section('meta')
-    <title><x-shop::product_title :product="$p" />  — купить онлайн / Недорогой интернет-магазин</title>
-    <meta name="description" content="Недорогой интернет-магазин DealExtreme. {{ $p->title ?: $p->title_ae }}. Посредник DealExtreme по России и СНГ. DealExtreme - китайский интернет-магазин дешевых товаров. Основным преимуществом DealExtreme помимо низких цен является бесплатная доставка по всему миру." />
-    <meta name="keywords" content="{{ $p->title ?: $p->title_ae }}. Недорогой интернет-магазин DealExtreme, Dealextreme на русском, dialextrim, dealextream, дешевый интернет-магазин, недорогой интернет-магазин, интернет магазин китайских товаров с бесплатной доставкой, китайские интернет магазины на русском языке, dealextreme аналог Россия СНГ, китайский интернет магазин на русском" />
+@section('title')
+    <x-shop::product_title :product="$p" />x — купить онлайн / Недорогой интернет-магазин
 @endsection
+@section('keywords', $p->title . ','. $p->title_ae  . 'Недорогой интернет-магазин DealExtreme, Dealextreme на русском')
+@section('description', $p->title . '. '. $p->title_ae . '. Купить недорого')
 
 @section('content')
 <div class="detail">

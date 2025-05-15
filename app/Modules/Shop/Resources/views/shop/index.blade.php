@@ -1,10 +1,8 @@
 @extends('layouts.shop')
 
-@section('meta')
-    <title>{{ $article['title'] ?? $title }}</title>
-    <meta name="keywords" content="{{ $article['keywords'] ?? $title}}" />
-    <meta name="description" content="{{ $article['description'] ?? $title }}" />
-@endsection
+@section('title', $article['title'] ?: $title)
+@section('keywords', $article['keywords'] ?? $title)
+@section('description',$article['description'] ?? $title)
 
 @section('content')
     <div class="text-center">

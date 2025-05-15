@@ -1,13 +1,11 @@
 @extends('layouts.shop')
 
-@section('meta')
-    <title>{{ $article->title ?? $article->name }}</title>
-    <meta name="description" content="{{ $article->title ?? $article->name }}" />
-    <meta name="keywords" content="{{ $article->title ?? $article->name }}" />
-@endsection
+@section('title', $article->title ?? $article->h1)
+@section('keywords', $article->keyworkds)
+@section('description', $article->description)
 
 @section('content')
-    <h1>{{$article->name}}</h1>
+    <h1>{{$article->h1}}</h1>
     {!! $article->text !!}
 @endsection
 

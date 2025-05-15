@@ -88,7 +88,7 @@ readonly class FileStorageService
         $file = File::where($fileData)->first();
 
         /** @var Storage $storage */
-        $storage = $file->storage()->first();
+        $storage = Storage::find($storageId);
 
         if ($file) {
             throw new ErrorException('File already exists');

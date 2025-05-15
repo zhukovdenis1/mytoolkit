@@ -1,19 +1,21 @@
 <!doctype html>
 <html lang="en">
 <head>
+    @inject('seo', 'App\Services\ShopSeoService')
+    {!! $seo->getNoIndexTag(view()->yieldContent('noindex'), request()) !!}
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" href="/shop/img/favicon.png" type="image/png">
-    @yield('meta',
-        '<title>Недорогой интернет-магазин с бесплатной доставкой / DealExtreme на русском языке</title>
-         <meta name="description" content="Недорогой интернет-магазин DealExtreme. Посредник DealExtreme по России и СНГ. DealExtreme - китайский интернет-магазин дешевых товаров. Основным преимуществом DealExtreme помимо низких цен является бесплатная доставка по всему миру." />
-         <meta name="keywords" content="Недорогой интернет-магазин DealExtreme, Dealextreme на русском, dialextrim, dealextream, дешевый интернет-магазин, недорогой интернет-магазин, интернет магазин китайских товаров с бесплатной доставкой, китайские интернет магазины на русском языке, dealextreme аналог Россия СНГ, китайский интернет магазин на русском" />'
-    )
+    <title>{{$seo->getTitle(view()->yieldContent('title'), request())}}</title>
+    <meta name="description" content="{{$seo->getDescription(view()->yieldContent('description'), request())}}">
+    <meta name="keywords" content="{{$seo->getKeywords(view()->yieldContent('keywords'), request())}}">
+
+
     <link rel="stylesheet" href="/shop/css/main.css" />
     <link rel="stylesheet" href="/shop/css/colorbox.css" />
     @stack('css')
+
     <meta name="yandex-verification" content="5d0ecdba6a014fcc" />
     <meta name="google-site-verification" content="Eougu2REuO6g1AZkpyBbgV_VdahDZ_ffBBsXtiikB8c" />
 </head>

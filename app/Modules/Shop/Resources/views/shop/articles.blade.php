@@ -1,10 +1,6 @@
 @extends('layouts.shop')
 
-@section('meta')
-    <title>Это интересно / Недорогой интернет-магазин</title>
-    <meta name="description" content="" />
-    <meta name="keywords" content="" />
-@endsection
+@section('title', 'Это интересно / Недорогой интернет-магазин')
 
 @section('content')
 

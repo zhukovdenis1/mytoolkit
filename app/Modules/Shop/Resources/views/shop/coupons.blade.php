@@ -1,13 +1,10 @@
 @extends('layouts.shop')
 
-@section('meta')
-    <title>{{ $article['title'] ?: $article['h1'] }}</title>
-    <meta name="description" content="{{ $article['keywords'] }}" />
-    <meta name="keywords" content="{{ $article['description'] }}" />
-@endsection
+@section('title', $article['title'] ?: $article['h1'])
+@section('keywords', $article['keywords'])
+@section('description', $article['description'])
 
 @section('content')
-
     <h1>{{ $article['h1'] }}</h1>
 
     {!! isset($article['content'][1]) && $isIndexPage ? $article['content'][1] : '' !!}

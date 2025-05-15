@@ -50,15 +50,16 @@ class ShopService extends BaseService
         if ($title) {
             $sTextArr = explode(' ', $title);
             $ssTextArr = [];
-            for ($i = 0; $i < min(2, count($sTextArr)); $i++) {
+            for ($i = 0; $i < min(4, count($sTextArr)); $i++) {
                 $ssTextArr[] = $sTextArr[$i];
             }
             $searchText = implode(' ', $ssTextArr);
             //временно
-            $searchText = $this->stringHelper->transliterate($searchText);
+            //$searchText = $this->stringHelper->transliterate($searchText);
         } elseif ($search) {
             //временно
-            $searchText = $this->stringHelper->transliterate($search);
+            //$searchText = $this->stringHelper->transliterate($search);
+            $searchText = $search;
         }
 
         //$ip = $_SERVER['REMOTE_ADDR'];
@@ -75,7 +76,7 @@ class ShopService extends BaseService
             $redirectUrl = 'https://login.aliexpress.ru/';
         } elseif (!$aliProductId && $searchText) {
             //$redirectUrl = 'https://aliexpress.ru/w/wholesale-' . urlencode($searchText) . '.html';
-            $redirectUrl = 'https://aliexpress.ru/wholesale?SearchText=' . urlencode($searchText);
+            $redirectUrl = 'https://aliexpress.ru/wholesale?SearchText=' . $searchText;
         } elseif ($aliProductId) {
             //$redirectUrl = 'https://aliexpress.com/item/xxx/'. $aliProductId .'.html';
             $redirectUrl = 'https://aliexpress.ru/item/' . $aliProductId . '.html';
@@ -86,8 +87,9 @@ class ShopService extends BaseService
         }
 
         if ($redirectUrl && str_contains($redirectUrl, 'aliexpress.ru')) {
-             //$goUrl = 'https://shopnow.pub/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl;
-             $goUrl = 'http://click.deshevyi.ru/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl;
+             //$goUrl = 'http://click.deshevyi.ru/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl;
+             $goUrl = 'https://shopnow.pub/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl;
+             //$goUrl = 'http://shopnow.pub/redirect/cpa/o/swacrnvh0ri1q4e1i5jitag6ro8w0uhf/?erid=2SDnjckbu97&to=' . $redirectUrl;//new link
         } else {
             Log::channel('daily')->warning('Переход без афилиатной ссылки: ', ['url' => $redirectUrl]);
             $goUrl = $redirectUrl;
