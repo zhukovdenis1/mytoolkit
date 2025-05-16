@@ -85,7 +85,7 @@ class ShopService extends BaseService
         } elseif ($url) {
             $redirectUrl = $url;
         } elseif ($couponId) {
-            $redirectUrl = $this->couponHelper->getRedirectUrl($couponId);
+            $redirectUrl = $this->couponHelper->getRedirectUrl($couponId) ?? 'https://aliexpress.ru';
         }
 
         if ($redirectUrl && str_contains($redirectUrl, 'aliexpress.ru')) {

@@ -132,7 +132,7 @@ class GetCouponsCommand extends Command
                 $data[] = [
                     'pikabu_id' => $item['couponId'],
                     'code' => empty($item['promoCode']) ? null : $item['promoCode'],
-                    'url' => null,
+                    'url' => null,//нужно запускать парсер
                     'uri' => $this->stringHelper->buildUri($item['title']),
                     'date_from' => new Carbon($item['startDate']),
                     'date_to' => new Carbon($item['endDate']),

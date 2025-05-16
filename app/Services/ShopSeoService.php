@@ -17,7 +17,7 @@ class ShopSeoService
         } else {
             $noIndex = false;
             $routeName = $request->route()->getName();
-            if (!empty($request->all()) || $routeName == 'category') {
+            if (!empty($request->all()) || $routeName == 'category' || $routeName == 'coupon.detail') {
                 $noIndex = true;
             }
         }
