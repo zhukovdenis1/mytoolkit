@@ -7,6 +7,7 @@ use App\Modules\Shop\Models\ShopCoupon;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use App\Modules\Shop\Services\EpnApiClient;
+use Illuminate\Support\Facades\DB;
 
 class GetCouponsCommand extends Command
 {
@@ -165,17 +166,37 @@ class GetCouponsCommand extends Command
 
         $countBefore = ShopCoupon::whereNotNull($primaryKeyName)->count();
 
+        //Этот метод увеличивает автоинкремент, даже если не было вставки
+//        foreach (array_chunk($data, $chunkSize) as $chunk) {
+//            $insertedCount += ShopCoupon::upsert(
+//                $chunk,
+//                [$primaryKeyName], // Укажите здесь имя первичного ключа или уникального индекса
+//                array_keys($chunk[0] ?? []) // Все поля для обновления при дубликате
+//            );
+//        }
+//        $countAfter = ShopCoupon::whereNotNull($primaryKeyName)->count();
+//
+//        //return $insertedCount;
+//        return $countAfter - $countBefore;
+
+
         foreach (array_chunk($data, $chunkSize) as $chunk) {
-            $insertedCount += ShopCoupon::upsert(
-                $chunk,
-                [$primaryKeyName], // Укажите здесь имя первичного ключа или уникального индекса
-                array_keys($chunk[0] ?? []) // Все поля для обновления при дубликате
-            );
+            DB::transaction(function () use ($chunk, $primaryKeyName, &$insertedCount) {
+                foreach ($chunk as $item) {
+                    $exists = ShopCoupon::where($primaryKeyName, $item[$primaryKeyName])->exists();
+
+                    if ($exists) {
+                        ShopCoupon::where($primaryKeyName, $item[$primaryKeyName])->update($item);
+                    } else {
+                        ShopCoupon::create($item);
+                        $insertedCount++;
+                    }
+                }
+            });
         }
 
-        $countAfter = ShopCoupon::whereNotNull($primaryKeyName)->count();
+        return $insertedCount;
 
-        //return $insertedCount;
-        return $countAfter - $countBefore;
+
     }
 }

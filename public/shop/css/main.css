@@ -8,9 +8,14 @@ html, body {
     font-size: 14px;
     color:#000;
 }
-a {
+a, .lnk {
     color: #036;
+    text-decoration: underline;
 }
+a.h {
+    text-decoration: none;
+}
+
 
 h1 {
     font-weight: normal;
@@ -23,6 +28,11 @@ h2 {
     font-weight: 300;
     font-size: 25px;
     margin: 35px 0 35px 0;
+}
+
+.h h1, .h h2, .h h3 {
+    display: inline;
+    color: #000;
 }
 
 .clearing {
@@ -809,8 +819,65 @@ nav .pagination {
             color: #fff;
         }
 
+.short-coupons-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Расстояние между блоками */
+    padding: 20px 0 0 0;
+    margin: 20px 0 50px 0;
+}
+
+a.short-coupon {
+    flex: 1 1 calc(50% - 20px); /* 2 колонки с учетом gap */
+    box-sizing: border-box;
+    padding: 10px 20px;
+    min-width: 0;
+    border: 1px #ccc dotted;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #000;
+    display: flex;
+    gap: 20px;
+    font-size: 1.2em;
+}
+
+a.short-coupon:hover {
+    background: #ccc;
+}
+
+.short-coupon .discount {
+    background: #e62e04;
+    padding: 5px 10px;
+    border-radius: 100px;
+    color: #fff;
+    /* Чтобы discount не растягивался по высоте */
+    align-self: flex-start;
+}
+
+.short-coupon .info {
+    display: flex;
+    flex-direction: column;
+    /* Чтобы info занимал всю доступную ширину */
+    flex: 1;
+    min-width: 0; /* Фикс для переполнения текста */
+}
+
+.short-coupon .title {
+    /* Занимает всё доступное пространство, кроме .date */
+    flex: 1;
+}
+
+.short-coupon .date {
+    /* Только под размер текста, не растягивается */
+    margin-top: auto; /* Прижимаем к низу .info */
+    text-align: right;
+    color: #aaa;
+    font-size: 0.9em;
+    white-space: nowrap; /* Запрет переноса текста */
+}
+
 @media (max-width: 1000px) {
-    .coupon {
+    .coupon, a.short-coupon {
         flex: 1 1 100%; /* 1 колонка на узких экранах */
     }
 }

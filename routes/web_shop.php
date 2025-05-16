@@ -33,13 +33,11 @@ Route::get('pa-{id_ae}', [ShopController::class, 'aedetail'])->name('aedetail')
 Route::get('/c/flashlights-lasers-999/flashlight-parts-and-tools-917_143', function (Illuminate\Http\Request $request) {
     return redirect('/s/flashlights', 301);
 });
+Route::get('/c/flashlights-lasers-999/flashlight-parts-and-tools-917/glass-954_592', function (Illuminate\Http\Request $request) {
+    return redirect('/s/flashlights', 301);
+});
 Route::get('/ali/{productHru}', function (Request $request, $productHru) {
     return app()->make(ShopController::class)->oldDetail($request, $productHru, 'ali');
 });
 Route::get('/p/{productHru}/{lang?}', [ShopController::class, 'oldDetail']);
 Route::get('/c/{categoryHru}/{categoryHru2?}/{categoryHru3?}', [ShopController::class, 'oldCategory']);
-
-
-
-
-

@@ -26,7 +26,7 @@
     @if($coupons->isEmpty())
         <p>Купоны не найдены</p>
     @else
-                <div class="coupons-wrap">
+        <div class="coupons-wrap">
             @foreach($coupons as $coupon)
                     <x-shop::coupon :coupon="$coupon" />
             @endforeach

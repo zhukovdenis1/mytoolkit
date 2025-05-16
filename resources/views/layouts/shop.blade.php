@@ -47,9 +47,9 @@
                 </noindex>
             </div>
         </header>
-        <nav class="center-menu">
+        <!--nav class="center-menu">
             <a href="/coupons">Купоны</a>
-        </nav>
+        </nav-->
         <main>
             <article>
                 @if(!Route::is('home')) {{ Breadcrumbs::render() }} @else <ol class="brcr"></ol> @endif

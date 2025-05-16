@@ -2,9 +2,11 @@
 
 namespace App\Modules\Shop\Http\Controllers\Shared;
 
+use App\Helpers\DateTimeHelper;
 use App\Http\Controllers\Controller;
 use App\Modules\Shop\Models\ShopCategory;
 use App\Modules\Shop\Models\ShopProduct;
+use App\Modules\Shop\Services\ShopCouponService;
 use App\Modules\Shop\Services\ShopService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -14,7 +16,11 @@ use Illuminate\Support\Facades\Mail;
 
 class ShopController extends Controller
 {
-    public function __construct(private readonly ShopService $service) {}
+    public function __construct(
+        private readonly ShopService $service,
+        private readonly DateTimeHelper $dateTimeHelper
+
+    ) {}
     public function go(Request $request)
     {
         $validated = $request->validate([
@@ -32,7 +38,6 @@ class ShopController extends Controller
     {
         $validated = $request->validate([
             'page'        => ['nullable', 'integer', 'min:1', 'max:100'],
-            //'category_id' => ['nullable', 'integer'],
             'search'      => ['nullable', 'string', 'max:50'],
         ]);
 
@@ -40,12 +45,13 @@ class ShopController extends Controller
         $search = $validated['search'] ?? '';
 
         $products = ShopProduct::filter($page, 0, $search);
+        $coupons = $this->service->getMainPageCoupons();
 
-        return view('Shop::shop.index', [
+        return view('Shop::shop.home', [
+            'monthName' => mb_ucfirst($this->dateTimeHelper->getMonthName(date('m'), 'nominative')),
             'products' => $products,
-            'title' => 'Недорогой интернет-магазин с бесплатной доставкой / DealExtreme на русском языке',
-            'category' => 0,
-            'search' => $search,
+            'coupons' => $coupons,
+            'searchString' => $search,
             'article' => $this->service->getArticleData()
         ]);
     }
@@ -85,13 +91,6 @@ class ShopController extends Controller
 
     public function category(Request $request, ShopCategory $category, string $categoryHru='')
     {
-//        $validator = Validator::make(array_replace($request->all(), ['category_id' => $categoryId]), [
-//            'page'        => ['nullable', 'integer', 'min:1', 'max:100'],
-//            'category_id' => ['nullable', 'integer'],
-//            'search'      => ['nullable', 'string', 'max:50'],
-//        ]);
-        //$validated = $validator->validated();
-
         $validated = $request->validate([
             'page'        => ['nullable', 'integer', 'min:1', 'max:100'],
             'category_id' => ['nullable', 'integer'],
@@ -102,26 +101,16 @@ class ShopController extends Controller
         //$category = $validated['category_id'] ?? 0;
         $search = $validated['search'] ?? '';
 
-//        $categoryData = ShopCategory::query()
-//            ->select('title','hru','id_ae')
-//            ->where('id_ae', $category)
-//            ->limit(1)->first();
-
-//        if (is_null($categoryData)) {
-//            abort(404);
-//        }
-
         if ($categoryHru != $category['hru']) {
             return redirect()->route('category', ['category' => $category->id_ae, 'categoryHru' => $category->hru], 301);
         }
 
         $products = ShopProduct::filter($page, $category->id_ae, $search);
 
-        return view('Shop::shop.index', [
+        return view('Shop::shop.category', [
             'products' => $products,
-            'title' => $category->title . '/ Недорогой интернет магазин' ?? 'Недорогой интернет магазин',
-            'category' => $category->id_ae,
-            'search' => $search
+            'category' => $category,
+            'searchString' => $search
         ]);
     }
 

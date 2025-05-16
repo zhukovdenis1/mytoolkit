@@ -8,6 +8,7 @@ use App\Modules\Shop\Models\ShopCoupon;
 use App\Modules\ShopArticle\Models\ShopArticle;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +20,7 @@ class ShopCouponService extends BaseService
 
     public function findPaginated(array $validatedData): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        $articles = ShopCoupon::query();
+        $coupons = ShopCoupon::query();
 
 
         $search = $validatedData['search'] ?? '';
@@ -29,28 +30,28 @@ class ShopCouponService extends BaseService
         $sortColumn = $validatedData['_sort'] ?? 'id';
         $order = $validatedData['_order'] ?? 'desc';
 
-        $articles->where('date_to', '>=', Carbon::now());
+        $coupons->where('date_to', '>=', Carbon::now());
 
 
         if ($search) {
-            $articles->where(function (Builder $query) use ($search) {
+            $coupons->where(function (Builder $query) use ($search) {
                 $query->where('title', 'like', '%' . $search . '%')
                     ->orWhere('description', 'like', '%' . $search . '%');
             });
         }
 
         if ($type == 'code') {
-            $articles->whereNotNull('code');
+            $coupons->whereNotNull('code');
         } elseif ($type == 'discount_amount') {
-            $articles->where('discount_amount', '>', 0);
+            $coupons->where('discount_amount', '>', 0);
         } elseif ($type == 'discount_percent') {
-            $articles->where('discount_percent', '>', 0);
+            $coupons->where('discount_percent', '>', 0);
         }
 
-        $articles->orderBy($sortColumn, $order);
-//var_dump($articles->toSql());die;
+        $coupons->orderBy($sortColumn, $order);
+//var_dump($coupons->toSql());die;
         //Пагинация
-        $dataPaginated = $articles->paginate($limit, ['*'], 'page', $page);
+        $dataPaginated = $coupons->paginate($limit, ['*'], 'page', $page);
 
         return $dataPaginated;
     }
@@ -77,5 +78,21 @@ class ShopCouponService extends BaseService
         $result['total'] = $counts->total;
 
         return $result;
+    }
+
+    public function getMainPageCoupons():  Collection
+    {
+        $coupons = ShopCoupon::query()
+            ->where('date_to', '>=', Carbon::now())
+            ->where(function ($query) {
+                $query->where('discount_amount', '>', 0)
+                    ->orWhere('discount_percent', '>', 0);
+            })
+            ->orderByRaw('CASE WHEN discount_amount > 0 THEN discount_amount ELSE 0 END DESC')
+            ->orderByRaw('CASE WHEN discount_percent > 0 THEN discount_percent ELSE 0 END DESC')
+            ->limit(10)
+            ->get();
+
+        return $coupons;
     }
 }

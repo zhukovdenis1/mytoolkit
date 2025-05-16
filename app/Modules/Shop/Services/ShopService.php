@@ -9,6 +9,7 @@ use App\Helpers\StringHelper;
 use App\Models\MyIp;
 use App\Modules\Shop\Models\ShopProduct;
 use App\Services\BaseService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
@@ -19,7 +20,8 @@ class ShopService extends BaseService
     public function __construct(
         private readonly ShopArticleHelper $articleHelper,
         private readonly ShopCouponHelper $couponHelper,
-        private readonly StringHelper $stringHelper
+        //private readonly StringHelper $stringHelper,
+        private readonly ShopCouponService $couponService,
     ){}
 
 
@@ -115,5 +117,10 @@ class ShopService extends BaseService
                 }
             }
         }
+    }
+
+    public function getMainPageCoupons(): Collection
+    {
+        return $this->couponService->getMainPageCoupons();
     }
 }
