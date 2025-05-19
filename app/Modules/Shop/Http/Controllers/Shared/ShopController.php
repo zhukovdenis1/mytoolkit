@@ -307,15 +307,15 @@ class ShopController extends Controller
 
     public function selection(string $selectionName)
     {
+        $search = 'фонар';
         if ($selectionName == 'flashlights') {
-            $products = ShopProduct::filter(0, 0, 'фонар');
 
-            return view('Shop::shop.index', [
+            $products = ShopProduct::filter(0, 0, $search);
+
+            return view('Shop::shop.selection', [
                 'products' => $products,
                 'title' => 'Фонари и запчати для фонарей / Недорогой интернет-магазин',
-                'category' => 0,
-                'search' => '',
-                'article' => null
+                'searchString' => $search
             ]);
         } else {
             abort(404);
