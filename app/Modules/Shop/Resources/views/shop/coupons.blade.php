@@ -26,9 +26,9 @@
     @if($coupons->isEmpty())
         <p>Купоны не найдены</p>
     @else
-        <div class="coupons-wrap">
+        <div class="short-coupons-wrap">
             @foreach($coupons as $coupon)
-                    <x-shop::coupon :coupon="$coupon" />
+                <x-shop::coupon :coupon="$coupon" />
             @endforeach
         </div>
 
@@ -38,7 +38,11 @@
 
         {!! isset($article['content'][0]) && $isIndexPage ? $article['content'][0] : '' !!}
     @endif
+@endsection
 
-
-
+@section('js')
+    <script src="{{ asset('/shop/js/coupon_list.js') }}"></script>
+    <script type="text/javascript">
+        CouponList.init({});
+    </script>
 @endsection

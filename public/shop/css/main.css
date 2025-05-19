@@ -818,13 +818,15 @@ nav .pagination {
             background: #ccc;
             color: #fff;
         }
-
 .short-coupons-wrap {
     display: flex;
     flex-wrap: wrap;
     gap: 20px; /* Расстояние между блоками */
     padding: 20px 0 0 0;
-    margin: 20px 0 50px 0;
+    margin: 20px 0 20px 0;
+}
+.short-coupons-wrap .details {
+    display: none;
 }
 
 a.short-coupon {
@@ -882,6 +884,38 @@ a.short-coupon:hover {
     }
 }
 /*end coupon*/
+
+/* articles */
+.articles-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Расстояние между блоками */
+    padding: 20px 0 0 0;
+    margin: 20px 0 20px 0;
+}
+.articles-wrap a {
+    flex: 1 1 calc(50% - 20px); /* 2 колонки с учетом gap */
+    box-sizing: border-box;
+    padding: 10px 20px;
+    min-width: 0;
+    border: 1px #ccc dotted;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #000;
+    display: flex;
+    gap: 20px;
+    font-size: 1.2em;
+}
+.articles-wrap a:hover {
+    color: #fff;
+    background: #ccc;
+}
+@media (max-width: 1000px) {
+    .articles-wrap a {
+        flex: 1 1 100%;
+    }
+}
+/*end articles */
 
 #colorbox .modal-wrap {
     margin: 0 10px 0 20px;

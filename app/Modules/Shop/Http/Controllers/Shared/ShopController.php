@@ -46,11 +46,13 @@ class ShopController extends Controller
 
         $products = ShopProduct::filter($page, 0, $search);
         $coupons = $this->service->getMainPageCoupons();
+        $articles = $this->service->getMainPageArticles();
 
         return view('Shop::shop.home', [
             'monthName' => mb_ucfirst($this->dateTimeHelper->getMonthName(date('m'), 'nominative')),
             'products' => $products,
             'coupons' => $coupons,
+            'articles' => $articles,
             'searchString' => $search,
             'article' => $this->service->getArticleData()
         ]);

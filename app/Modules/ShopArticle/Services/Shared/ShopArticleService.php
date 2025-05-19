@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace App\Modules\ShopArticle\Services\Shared;
 use App\Helpers\EditorHelper;
+use App\Helpers\ShopArticleHelper;
 use App\Modules\ShopArticle\Models\ShopArticle;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 class ShopArticleService extends BaseService
 {
+    public function __construct(
+        private readonly ShopArticleHelper $articleHelper,
+        private readonly EditorHelper $editorHelper
+    ){}
     public function findPaginated(array $validatedData): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         $articles = ShopArticle::query()->withoutTrashed()->whereNull('code');
@@ -44,8 +50,23 @@ class ShopArticleService extends BaseService
 
     public function prepareForDisplay(ShopArticle $article): ShopArticle
     {
-        $editorService = new EditorHelper();
-        $article->text = $editorService->jsonToHtml($article->text);
+        $article->text = $this->editorHelper->jsonToHtml($article->text);
+        $article->text = $this->articleHelper->replace($article->text);
         return $article;
+    }
+
+    public function getMainPageArticles(): Collection
+    {
+        $articles = ShopArticle::select('id', 'h1', 'uri')
+            ->whereNull('code')
+            ->orderBy('id', 'desc')
+            ->limit(20)
+            ->get();
+
+        $articles->each(function ($article) {
+            $article->h1 = $this->articleHelper->replace($article->h1);
+        });
+
+        return $articles;
     }
 }

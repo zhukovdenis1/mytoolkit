@@ -8,6 +8,8 @@ use App\Helpers\ShopCouponHelper;
 use App\Helpers\StringHelper;
 use App\Models\MyIp;
 use App\Modules\Shop\Models\ShopProduct;
+use App\Modules\ShopArticle\Models\ShopArticle;
+use App\Modules\ShopArticle\Services\Shared\ShopArticleService;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -22,6 +24,7 @@ class ShopService extends BaseService
         private readonly ShopCouponHelper $couponHelper,
         //private readonly StringHelper $stringHelper,
         private readonly ShopCouponService $couponService,
+        private readonly ShopArticleService $articleService,
     ){}
 
 
@@ -122,5 +125,10 @@ class ShopService extends BaseService
     public function getMainPageCoupons(): Collection
     {
         return $this->couponService->getMainPageCoupons();
+    }
+
+    public function getMainPageArticles(): Collection
+    {
+        return $this->articleService->getMainPageArticles();
     }
 }

@@ -12,7 +12,23 @@
 
         <div class="short-coupons-wrap">
             @foreach($coupons as $coupon)
-                <x-shop::coupon-short :coupon="$coupon" />
+                <x-shop::coupon :coupon="$coupon" />
+            @endforeach
+        </div>
+
+        <p style="margin-bottom: 50px;">
+            <a  href="{{route('coupons')}}">Посмотреть все скидки &raquo;</a>
+        </p>
+
+    @endif
+
+
+    @if(!$articles->isEmpty() && !$searchString)
+        <h3>Информация об Алиэкспресс:</h3>
+
+        <div class="articles-wrap">
+            @foreach($articles as $article)
+                <a href="{{route('article.detail', ['article' => $article->id, 'articleHru' => $article->uri])}}">{{$article->h1}}</a>
             @endforeach
         </div>
     @endif
@@ -33,5 +49,10 @@
             categoryId: 0,
             searchString: '{{ $searchString }}'
         });
+    </script>
+
+    <script src="{{ asset('/shop/js/coupon_list.js') }}"></script>
+    <script type="text/javascript">
+        CouponList.init({});
     </script>
 @endsection

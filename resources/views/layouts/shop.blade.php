@@ -12,7 +12,7 @@
     <meta name="keywords" content="{{$seo->getKeywords(view()->yieldContent('keywords'), request())}}">
 
 
-    <link rel="stylesheet" href="/shop/css/main.css" />
+    <link rel="stylesheet" href="/shop/css/main.css?{{date('H')}}" />
     <link rel="stylesheet" href="/shop/css/colorbox.css" />
     @stack('css')
 

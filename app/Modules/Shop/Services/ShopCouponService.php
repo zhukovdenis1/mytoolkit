@@ -26,7 +26,7 @@ class ShopCouponService extends BaseService
         $search = $validatedData['search'] ?? '';
         $type = $validatedData['type'] ?? null;
         $page = empty($validatedData['page']) ? 1 : intval($validatedData['page']);
-        $limit = empty($validatedData['_limit']) ? 30 : intval($validatedData['_limit']);
+        $limit = empty($validatedData['_limit']) ? 100 : intval($validatedData['_limit']);
         $sortColumn = $validatedData['_sort'] ?? 'id';
         $order = $validatedData['_order'] ?? 'desc';
 
