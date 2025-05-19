@@ -6,6 +6,7 @@ use App\Modules\Shop\Models\ShopProduct;
 use App\Modules\ShopArticle\Models\ShopArticle;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
+use App\Helpers\ShopArticleHelper;
 
 Breadcrumbs::for('home', function (BreadcrumbTrail $trail): void {
     $trail->push('Главная', route('home'));
@@ -33,9 +34,12 @@ Breadcrumbs::for('articles', function (BreadcrumbTrail $trail): void {
 });
 
 Breadcrumbs::for('article.detail', function (BreadcrumbTrail $trail, ShopArticle $article): void {
+    $helper = app(ShopArticleHelper::class);
+    $name = $article->name ?? '';
+    $name = $helper->replace($name);
     $trail->push('Главная', route('home'));
     $trail->push('Инфо', route('articles'));
-    $trail->push($article->name ?? '', route('home'));
+    $trail->push($name, route('home'));
 
 });
 

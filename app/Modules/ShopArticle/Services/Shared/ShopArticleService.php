@@ -52,6 +52,10 @@ class ShopArticleService extends BaseService
     {
         $article->text = $this->editorHelper->jsonToHtml($article->text);
         $article->text = $this->articleHelper->replace($article->text);
+        $article->h1 = $this->articleHelper->replace($article->h1);
+        $article->title = $this->articleHelper->replace($article->title);
+        $article->keywords = $this->articleHelper->replace($article->keywords);
+        $article->description = $this->articleHelper->replace($article->description);
         return $article;
     }
 
