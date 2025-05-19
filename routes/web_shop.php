@@ -17,7 +17,7 @@ Route::get('get-categories', [ShopController::class, 'getCategories'])->name('ge
 
 //->where(['categoryId' => '[0-9]+']);
 Route::get('coupons', [ShopCouponController::class, 'index'])->name('coupons');
-Route::get('coupons/{coupon}/{couponHru?}', [ShopCouponController::class, 'detail'])->name('coupon.detail');
+//Route::get('coupons/{coupon}/{couponHru?}', [ShopCouponController::class, 'detail'])->name('coupon.detail');
 Route::get('a', [ShopArticleController::class, 'index'])->name('articles');
 Route::get('a-{article}/{articleHru?}', [ShopArticleController::class, 'detail'])->name('article.detail');
 Route::get('c-{category}/{categoryHru?}', [ShopController::class, 'category'])->name('category');
