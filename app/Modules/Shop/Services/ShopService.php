@@ -38,8 +38,8 @@ class ShopService extends BaseService
         $goUrl = '/';
         $detector = new CrawlerDetect();
 
-        //$agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-        //if (!(strpos($agent, 'Bot/') || strpos($agent, 'bot/'))) {
+//        $agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+//        if (!(strpos($agent, 'Bot/') || strpos($agent, 'bot/'))) {
         if ($detector->isCrawler($request->header('User-Agent'))) {
             Log::channel('bot')->info('Bot: ', $request->all());
             return $goUrl;
@@ -48,48 +48,51 @@ class ShopService extends BaseService
         $url = $validated['url'] ?? '';
         $aliProductId = $validated['aid'] ?? 0;
         $search = $validated['search'] ?? '';
-        $title = $validated['title'] ?? '';
+        //$title = $validated['title'] ?? '';
         $couponId = intval($validated['coupon_id'] ?? 0);
 
-        $searchText = $search;
-        if ($title) {
-            $sTextArr = explode(' ', $title);
-            $ssTextArr = [];
-            for ($i = 0; $i < min(4, count($sTextArr)); $i++) {
-                $ssTextArr[] = $sTextArr[$i];
+        $redirectUrl = 'https://aliexpress.ru/';
+
+        if ($aliProductId) {
+            $product = ShopProduct::query()->where('id_ae', $aliProductId)->first();
+            if ($product && $product->not_found_at) {
+                $categoryId = $product->category_id;
+                if ($categoryId) {
+                    $redirectUrl = 'https://aliexpress.ru/category/' . $categoryId . '/x';
+                } else {
+                    $title = $product->title ?? $product->title_ae;
+                    $sTextArr = explode(' ', $title);
+                    $ssTextArr = [];
+                    for ($i = 0; $i < min(4, count($sTextArr)); $i++) {
+                        $ssTextArr[] = $sTextArr[$i];
+                    }
+                    $searchText = implode(' ', $ssTextArr);
+                    //временно
+                    //$searchText = $this->stringHelper->transliterate($searchText);
+                    $redirectUrl = 'https://aliexpress.ru/wholesale?SearchText=' . $searchText;
+                }
+            } else {
+                $redirectUrl = 'https://aliexpress.ru/item/' . $aliProductId . '.html';
             }
-            $searchText = implode(' ', $ssTextArr);
-            //временно
-            //$searchText = $this->stringHelper->transliterate($searchText);
+        } elseif ($couponId) {
+            $redirectUrl = $this->couponHelper->getRedirectUrl($couponId) ?? 'https://aliexpress.ru';
+        } elseif ($url) {
+            $redirectUrl = $url;
         } elseif ($search) {
-            //временно
-            //$searchText = $this->stringHelper->transliterate($search);
-            $searchText = $search;
+            if ($search == '{basket}') {
+                $redirectUrl = 'https://aliexpress.ru/cart';
+            } elseif ($search == '{wishlist}') {
+                $redirectUrl = 'https://aliexpress.ru/wishlist';
+            } elseif ($search == '{login}') {
+                $redirectUrl = 'https://login.aliexpress.ru/';
+            } else {
+                $redirectUrl = 'https://aliexpress.ru/wholesale?SearchText=' . $search;
+            }
         }
 
         //$ip = $_SERVER['REMOTE_ADDR'];
 
         //mysqli_query($resource, "INSERT INTO ali_product_redirect (site_id,ali_product_id,search_text,url,ip,agent) VALUES ( $siteId,'$aliProductId','$mysqlsText','$referer','$ip','$agent')");
-
-        $redirectUrl = null;
-
-        if ($searchText == '{basket}') {
-            $redirectUrl = 'https://aliexpress.ru/cart';
-        } elseif ($searchText == '{wishlist}') {
-            $redirectUrl = 'https://aliexpress.ru/wishlist';
-        } elseif ($searchText == '{login}') {
-            $redirectUrl = 'https://login.aliexpress.ru/';
-        } elseif (!$aliProductId && $searchText) {
-            //$redirectUrl = 'https://aliexpress.ru/w/wholesale-' . urlencode($searchText) . '.html';
-            $redirectUrl = 'https://aliexpress.ru/wholesale?SearchText=' . $searchText;
-        } elseif ($aliProductId) {
-            //$redirectUrl = 'https://aliexpress.com/item/xxx/'. $aliProductId .'.html';
-            $redirectUrl = 'https://aliexpress.ru/item/' . $aliProductId . '.html';
-        } elseif ($url) {
-            $redirectUrl = $url;
-        } elseif ($couponId) {
-            $redirectUrl = $this->couponHelper->getRedirectUrl($couponId) ?? 'https://aliexpress.ru';
-        }
 
         if ($redirectUrl && str_contains($redirectUrl, 'aliexpress.ru')) {
              //$goUrl = 'http://click.deshevyi.ru/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl;

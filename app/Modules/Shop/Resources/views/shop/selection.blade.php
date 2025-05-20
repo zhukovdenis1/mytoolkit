@@ -1,8 +1,9 @@
 @extends('layouts.shop')
 
-@section('title', $title ?? 'Недорогой интернет магазин')
+@section('title', $title . '/ Недорогой интернет магазин' ?? 'Недорогой интернет магазин')
 
 @section('content')
+    <h1>{{$title}}</h1>
     <x-shop::product-list :products="$products" />
 @endsection
 

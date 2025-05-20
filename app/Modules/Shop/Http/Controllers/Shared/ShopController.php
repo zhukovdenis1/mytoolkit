@@ -28,10 +28,10 @@ class ShopController extends Controller
             'aid' => ['nullable', 'string', 'min:1', 'max:15'],
             'coupon_id' => ['nullable', 'integer', 'min:1'],
             'search' => ['nullable', 'string', 'min:1', 'max:1000'],
-            'title' => ['nullable', 'string', 'min:1', 'max:1000'],
         ]);
 
-        return redirect($this->service->getGoRedirectUrl($validated, $request));
+        $url = $this->service->getGoRedirectUrl($validated, $request);
+        return redirect($url);
     }
 
     public function index(Request $request)
@@ -314,7 +314,7 @@ class ShopController extends Controller
 
             return view('Shop::shop.selection', [
                 'products' => $products,
-                'title' => 'Фонари и запчати для фонарей / Недорогой интернет-магазин',
+                'title' => 'Фонари и запчати для фонарей',
                 'searchString' => $search
             ]);
         } else {
