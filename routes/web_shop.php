@@ -11,6 +11,7 @@ Route::get('more', [ShopController::class, 'more'])->name('more');
 Route::get('search', [ShopController::class, 'search'])->name('search');
 Route::get('sitemap.xml', [ShopController::class, 'sitemap'])->name('sitemap');
 Route::get('go', [ShopController::class, 'go'])->name('go');
+Route::get('go2', [ShopController::class, 'go'])->name('go2');
 Route::any('new-order', [ShopController::class, 'newOrder']);
 Route::get('robots.txt', [ShopController::class, 'robots'])->name('robots');
 Route::get('get-categories', [ShopController::class, 'getCategories'])->name('getCategories');

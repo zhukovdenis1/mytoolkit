@@ -25,7 +25,7 @@ class ShopController extends Controller
     {
         $validated = $request->validate([
             'url' => ['nullable', 'string', 'min:1', 'max:255'],
-            'aid' => ['nullable', 'string', 'min:1', 'max:15'],
+            'aid' => ['nullable', 'string', 'min:1', 'max:30'],
             'coupon_id' => ['nullable', 'integer', 'min:1'],
             'search' => ['nullable', 'string', 'min:1', 'max:1000'],
         ]);
@@ -145,14 +145,14 @@ class ShopController extends Controller
         }
 
         //var_dump($_SERVER['HTTP_REFERER']);die;
-        $currentUrl = url()->current();
+        /*$currentUrl = url()->current();
         $referrer = $request->header('referer');
         $referrer = strtok($referrer, '?');
         if ($currentUrl === $referrer && !$product['not_found_at']) {
             $product->not_found_at = Carbon::now();
             $product->save();
-            return redirect()->route('go', ['search'=> $product->title]);
-        }
+            return redirect()->route('go', ['aid'=> $product->id_ae]);
+        }*/
 
         if ($productHru != $product['hru']) {
             return redirect()->route('detail', ['product' => $product, 'productHru' => $product->hru], 301);
