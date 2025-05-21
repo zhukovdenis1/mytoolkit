@@ -22,7 +22,7 @@ class ShopParseController extends Controller
     {
         $data = ShopProductParseQueue::query()
             ->whereNull('parsed_at')
-            ->where('source', '=','epn_top')
+            //->where('source', '=','epn_top')
             ->where(function($query) {
                 $query->whereNull('blocked_until')
                     ->orWhere('blocked_until', '<', Carbon::now());
@@ -131,7 +131,7 @@ class ShopParseController extends Controller
 
             if ($epnCategoryId) {
                 ShopCategory::where('id_ae', $data['category_id'])->update([
-                    'epn_category_id' => $epnCategoryId,
+                    'id_epn' => $epnCategoryId,
                 ]);
             }
 
