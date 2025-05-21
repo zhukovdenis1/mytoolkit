@@ -63,7 +63,7 @@ class ExceptionHandler
     {
         $exceptions->renderable(function (QueryException $e, Request $request) {
 
-            // Логируем ошибку в канал sql_error
+            // Логируем ошибку в канал sql_error (Перенес в AppServiceProvider)
             Log::channel('sql_error')->error('Database Query Error', [
                 'message' => $e->getMessage(),
                 'sql' => $e->getSql(),

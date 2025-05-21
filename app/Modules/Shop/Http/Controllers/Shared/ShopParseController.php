@@ -12,7 +12,9 @@ use App\Modules\Shop\Models\ShopCoupon;
 use App\Modules\Shop\Models\ShopProduct;
 use App\Modules\Shop\Models\ShopProductParseQueue;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 
 class ShopParseController extends Controller
@@ -44,6 +46,7 @@ class ShopParseController extends Controller
     public function setParsedProduct(SetParsedProductRequest $request)
     {
         $newProduct = null;
+        $errorMessage = '';
 
         $idQueue = $request->input('id_queue');
         $data = $request->input('data') ?? [];
@@ -96,6 +99,9 @@ class ShopParseController extends Controller
             }
             $epnCashBack = intval($epnCashBack);
 
+            $epnIncome = $queueItem['info']['income'] ?? 0;
+            $epnIncome = intval($epnIncome);
+
             /*$newProduct = ShopProduct::create(
                 array_merge(
                     $data,
@@ -122,7 +128,7 @@ class ShopParseController extends Controller
                         'vk_category' => $queueItem['info']['vk_category'] ?? null,
                         'epn_category_id' => $epnCategoryId,
                         'vk_attachment' => $queueItem['info']['vk_attachment'] ?? null,
-                        'epn_month_income' => intval($queueItem['info']['income']) ?? 0,
+                        'epn_month_income' => $epnIncome,
                         'epn_cashback' => $epnCashBack,
                         'info' => $queueItem['info'] ?? null,
                     ]
@@ -139,9 +145,19 @@ class ShopParseController extends Controller
                 ->update([
                     'parsed_at' => Carbon::now(),
                 ]);
-        } catch (\Exception $e) {
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
             $errorCode = intval($e->getMessage());
             $errorCode = $errorCode ?: 6;
+
+            Log::channel('sql_error')->error('Database Query Error', [
+                'message' => $e->getMessage(),
+                'sql' => $e->getSql(),
+                'bindings' => $e->getBindings(),
+                //'trace' => $e->getTraceAsString(),
+                'url' => $request->fullUrl(),
+                'ip' => $request->ip(),
+            ]);
         }
 
         ShopProductParseQueue::where('id', $idQueue)
@@ -150,7 +166,7 @@ class ShopParseController extends Controller
                 'error_code' => $errorCode
             ]);
 
-        return new AnonymousResource($newProduct);
+        return new AnonymousResource(['product' => $newProduct, 'message' => $errorMessage]);
     }
 
     public function getCouponForParse(Request $request): AnonymousResource
