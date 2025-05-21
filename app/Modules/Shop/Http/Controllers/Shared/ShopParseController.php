@@ -22,6 +22,7 @@ class ShopParseController extends Controller
     {
         $data = ShopProductParseQueue::query()
             ->whereNull('parsed_at')
+            ->where('source', '=','epn_top')
             ->where(function($query) {
                 $query->whereNull('blocked_until')
                     ->orWhere('blocked_until', '<', Carbon::now());
@@ -93,6 +94,7 @@ class ShopParseController extends Controller
             if (isset($queueItem['info']['attributes']['cashbackPercent'])) {
                 $epnCashBack = floatval($queueItem['info']['attributes']['cashbackPercent'])* intval($data['price']);
             }
+            $epnCashBack = intval($epnCashBack);
 
             /*$newProduct = ShopProduct::create(
                 array_merge(
@@ -120,7 +122,7 @@ class ShopParseController extends Controller
                         'vk_category' => $queueItem['info']['vk_category'] ?? null,
                         'epn_category_id' => $epnCategoryId,
                         'vk_attachment' => $queueItem['info']['vk_attachment'] ?? null,
-                        'epn_month_income' => $queueItem['info']['income'] ?? 0,
+                        'epn_month_income' => intval($queueItem['info']['income']) ?? 0,
                         'epn_cashback' => $epnCashBack,
                         'info' => $queueItem['info'] ?? null,
                     ]
@@ -136,7 +138,7 @@ class ShopParseController extends Controller
             ShopProductParseQueue::where('id', $idQueue)
                 ->update([
                     'parsed_at' => Carbon::now(),
-            ]);
+                ]);
         } catch (\Exception $e) {
             $errorCode = intval($e->getMessage());
             $errorCode = $errorCode ?: 6;

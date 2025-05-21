@@ -23,7 +23,11 @@ class ShopParsingController extends BaseController
 
     public function getEpnCategories():AnonymousResource
     {
-        return new AnonymousResource(config('epn.categories'));
+        $categories = config('epn.categories') ?? [];
+        usort($categories, function($a, $b) {
+            return strcmp($a['name'], $b['name']);
+        });
+        return new AnonymousResource($categories);
     }
 
 

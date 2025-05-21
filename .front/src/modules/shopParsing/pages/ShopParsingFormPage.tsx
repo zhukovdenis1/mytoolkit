@@ -55,6 +55,7 @@ export const ShopParsingFormPage: React.FC = ({}) => {
 
     return (
         <>
+            <a target="_blank" href="https://epn.bz/ru/cabinet/#/top/ali/commission">Got to epn top list &rarr;</a>
             <Form form={form} onFinish={handleSave}>
                 <Form.Item name="exit" hidden>
                     <Input type="hidden" />

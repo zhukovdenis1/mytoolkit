@@ -12,9 +12,9 @@ return [
     'debug_source' => 'file',//file or url
     'debug_file' => 'debug_product.txt',
     'debug_extra_file' => 'debug_extra.txt',
-    'debug_parse_url' => 'https://aliexpress.ru/item/1485515770.html',//если debug_source = url
+    'debug_parse_url' => 'https://www.aliexpress.com/item/32775690350.html',//если debug_source = url
     //'url' => 'https://mytoolkit.loc',
-    'url' => 'https://mtk.deshevyi.ru',
+    'url' => 'https://deshevyi.ru',//'url' => 'https://mtk.deshevyi.ru',//урл для вызова скриптов
     'url_shop' => 'https://deshevyi.ru',
     'get_uri' => '/api/shop/get-product-for-parse',
     'set_uri' => '/api/shop/set-parsed-product',

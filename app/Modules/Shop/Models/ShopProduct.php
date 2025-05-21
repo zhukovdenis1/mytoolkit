@@ -43,6 +43,8 @@ class ShopProduct extends BaseModel
         'video',
         'vk_attachment',
         'rating',
+        'epn_month_income',
+        'epn_cashback',
         'info',
         'not_found_at',
     ];

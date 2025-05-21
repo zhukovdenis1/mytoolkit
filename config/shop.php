@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'dollar_rate' => 80,
+    //'dollar_rate' => 80,
 ];

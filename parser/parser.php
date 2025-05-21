@@ -20,6 +20,7 @@ try {
         file_put_contents($config['debug_file'], $content);
     } else {
         $json = Helper::request($config['url'] . $config['get_uri']);
+
         $data = json_decode($json, true);
         if (empty($data['data'])) {
             throw new Exception('Empty parse queue');
@@ -29,6 +30,8 @@ try {
         $queueItemId = $data['id'];
         if ($data['source'] == 'epn_hot') {
             $parseUrl = $data['info']['attributes']['directUrl'];
+        } elseif ($data['source'] = 'epn_top') {
+            $parseUrl = 'https://aliexpress.ru/item/'.$data['id_ae'].'.html';
         } else {
             throw new Exception('Unknown source');
         }
@@ -79,21 +82,23 @@ try {
         $response = Helper::request($config['url'] . $config['set_uri'],
             ['id_queue' => $data['id'], 'data' => $aliData, 'brcr' => $brcr]
         );
+//        var_dump($data['id']);
         file_put_contents('response.html', $response);
 
         $responseData = json_decode($response, true);
 
-        echo date('H:i:s ') . 'ok: ' . $config['url_shop'] . '/p-' . $responseData['data']['id'] . '/';
+        echo date('H:i:s ') . 'ok: ' . $config['url_shop'] . '/p-' . $responseData['data']['id'] . '/ ; id_queue='.$data['id'];
     }
 } catch (Exception $e) {
     $message = $e->getMessage();
     $errorCode = 0;
+
     if (is_numeric($message)) {
         $errorCode = $message;
         $message = ParserError::getMessageByCode($errorCode);
     }
 
-    if (!$config['debug'] && is_numeric($message)) {
+    if (!$config['debug'] && $errorCode) {
         $json = Helper::request($config['url'] . $config['set_uri'], [
             'id_queue' => $data['id'],
             'error_code' => $errorCode
