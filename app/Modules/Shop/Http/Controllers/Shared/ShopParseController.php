@@ -56,14 +56,14 @@ class ShopParseController extends Controller
             return new AnonymousResource(['error' => 'Данные были распарсены ранее: ' . $queueItem['parsed_at']->format('Y-m-d H:i:s')]);
         }
 
-        $categroryParents = [];
+        $categoryParents = [];
         for ($i =0; $i < count($brcr); $i++) {
             $b = $brcr[$i];
             $b['level'] = $i;
             if ($i) {
                 $b['parent_id'] = $brcr[$i-1]['id_ae'];
-                $categroryParents[] = $b['parent_id'];
-                $b['parents'] = implode(',', $categroryParents);
+                $categoryParents[] = $b['parent_id'];
+                $b['parents'] = implode(',', $categoryParents);
             } else {
                 $b['parent_id'] = null;
                 $b['parents'] = null;
@@ -80,19 +80,58 @@ class ShopParseController extends Controller
                 throw new \Exception('1');
             }
 
-            $newProduct = ShopProduct::create(
+            $titleSource = null;
+            $titleSource = $queueItem['info']['attributes']['titleRu'] ?? $titleSource;
+            $titleSource = $queueItem['info']['title'] ?? $titleSource;
+
+            $epnCategoryId = null;
+            $epnCategoryId = $queueItem['info']['attributes']['goodsCategoryId'] ?? $epnCategoryId;
+            $epnCategoryId = $queueItem['info']['epnCategoryId'] ?? $epnCategoryId;
+
+            $epnCashBack = 0;
+            $epnCashBack = $queueItem['info']['cashback'] ?? $epnCashBack;
+            if (isset($queueItem['info']['attributes']['cashbackPercent'])) {
+                $epnCashBack = floatval($queueItem['info']['attributes']['cashbackPercent'])* intval($data['price']);
+            }
+
+            /*$newProduct = ShopProduct::create(
                 array_merge(
                     $data,
                     [
                         'source' => $queueItem['source'] ?? null,
-                        'title_source' => $queueItem['info']['attributes']['titleRu'] ?? null,
+                        'title_source' => $titleSource,
                         'vk_category' => $queueItem['info']['vk_category'] ?? null,
-                        'epn_category_id' => $queueItem['info']['attributes']['goodsCategoryId'] ?? null,
+                        'epn_category_id' => $epnCategoryId,
                         'vk_attachment' => $queueItem['info']['vk_attachment'] ?? null,
                         'info' => $queueItem['info'] ?? null,
                     ]
                 )
+            );*/
+
+            $newProduct = ShopProduct::updateOrCreate(
+                [
+                    'id_ae' => $data['id_ae']
+                ],
+                array_merge(
+                    $data,
+                    [
+                        'source' => $queueItem['source'] ?? null,
+                        'title_source' => $titleSource,
+                        'vk_category' => $queueItem['info']['vk_category'] ?? null,
+                        'epn_category_id' => $epnCategoryId,
+                        'vk_attachment' => $queueItem['info']['vk_attachment'] ?? null,
+                        'epn_month_income' => $queueItem['info']['income'] ?? 0,
+                        'epn_cashback' => $epnCashBack,
+                        'info' => $queueItem['info'] ?? null,
+                    ]
+                )
             );
+
+            if ($epnCategoryId) {
+                ShopCategory::where('id_ae', $data['category_id'])->update([
+                    'epn_category_id' => $epnCategoryId,
+                ]);
+            }
 
             ShopProductParseQueue::where('id', $idQueue)
                 ->update([

@@ -24,7 +24,7 @@
 
 
     @if(!$articles->isEmpty() && !$searchString)
-        <h3>Информация об Алиэкспресс:</h3>
+        <h3>Информационный блок:</h3>
 
         <div class="articles-wrap">
             @foreach($articles as $article)

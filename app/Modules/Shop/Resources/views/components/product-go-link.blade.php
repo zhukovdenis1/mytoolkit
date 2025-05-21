@@ -13,7 +13,7 @@
     }*/
     $href = route('go', ['aid' => $product->id_ae]);
 @endphp
-<noindex>
+
 <a
     href="{{ $href }}"
     rel="nofollow"
@@ -22,4 +22,4 @@
 >
     {{ $slot }}
 </a>
-</noindex>
+

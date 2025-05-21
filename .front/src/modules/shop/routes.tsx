@@ -4,6 +4,7 @@ import {IRoute} from "@/routes";
 import {Outlet} from "react-router-dom";
 import {ShopIndexPage} from "./pages/ShopIndexPage";
 import {shopArticlesRoutes} from '@/modules/shopArticles/routes';
+import {shopParsingRoutes} from '@/modules/shopParsing/routes';
 
 export const shopRoutes: IRoute =
 {
@@ -16,6 +17,7 @@ export const shopRoutes: IRoute =
             index: true,
             element: <ShopIndexPage /> ,
         },
-        shopArticlesRoutes
+        shopArticlesRoutes,
+        shopParsingRoutes
     ]
 };

@@ -12,7 +12,7 @@ class ShopProductParseQueue extends BaseModel
     protected $table = 'shop_products_parse_queue';
     public $timestamps = false;
 
-    protected $connection = 'mysql_shop';
+    //protected $connection = 'mysql_shop';
 
     protected $casts = [
         'info' => 'array',

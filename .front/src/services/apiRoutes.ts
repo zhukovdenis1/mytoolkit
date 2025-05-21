@@ -30,6 +30,9 @@ const apiRoutes: Record<string, [string, string]> = {
     "admin.shop.articles.editContent": ["admin/shop/articles/:article_id/edit-content", "put"],
     "admin.shop.articles.delete": ["admin/shop/articles/:article_id", "delete"],
     "admin.articles.files.add": ["admin/shop/articles/:article_id/files", "post"],
+
+    "admin.shop.parsing.add": ["admin/shop/parsing", "post"],
+    "admin.shop.parsing.getEpnCategories": ["admin/shop/parsing/epn-categories", "get"],
 };
 
 export default apiRoutes;

@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('shop_category', function (Blueprint $table) {
             $table->id('inc')->autoIncrement();
             $table->integer('id_ae');
-            $table->integer('parent_id');
+            $table->integer('id_epn')->nullable();
+            $table->integer('parent_id')->nullable();
             $table->integer('level');
             $table->boolean('hidden');
             $table->string('title', 64);

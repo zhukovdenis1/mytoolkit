@@ -6,6 +6,7 @@ export {
     Button,
     Form,
     Input,
+    Checkbox,
     message,
     Select,
     Space,

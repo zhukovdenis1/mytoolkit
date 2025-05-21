@@ -6,6 +6,7 @@ use App\Modules\Note\Http\Controllers\User\NoteCategoryController;
 use App\Modules\Note\Http\Controllers\User\NoteController;
 //use App\Modules\Product\Http\Controllers\User\ProductController;
 use App\Modules\Patient\Http\Controllers\PatientController;
+use App\Modules\Shop\Http\Controllers\Admin\ShopParsingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\JwtMiddleware;
 
@@ -67,6 +68,10 @@ Route::middleware([JwtAdminMiddleware::class])->group(function () {
                 Route::put('{article}/edit-content', [ShopArticleController::class, 'updateContent']);
                 Route::delete('{article}', [ShopArticleController::class, 'destroy']);
                 Route::post('{article}/files', [ShopArticleController::class, 'storeFile']);
+            });
+            Route::prefix('parsing')->group(function () {
+                Route::post('/', [ShopParsingController::class, 'store']);
+                Route::get('epn-categories', [ShopParsingController::class, 'getEpnCategories']);
             });
         });
     });

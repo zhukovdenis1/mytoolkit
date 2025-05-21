@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('id_vk_group',32)->nullable();
             $table->string('id_vk_ref',256);
             $table->enum('category', ['', 'women','men','children','design', 'auto','handmade','fisher','krutye-veshi']);
+            $table->integer('epn_category_id');
             $table->integer('category_id');
             $table->integer('category_0');
             $table->integer('category_1');
@@ -37,6 +38,8 @@ return new class extends Migration
             $table->text('vk_attachment');
             $table->integer('vk_published');
             $table->integer('rating');
+            $table->integer('epn_cashback')->default(0);
+            $table->integer('epn_month_income')->default(0);
             $table->integer('moderated');
             $table->boolean('is_duplicate');
             $table->timestamp('date_add')->useCurrent();
