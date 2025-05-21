@@ -87,7 +87,7 @@ try {
 
         $responseData = json_decode($response, true);
 
-        echo date('H:i:s ') . 'ok: ' . $config['url_shop'] . '/p-' . $responseData['data']['id'] . '/ ; id_queue='.$data['id'];
+        echo date('H:i:s ') . 'ok: ' . $config['url_shop'] . '/p-' . $responseData['data']['product']['id'] . '/ ; id_queue='.$data['id'];
     }
 } catch (Exception $e) {
     $message = $e->getMessage();

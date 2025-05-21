@@ -95,7 +95,7 @@ class ShopParseController extends Controller
             $epnCashBack = 0;
             $epnCashBack = $queueItem['info']['cashback'] ?? $epnCashBack;
             if (isset($queueItem['info']['attributes']['cashbackPercent'])) {
-                $epnCashBack = floatval($queueItem['info']['attributes']['cashbackPercent'])* intval($data['price']);
+                $epnCashBack = floatval($queueItem['info']['attributes']['cashbackPercent'])* intval($data['price'])/100;
             }
             $epnCashBack = intval($epnCashBack);
 
