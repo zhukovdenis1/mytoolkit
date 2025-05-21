@@ -7,6 +7,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Configuration\Exceptions as BaseExceptions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\MessageBag;
 use Illuminate\Validation\ValidationException;
@@ -61,6 +62,17 @@ class ExceptionHandler
     protected function renderQueryErrors(BaseExceptions $exceptions): void
     {
         $exceptions->renderable(function (QueryException $e, Request $request) {
+
+            // Логируем ошибку в канал sql_error
+            Log::channel('sql_error')->error('Database Query Error', [
+                'message' => $e->getMessage(),
+                'sql' => $e->getSql(),
+                'bindings' => $e->getBindings(),
+                'trace' => $e->getTraceAsString(),
+                'url' => $request->fullUrl(),
+                'ip' => $request->ip(),
+            ]);
+
             $isApiRequest = $this->isApiRequest($request);
 
             if ($isApiRequest) {
