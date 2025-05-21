@@ -145,7 +145,7 @@ class ShopParseController extends Controller
                 ->update([
                     'parsed_at' => Carbon::now(),
                 ]);
-        } catch (QueryException $e) {
+        } catch (\Exception $e) {
             $errorMessage = $e->getMessage();
             $errorCode = intval($e->getMessage());
             $errorCode = $errorCode ?: 6;
