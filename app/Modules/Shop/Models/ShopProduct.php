@@ -70,7 +70,7 @@ class ShopProduct extends BaseModel
 
 
         $query = ShopProduct::query()
-            ->select('id', 'title', 'title_ae', 'photo', 'rating', 'price', 'price_from', 'price_to', 'hru')
+            ->select('id', 'title1', 'title_ae', 'photo', 'rating', 'price', 'price_from', 'price_to', 'hru')
             ->whereNull('deleted_at')
             ->whereNull('not_found_at')
             ->whereNotIn('category_0', [16002,1309])

@@ -68,7 +68,7 @@ class ExceptionHandler
                 'message' => $e->getMessage(),
                 'sql' => $e->getSql(),
                 'bindings' => $e->getBindings(),
-                'trace' => $e->getTraceAsString(),
+                //'trace' => $e->getTraceAsString(),
                 'url' => $request->fullUrl(),
                 'ip' => $request->ip(),
             ]);

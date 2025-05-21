@@ -132,11 +132,11 @@ return [
             'path' => storage_path('logs/bots.log'), // путь к файлу
             'level' => 'debug', // минимальный уровень логирования
         ],
-        'sql_errors' => [
-            'driver' => 'monthly',
+        'sql_error' => [
+            'driver' => 'daily',
             'path' => storage_path('logs/sql_error.log'),
             'level' => 'error',
-            'days' => 60,
+            'days' => 14,
         ],
 
     ],
