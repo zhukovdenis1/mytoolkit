@@ -118,8 +118,8 @@ class ShopParseController extends Controller
                 )
             );*/
 
-            $hruTitle = $titleSource
-                ? mb_substr($this->stringHelper->buildUri($titleSource), 0, 100)
+            $hruTitle = $data['title_ae']
+                ? mb_substr($this->stringHelper->buildUri($data['title_ae']), 0, 100)
                 : null;
 
             $newProduct = ShopProduct::updateOrCreate(
