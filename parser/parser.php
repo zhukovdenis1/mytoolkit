@@ -9,7 +9,7 @@ $config = include 'config.php';
 
 $parseUrl = '';
 $data = ['id' => 1];//for debug case
-
+$message = '';
 try {
     if ($config['debug'] && $config['debug_source'] == 'file') {
         $parseUrl = 'file:' . $config['debug_file'];

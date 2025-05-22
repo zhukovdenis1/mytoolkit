@@ -18,6 +18,8 @@ $json = [];
 
 $foundUrl = '';
 
+$message = '';
+
 try {
     if (empty($data['data'])) {
         throw new Exception('No new data received');

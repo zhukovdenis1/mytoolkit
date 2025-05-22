@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Http\Controllers\Shared;
 
+use App\Helpers\StringHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AnonymousResource;
 use App\Modules\Shop\Http\Requests\Shared\SetParsedProductRequest;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Log;
 
 class ShopParseController extends Controller
 {
+    public function __construct(private readonly StringHelper $stringHelper) {}
 
     public function getProductForParse(Request $request): AnonymousResource
     {
@@ -116,6 +118,10 @@ class ShopParseController extends Controller
                 )
             );*/
 
+            $hruTitle = $titleSource
+                ? mb_substr($this->stringHelper->buildUri($titleSource), 0, 100)
+                : null;
+
             $newProduct = ShopProduct::updateOrCreate(
                 [
                     'id_ae' => $data['id_ae']
@@ -123,6 +129,7 @@ class ShopParseController extends Controller
                 array_merge(
                     $data,
                     [
+                        'hru' => $hruTitle,
                         'source' => $queueItem['source'] ?? null,
                         'title_source' => $titleSource,
                         'vk_category' => $queueItem['info']['vk_category'] ?? null,
