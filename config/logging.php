@@ -138,7 +138,12 @@ return [
             'level' => 'error',
             'days' => 14,
         ],
-
+        'critical' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/critical.log'),
+            'level' => 'error',
+            'days' => 7,
+        ],
     ],
 
 ];

@@ -13,6 +13,7 @@ use Illuminate\Support\MessageBag;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
@@ -45,6 +46,18 @@ class ExceptionHandler
     {
         $exceptions->renderable(function (Throwable $e, Request $request) {
             $isApiRequest = $this->isApiRequest($request);
+            //get_class($e) //ParseError
+            //if (($e instanceof HttpException || $) && $e->getStatusCode() >= 500) {die('daf');
+                Log::channel('critical')->error('500 error', [
+                    'message' => $e->getMessage(),
+                    //'trace' => $e->getTraceAsString(),
+                    'url' => $request->fullUrl(),
+                    'method' => $request->method(),
+                    'referrer' => $request->header('referer'),
+                    'ip' => $request->ip(),
+                ]);
+            //}
+
 
             if ($isApiRequest) {
                 return $this->buildJsonResponse(

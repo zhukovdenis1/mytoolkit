@@ -87,14 +87,19 @@ class DeployCommand extends Command
         }
         //$result = exec("php -r 'echo getcwd();'", $r2);
 
-        $result = exec("php ../artisan migrate 2>&1", $r2);
+        $result = exec("php ../artisan migrate --force 2>&1", $r2);
+
+//        \Illuminate\Support\Facades\Artisan::call('migrate', [
+//            '--force' => true,
+//        ]);
+//        $result = \Illuminate\Support\Facades\Artisan::output();
 
         exec("php ../artisan config:clear");
-        //exec("php ../artisan route:clear");
+        exec("php ../artisan route:clear");
         exec("php ../artisan view:clear");
 
         exec("php ../artisan config:cache");
-        //exec("php ../artisan route:cache");
+        exec("php ../artisan route:cache");
         exec("php ../artisan view:cache");
 
         foreach ($r2 as $line) {
