@@ -19,10 +19,14 @@ if ($domain === 'deshevyi.loc' || $domain === 'deshevyi.ru') {
             health: '/up',
         )
         ->withMiddleware(function (Middleware $middleware) {
+            $middleware->alias([
+                'shop_visits' => \App\Http\Middleware\RegisterVisit::class,
+            ]);
             //$middleware->append(JwtMiddleware::class);
             $middleware->append(DebugMode::class);
             $middleware->append(JsonUnescapeUnicode::class);
             $middleware->append(HandleCors::class);
+            //$middleware->append(\App\Http\Middleware\RegisterVisit::class); - перенесено в routes
         })
         ->withExceptions(new ExceptionHandler()/*function (Exceptions $exceptions) {
         //
