@@ -55,11 +55,14 @@ class RegisterVisit
         $request->session()->put('visit_num', $visitNum);
 
         // Определяем параметры визита
-        $isBot = $crawlerDetect->isCrawler($request->userAgent());
-        $isMobile = $this->isMobile($request->userAgent());
+        $userAgent = $request->userAgent() ?? null;
+        $isBot = $crawlerDetect->isCrawler($userAgent);
+        $isMobile = $this->isMobile($userAgent);
         $referrer = $request->header('referer');
-        $isExternal = $referrer && !Str::contains($referrer, env('APP_SHOP_URL'));
+        //var_dump($referrer);var_dump(env('APP_SHOP_URL'));die;
+        $isExternal = $referrer ? !Str::contains($referrer, env('APP_SHOP_URL')) : null;
         $itemInfo = $this->getItemInfoFromRoute($request);
+        $uri = Str::limit($request->getRequestUri(), 255);
 
         if ($isBot) {
             Log::channel('bot_visits')->info('Bot: ', [
@@ -67,7 +70,7 @@ class RegisterVisit
                 'user_agent' => Str::limit($request->userAgent(), 255),
                 'sid' => $sid,
                 'ip' => $ip,
-                'uri' => Str::limit($request->path(), 255),
+                'uri' => $uri,
                 'referrer' => $referrer ? Str::limit($referrer, 255) : null,
                 'item_id' => $itemInfo['id'],
                 'visit_num' => $visitNum,
@@ -82,7 +85,7 @@ class RegisterVisit
                 'ip' => $ip,
                 'user_agent' => Str::limit($request->userAgent(), 255),
                 'referrer' => $referrer ? Str::limit($referrer, 255) : null,
-                'uri' => Str::limit($request->path(), 255),
+                'uri' => $uri,
                 'page_name' => $this->getPageName($request),
                 'item_id' => $itemInfo['id'],
                 'visit_num' => $visitNum,
@@ -133,6 +136,12 @@ class RegisterVisit
         if ($route->named('detail')) {
             return [
                 'id' => (int) $route->parameter('product')->id,
+            ];
+        }
+
+        if ($route->named('category')) {
+            return [
+                'id' => (int) $route->parameter('category')->id_ae,
             ];
         }
 

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->tinyInteger('visit_num')->unsigned()->default(0);
             $table->boolean('is_bot')->default(0);
             $table->boolean('is_mobile')->default(0);
-            $table->boolean('is_external')->default(0);
+            $table->boolean('is_external')->nullable();
             $table->timestamp('created_at')->useCurrent();
         });
     }
