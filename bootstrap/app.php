@@ -1,22 +1,5 @@
 <?php
 
-
-use Illuminate\Foundation\Application;
-use App\Exceptions\ExceptionHandler;
-use Illuminate\Foundation\Configuration\Middleware;
-
-return Application::configure(basePath: dirname(__DIR__))
-    ->withProviders()
-    ->withRouting(
-        health: '/up'
-    )
-    ->withMiddleware(function (Middleware $middleware) {
-        // Только общие middleware, которые не зависят от домена
-    })
-    ->withExceptions(new ExceptionHandler())
-    ->create();
-
-/*
 use App\Exceptions\ExceptionHandler;
 use App\Http\Middleware\HandleCors;
 use App\Http\Middleware\JsonUnescapeUnicode;
@@ -30,7 +13,6 @@ $domain = $_SERVER['HTTP_HOST'] ?? '';
 
 if ($domain === 'deshevyi.loc' || $domain === 'deshevyi.ru') {
     return Application::configure(basePath: dirname(__DIR__))
-        ->withProviders()
         ->withRouting(
             web: __DIR__ . '/../routes/web_shop.php',
             api: __DIR__.'/../routes/api_shop.php',
@@ -64,6 +46,21 @@ if ($domain === 'deshevyi.loc' || $domain === 'deshevyi.ru') {
             $middleware->append(HandleCors::class);
         })
         ->withExceptions(new ExceptionHandler())->create();
-}*/
+}
 
+/*
+use Illuminate\Foundation\Application;
+use App\Exceptions\ExceptionHandler;
+use Illuminate\Foundation\Configuration\Middleware;
 
+return Application::configure(basePath: dirname(__DIR__))
+    ->withProviders()
+    ->withRouting(
+        health: '/up'
+    )
+    ->withMiddleware(function (Middleware $middleware) {
+        // Только общие middleware, которые не зависят от домена
+    })
+    ->withExceptions(new ExceptionHandler())
+    ->create();
+*/

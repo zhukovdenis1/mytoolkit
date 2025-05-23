@@ -95,11 +95,11 @@ class DeployCommand extends Command
 //        $result = \Illuminate\Support\Facades\Artisan::output();
 
         exec("php ../artisan config:clear");
-        exec("php ../artisan route:clear");
+        //exec("php ../artisan route:clear");
         exec("php ../artisan view:clear");
 
         exec("php ../artisan config:cache");
-        exec("php ../artisan route:cache");
+        //exec("php ../artisan route:cache");
         exec("php ../artisan view:cache");
 
         foreach ($r2 as $line) {
