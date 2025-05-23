@@ -36,9 +36,14 @@ class ShopParseController extends Controller
             ->first();
 
         if ($data->exists) {
+            if ($data->important) {
+                $blockedUntil = Carbon::now()->addMinutes(3);
+            } else {
+                $blockedUntil = Carbon::now()->addHour();
+            }
             ShopProductParseQueue::where('id', $data->id)
                 ->update([
-                    'blocked_until' => Carbon::now()->addHour()
+                    'blocked_until' => $blockedUntil
                 ]);
         }
 
@@ -50,38 +55,42 @@ class ShopParseController extends Controller
         $newProduct = null;
         $errorMessage = '';
 
-        $idQueue = $request->input('id_queue');
-        $data = $request->input('data') ?? [];
-        $brcr = $request->input('brcr') ?? [];
-        $errorCode = $request->input('error_code') ?? 0;
-
-        $queueItem = ShopProductParseQueue::findOrFail($idQueue);
-
-        if ($queueItem['parsed_at']) {
-            //throw new \Exception('Данные были распарсены ранее: ' . $queueItem['parsed_at']->format('Y-m-d H:i:s'));
-            return new AnonymousResource(['error' => 'Данные были распарсены ранее: ' . $queueItem['parsed_at']->format('Y-m-d H:i:s')]);
-        }
-
-        $categoryParents = [];
-        for ($i =0; $i < count($brcr); $i++) {
-            $b = $brcr[$i];
-            $b['level'] = $i;
-            if ($i) {
-                $b['parent_id'] = $brcr[$i-1]['id_ae'];
-                $categoryParents[] = $b['parent_id'];
-                $b['parents'] = implode(',', $categoryParents);
-            } else {
-                $b['parent_id'] = null;
-                $b['parents'] = null;
-            }
-            try {
-                ShopCategory::create($b);
-            } catch (\Exception $e) {
-
-            }
-        }
-
         try {
+            $idQueue = $request->input('id_queue');
+            $data = $request->input('data') ?? [];
+            $brcr = $request->input('brcr') ?? [];
+            $errorCode = $request->input('error_code') ?? 0;
+
+            $queueItem = ShopProductParseQueue::findOrFail($idQueue);
+
+            if ($queueItem['parsed_at']) {
+                //throw new \Exception('Данные были распарсены ранее: ' . $queueItem['parsed_at']->format('Y-m-d H:i:s'));
+                return new AnonymousResource(['error' => 'Данные были распарсены ранее: ' . $queueItem['parsed_at']->format('Y-m-d H:i:s')]);
+            }
+
+            if ($errorCode) {
+                throw new \Exception($errorCode);
+            }
+
+            $categoryParents = [];
+            for ($i =0; $i < count($brcr); $i++) {
+                $b = $brcr[$i];
+                $b['level'] = $i;
+                if ($i) {
+                    $b['parent_id'] = $brcr[$i-1]['id_ae'];
+                    $categoryParents[] = $b['parent_id'];
+                    $b['parents'] = implode(',', $categoryParents);
+                } else {
+                    $b['parent_id'] = null;
+                    $b['parents'] = null;
+                }
+                try {
+                    ShopCategory::create($b);
+                } catch (\Exception $e) {
+
+                }
+            }
+
             if (empty($idQueue)) {
                 throw new \Exception('1');
             }
@@ -155,16 +164,19 @@ class ShopParseController extends Controller
         } catch (\Exception $e) {
             $errorMessage = $e->getMessage();
             $errorCode = intval($e->getMessage());
-            $errorCode = $errorCode ?: 6;
+            $errorCode = $errorCode ?: -1;
 
-            Log::channel('sql_error')->error('Database Query Error', [
-                'message' => $e->getMessage(),
-                'sql' => $e->getSql(),
-                'bindings' => $e->getBindings(),
-                //'trace' => $e->getTraceAsString(),
-                'url' => $request->fullUrl(),
-                'ip' => $request->ip(),
-            ]);
+            if ($e instanceof QueryException) {
+                $errorCode = 6;
+                Log::channel('sql_error')->error('Database Query Error', [
+                    'message' => $e->getMessage(),
+                    'sql' => $e->getSql(),
+                    'bindings' => $e->getBindings(),
+                    //'trace' => $e->getTraceAsString(),
+                    'url' => $request->fullUrl(),
+                    'ip' => $request->ip(),
+                ]);
+            }
         }
 
         ShopProductParseQueue::where('id', $idQueue)

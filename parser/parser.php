@@ -99,6 +99,7 @@ try {
     }
 
     if (!$config['debug'] && $errorCode) {
+
         $json = Helper::request($config['url'] . $config['set_uri'], [
             'id_queue' => $data['id'],
             'error_code' => $errorCode
@@ -109,6 +110,3 @@ try {
 }
 
 echo PHP_EOL;
-
-
-

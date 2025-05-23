@@ -41,7 +41,7 @@ class ShopService extends BaseService
 //        $agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 //        if (!(strpos($agent, 'Bot/') || strpos($agent, 'bot/'))) {
         if ($detector->isCrawler($request->header('User-Agent'))) {
-            Log::channel('bot')->info('Bot: ', $request->all());
+            //Log::channel('bot')->info('Bot: ', $request->all());
             return $goUrl;
         }
 

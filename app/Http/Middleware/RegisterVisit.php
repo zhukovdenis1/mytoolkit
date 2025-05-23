@@ -8,6 +8,7 @@ use App\Modules\Shop\Models\ShopVisit;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,22 +61,37 @@ class RegisterVisit
         $isExternal = $referrer && !Str::contains($referrer, env('APP_SHOP_URL'));
         $itemInfo = $this->getItemInfoFromRoute($request);
 
-        // Создаем запись о визите
-        ShopVisit::create([
-            'sid' => $sid,
-            'ip' => $ip,
-            'user_agent' => Str::limit($request->userAgent(), 255),
-            'referrer' => $referrer ? Str::limit($referrer, 255) : null,
-            'uri' => Str::limit($request->path(), 255),
-            'page_name' => $this->getPageName($request),
-            'item_id' => $itemInfo['id'],
-            'visit_num' => $visitNum,
-            'is_bot' => $isBot,
-            'is_mobile' => $isMobile,
-            'is_external' => $isExternal,
-            'created_at' => Carbon::now(),
-        ]);
-
+        if ($isBot) {
+            Log::channel('bot_visits')->info('Bot: ', [
+                'page_name' => $this->getPageName($request),
+                'user_agent' => Str::limit($request->userAgent(), 255),
+                'sid' => $sid,
+                'ip' => $ip,
+                'uri' => Str::limit($request->path(), 255),
+                'referrer' => $referrer ? Str::limit($referrer, 255) : null,
+                'item_id' => $itemInfo['id'],
+                'visit_num' => $visitNum,
+                'is_bot' => $isBot,
+                'is_mobile' => $isMobile,
+                'is_external' => $isExternal,
+            ]);
+        } else {
+            // Создаем запись о визите
+            ShopVisit::create([
+                'sid' => $sid,
+                'ip' => $ip,
+                'user_agent' => Str::limit($request->userAgent(), 255),
+                'referrer' => $referrer ? Str::limit($referrer, 255) : null,
+                'uri' => Str::limit($request->path(), 255),
+                'page_name' => $this->getPageName($request),
+                'item_id' => $itemInfo['id'],
+                'visit_num' => $visitNum,
+                'is_bot' => $isBot,
+                'is_mobile' => $isMobile,
+                'is_external' => $isExternal,
+                'created_at' => Carbon::now(),
+            ]);
+        }
 
         return $response;
     }

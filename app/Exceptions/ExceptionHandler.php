@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\MessageBag;
 use Illuminate\Validation\ValidationException;
+use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -20,6 +21,18 @@ use Throwable;
 class ExceptionHandler
 {
     protected int $jsonFlags = JSON_UNESCAPED_UNICODE;
+    protected string $logPrefix = '';
+
+    private readonly CrawlerDetect $crawlerDetect;
+
+    public function __construct()
+    {
+        $this->crawlerDetect = new CrawlerDetect();
+        $this->logPrefix = $this->crawlerDetect->isCrawler($_SERVER['HTTP_USER_AGENT'] ?? null)
+            ? 'bot_'
+            : '';
+
+    }
 
 
     public function __invoke(BaseExceptions $exceptions): BaseExceptions
@@ -48,7 +61,8 @@ class ExceptionHandler
             $isApiRequest = $this->isApiRequest($request);
             //get_class($e) //ParseError
             //if (($e instanceof HttpException || $) && $e->getStatusCode() >= 500) {die('daf');
-                Log::channel('critical')->error('500 error', [
+
+                Log::channel($this->logPrefix.'critical')->error('500 error', [
                     'message' => $e->getMessage(),
                     //'trace' => $e->getTraceAsString(),
                     'url' => $request->fullUrl(),

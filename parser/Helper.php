@@ -365,6 +365,10 @@ class Helper
             $errors[] = 'empty id_ae';
         }
 
+        if (!$aliData['price']) {
+            $errors[] = 'empty price';
+        }
+
         if (!count($aliData['photo'])) {
             $errors[] = 'no photos';
         }

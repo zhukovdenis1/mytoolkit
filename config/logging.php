@@ -127,10 +127,11 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
-        'bot' => [
-            'driver' => 'single', // или 'daily' для ротации логов
-            'path' => storage_path('logs/bots.log'), // путь к файлу
+        'bot_visits' => [
+            'driver' => 'daily', // или 'daily' для ротации логов
+            'path' => storage_path('logs/visits_bot.log'), // путь к файлу
             'level' => 'debug', // минимальный уровень логирования
+            'days' => 14,
         ],
         'sql_error' => [
             'driver' => 'daily',
@@ -141,6 +142,12 @@ return [
         'critical' => [
             'driver' => 'daily',
             'path' => storage_path('logs/critical.log'),
+            'level' => 'error',
+            'days' => 7,
+        ],
+        'bot_critical' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/critical_bot.log'),
             'level' => 'error',
             'days' => 7,
         ],
