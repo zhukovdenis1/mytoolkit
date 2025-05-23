@@ -48,8 +48,8 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function isShopDomain($domain): bool
     {
-        return $domain == env('APP_SHOP_URL');
-        //return in_array($domain, ['deshevyi.loc', 'deshevyi.ru']);
+        //return $domain == env('APP_SHOP_URL');
+        return in_array($domain, ['deshevyi.loc', 'deshevyi.ru']);
     }
 
     protected function mapShopRoutes()
