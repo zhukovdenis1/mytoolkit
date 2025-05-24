@@ -54,12 +54,14 @@ class ShopParseController extends Controller
     {
         $newProduct = null;
         $errorMessage = '';
+        $version = 0;
 
         try {
             $idQueue = $request->input('id_queue');
             $data = $request->input('data') ?? [];
             $brcr = $request->input('brcr') ?? [];
             $errorCode = $request->input('error_code') ?? 0;
+            $version = $request->input('version') ?? 0;
 
             $queueItem = ShopProductParseQueue::findOrFail($idQueue);
 
@@ -160,6 +162,7 @@ class ShopParseController extends Controller
             ShopProductParseQueue::where('id', $idQueue)
                 ->update([
                     'parsed_at' => Carbon::now(),
+                    'version' => $version,
                 ]);
         } catch (\Exception $e) {
             $errorMessage = $e->getMessage();
@@ -182,7 +185,8 @@ class ShopParseController extends Controller
         ShopProductParseQueue::where('id', $idQueue)
             ->update([
                 'parsed_at' => Carbon::now(),
-                'error_code' => $errorCode
+                'error_code' => $errorCode,
+                'version' => $version
             ]);
 
         return new AnonymousResource(['product' => $newProduct, 'message' => $errorMessage]);

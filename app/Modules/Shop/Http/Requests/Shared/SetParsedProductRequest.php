@@ -15,7 +15,8 @@ class SetParsedProductRequest extends BaseFormRequest
             'id_queue' => 'required|integer',
             'data' => 'nullable|array',
             'brcr' => 'nullable|array',
-            'error_code' => 'nullable|integer'
+            'error_code' => 'nullable|integer',
+            'version' => 'nullable|integer',
         ];
     }
 }

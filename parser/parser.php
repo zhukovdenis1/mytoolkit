@@ -52,18 +52,37 @@ try {
         $extraContent = Helper::getAeContent(
             $config['url_extra'],
             [],
-            ['Aer-Url: https://aliexpress.ru/item/' . $baseData['id_ae'] . '.html']
+            ['Aer-Url: https://aliexpress.ru/item/' . $baseData['id_ae'] . '.html?sku_id=64043994862']
         );
 
         if (($config['debug'] && $config['debug_source'] == 'url')) {
             file_put_contents($config['debug_extra_file'], $extraContent);
         }
-
     }
 
     $extraData = Helper::parseExtraContent($extraContent);
 
     $aliData = array_merge($baseData, $extraData);
+
+    $extra2Content = '';
+    if (Helper::$version == 2) {
+        if ($config['debug'] && $config['debug_source'] == 'file') {
+            $extra2Content = file_get_contents($config['debug_extra2_file']);
+        } else {
+            $extra2Content = Helper::getAeContent(
+                'https://aliexpress.ru/aer-jsonapi/v1/bx/pdp/web/productData?productId='.$baseData['id_ae'],
+                [],
+                []
+            );
+
+            if ($config['debug'] && $config['debug_source'] == 'url') {
+                file_put_contents($config['debug_extra2_file'], $extra2Content);
+            }
+        }
+
+        $extra2Data = Helper::parseExtra2Content($extra2Content);
+        $aliData = array_merge($aliData, $extra2Data);
+    }
 
     $validateErrors = Helper::validateErrors($aliData);
 
@@ -77,10 +96,10 @@ try {
     }
 
     if ($config['debug']) {
-        var_dump(['id_queue' => $data['id'], 'data' => $aliData, 'brcr' => $brcr]);
+        var_dump(['id_queue' => $data['id'], 'data' => $aliData, 'brcr' => $brcr, 'version' => Helper::$version]);
     } else {
         $response = Helper::request($config['url'] . $config['set_uri'],
-            ['id_queue' => $data['id'], 'data' => $aliData, 'brcr' => $brcr]
+            ['id_queue' => $data['id'], 'data' => $aliData, 'brcr' => $brcr, 'version' => Helper::$version]
         );
 //        var_dump($data['id']);
         file_put_contents('response.html', $response);
@@ -102,7 +121,8 @@ try {
 
         $json = Helper::request($config['url'] . $config['set_uri'], [
             'id_queue' => $data['id'],
-            'error_code' => $errorCode
+            'error_code' => $errorCode,
+            'version' => Helper::$version,
         ]);
     }
 

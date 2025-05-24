@@ -2,6 +2,7 @@
 
 class Helper
 {
+    public static $version = 0;
 
     public static function request($url, $postParams = [], $headers=[])
     {
@@ -30,28 +31,29 @@ class Helper
         return $content;
     }
 
-    public static function getAeContent($url, $postParams = [], $headers=[])
+    public static function getAeContent($url, $postParams = [], $headers=[]/*, $referer = null*/)
     {
+        $referer = null;
         $connects = array(
             0 => [
                 'i' => 0,
                 'useragent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36 OPR/104.0.0.0 (Edition Yx 05)',
-                'referer' => 'https://yandex.ru/',
+                'referer' => $referer ?? 'https://yandex.ru/',
             ],
             1 => [
                 'i' => 1,
                 'useragent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0 SeaMonkey/2.53.17.1',
-                'referer' => 'https://google.com/',
+                'referer' => $referer ?? 'https://google.com/',
             ],
             2 => [
                 'i' => 2,
                 'useragent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
-                'referer' => 'https://mail.ru/',
+                'referer' => $referer ?? 'https://mail.ru/',
             ],
             3 => [
                 'i' => 3,
                 'useragent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 Edg/119.0.0.0',
-                'referer' => 'https://mail.ru/',
+                'referer' => $referer ?? 'https://mail.ru/',
             ],
         );
 
@@ -122,6 +124,7 @@ class Helper
      */
     public static function parseContent(string $content): array
     {
+        static::$version = 0;
         if (empty($content)) {
             throw new Exception('No content received');
         }
@@ -134,7 +137,13 @@ class Helper
         }
 
         if (!strpos($content, 'SnowProductGallery_SnowProductGallery__container')) {
-            throw new Exception(ParserError::WrongPage->value);//не страница с детальным описаниме товара
+            if (!strpos($content, 'HazeProductGridItem_HazeProductGridItem__item__1xcur')) {
+                throw new Exception(ParserError::WrongPage->value);//не страница с детальным описаниме товара
+            } else {
+                static::$version = 2;//example: https://aliexpress.ru/item/32798240122.html?gatewayAdapt=glo2rus&sku_id=64043994862
+            }
+        } else {
+            static::$version = 1;
         }
 
         if (strpos($content, 'Товар уже разобрали</h3>')) {
@@ -148,7 +157,7 @@ class Helper
         if (!$basic) {
             throw new Exception('Не удалось найти basic');
         }
-
+//var_dump(static::extractUuids($json));die;
         return static::getBasicData($basic);
     }
 
@@ -165,15 +174,6 @@ class Helper
         $data['description'] = static::findDescription($json);
 
 
-//        $properties = [];
-//        $i=0;
-//        $propBasic = static::findProperties($json);
-//        if ($charBasic) {
-//            while (isset($charBasic[$i])) {
-//                $characteristics[] = $charBasic[$i];
-//                $i++;
-//            }
-//        }
         $reviewBasic = null;
         $i=0;
         while (!$reviewBasic && $i<20) {
@@ -185,14 +185,52 @@ class Helper
             $data['reviews'] = json_encode($reviewBasic, JSON_UNESCAPED_UNICODE);
         }
 
-//        if ($properties) {
-//            $data['properties'] = '<ul class="product-property-list">';
-//            foreach ($properties as $c) {
-//                if (isset($c['title']) && isset($c['value']))
-//                    $data['properties'] .= '<li class="property-item"><span class="propery-title">'.$c['title'].'</span><span class="propery-des">'.$c['value'].'</span></li>';
-//            }
-//            $data['properties'] .= '</ul>';
-//        }
+        $propsList = $json["widgets"]["1"]["state"]["data"]["groups"]["0"]["properties"];
+        $props = '';
+        if (is_array($propsList) && count($propsList))
+        {
+            $props = '<ul class="product-property-list">';
+            foreach ($propsList as $p)
+            {
+                $props .= '<li class="property-item">';
+                $props .= '<span class="propery-title">' . (isset($p['title']) ? $p['title'] : $p['name'])  . ':</span>';
+                $props .= '<span class="propery-des">' . $p['value'] . '</span>';
+                $props .= '</li>';
+            }
+            $props .= '</ul>';
+        }
+
+        $data['characteristics'] = $props;
+
+        return $data;
+    }
+
+    public static function parseExtra2Content(string $jsonTxt): array
+    {
+
+        $json = json_decode($jsonTxt, JSON_OBJECT_AS_ARRAY);
+
+        if (!$json) {
+            throw new Exception('Невалидный json в extra2 документе');
+        }
+
+        $data = [];
+
+        $data['title_ae'] = $json['data']['name'];
+
+        $imgList = $json['data']["gallery"];
+        $img = [];
+        $video = [];
+        foreach ($imgList as $image)
+        {
+            $img[] = $image['imageUrl'];
+            if ($image['videoUrl'] && !is_numeric($image['videoUrl']))
+                $video[] = $image['videoUrl'];
+        }
+
+        $data['photo'] = $img;
+
+        $data['price'] = $json["data"]["skuInfo"]["priceList"]["0"]["activityAmount"]["value"];
 
         return $data;
     }
@@ -279,8 +317,9 @@ class Helper
         }
         $price = $lowPrice;
         /////////////////////
-        $rating =   $basic["props"]["rating"]["middle"]  ;
-        $rating = floatval($rating)*10;
+        $rating =   $basic["props"]["rating"]["middle"];
+        $rating = $rating ?: $basic["children"]["8"]["children"]["1"]["children"]["0"]["children"]["2"]["children"]["0"]["children"]["2"]["children"]["0"]["children"]["0"]["props"]["analyticEvents"]["viewWidgetReview"]["trackingInfo"]["overallRating"];
+        $rating = floatval(str_replace(',', '.', $rating))*10;
         /////////////////////
         $imgList = $basic["props"]["gallery"];
         $img = [];
@@ -333,6 +372,8 @@ class Helper
 
 
 
+
+
         return
             [
                 'brcr' => $brcr,
@@ -365,6 +406,10 @@ class Helper
             $errors[] = 'empty id_ae';
         }
 
+        if (!$aliData['rating']) {
+            $errors[] = 'no rating';
+        }
+
         if (!$aliData['price']) {
             $errors[] = 'empty price';
         }
@@ -377,10 +422,30 @@ class Helper
             $errors[] = 'no category_id';
          }
 
-         if (!$aliData['description'] && !$aliData['characteristics'] && !$aliData['reviews']) {
-              $errors[] = 'empty description and properties and reviews';
+        if (!$aliData['characteristics']) {
+            $errors[] = 'empty properties';
+        }
+
+         if (!$aliData['description'] && !$aliData['reviews']) {
+              $errors[] = 'empty description and reviews';
          }
 
          return $errors;
     }
+
+    /*private static function extractUuids(array $array): array {
+        $uuids = [];
+
+        foreach ($array as $key => $value) {
+            if ($key === 'uuid') {
+                $uuids[] = $value;
+            }
+
+            if (is_array($value)) {
+                $uuids = array_merge($uuids, static::extractUuids($value));
+            }
+        }
+
+        return $uuids;
+    }*/
 }
