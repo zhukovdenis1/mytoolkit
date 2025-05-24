@@ -60,7 +60,7 @@ class RegisterVisit
         $isMobile = $this->isMobile($userAgent);
         $referrer = $request->header('referer');
         //var_dump($referrer);var_dump(env('APP_SHOP_URL'));die;
-        $isExternal = $referrer ? !Str::contains($referrer, env('APP_SHOP_URL')) : null;
+        $isExternal = $referrer ? !Str::contains($referrer, config('app.shop_url')) : null;
         $itemInfo = $this->getItemInfoFromRoute($request);
         $uri = Str::limit($request->getRequestUri(), 255);
 

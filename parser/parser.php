@@ -52,7 +52,7 @@ try {
         $extraContent = Helper::getAeContent(
             $config['url_extra'],
             [],
-            ['Aer-Url: https://aliexpress.ru/item/' . $baseData['id_ae'] . '.html?sku_id=64043994862']
+            ['Aer-Url: https://aliexpress.ru/item/' . $baseData['id_ae'] . '.html']
         );
 
         if (($config['debug'] && $config['debug_source'] == 'url')) {

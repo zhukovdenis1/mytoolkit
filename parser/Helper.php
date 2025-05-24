@@ -308,16 +308,16 @@ class Helper
 
     private static function getBasicData(array $basic): array
     {
-        $lowPrice = $basic["props"]["price"]["minActivityAmount"]["value"];
-        $highPrice = $basic["props"]["price"]["maxActivityAmount"]["value"];
+        $lowPrice = $basic["props"]["price"]["minActivityAmount"]["value"] ?? null;
+        $highPrice = $basic["props"]["price"]["maxActivityAmount"]["value"] ?? null;
         if (empty($lowPrice))
         {
-            $lowPrice = $basic["props"]["price"]["minAmount"]["value"];
-            $highPrice = $basic["props"]["price"]["maxAmount"]["value"];
+            $lowPrice = $basic["props"]["price"]["minAmount"]["value"] ?? null;
+            $highPrice = $basic["props"]["price"]["maxAmount"]["value"] ?? null;
         }
         $price = $lowPrice;
         /////////////////////
-        $rating =   $basic["props"]["rating"]["middle"];
+        $rating =   $basic["props"]["rating"]["middle"] ?? null;
         $rating = $rating ?: $basic["children"]["8"]["children"]["1"]["children"]["0"]["children"]["2"]["children"]["0"]["children"]["2"]["children"]["0"]["children"]["0"]["props"]["analyticEvents"]["viewWidgetReview"]["trackingInfo"]["overallRating"];
         $rating = floatval(str_replace(',', '.', $rating))*10;
         /////////////////////
@@ -331,7 +331,7 @@ class Helper
                 $video[] = $image['videoUrl'];
         }
         ////////////////////////
-        $propsList = $basic["children"]["8"]["children"]["1"]["children"]["0"]["children"]["3"]["children"]["0"]["children"]["1"]["props"]["groups"]["0"]["properties"];
+        $propsList = $basic["children"]["8"]["children"]["1"]["children"]["0"]["children"]["3"]["children"]["0"]["children"]["1"]["props"]["groups"]["0"]["properties"] ?? null;
         $props = '';
         if (is_array($propsList) && count($propsList))
         {
@@ -426,9 +426,13 @@ class Helper
             $errors[] = 'empty properties';
         }
 
-         if (!$aliData['description'] && !$aliData['reviews']) {
-              $errors[] = 'empty description and reviews';
+         if (!$aliData['description']) {
+              $errors[] = 'empty description';
          }
+
+        if (!$aliData['reviews']) {
+            $errors[] = 'empty reviews';
+        }
 
          return $errors;
     }
