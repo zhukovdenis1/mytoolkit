@@ -321,4 +321,18 @@ class ShopController extends Controller
             abort(404);
         }
     }
+
+    public function visit(Request $request): \Illuminate\Http\JsonResponse
+    {
+
+        $registered = $this->service->registerVisit(
+            session()->all(),
+            $request->cookie('sid'),
+            $request->ip()
+        );
+
+        return response()->json(['registered' => $registered]);
+    }
+
+
 }

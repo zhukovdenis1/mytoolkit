@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
+use SebastianBergmann\CodeUnit\Exception;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\MyIp;
 
@@ -23,6 +24,65 @@ class RegisterVisit
      */
     public function handle(Request $request, Closure $next): Response
     {
+
+        $response = $next($request);
+
+        try {
+            if (!$request->ajax()) {
+                if (!$request->hasCookie('sid')) {
+                    $sid = bin2hex(random_bytes(8));
+                    // Создаем cookie на 5 лет
+                    $response->headers->setCookie(cookie('sid', $sid, 2628000));
+                }
+
+                $userAgent = $request->userAgent() ?? null;
+                // Управление счетчиком визитов через сессию
+                $visitNum = $request->session()->get('visitNum', 0);
+                $visitNum++;
+                $request->session()->put('visitNum', $visitNum);
+
+                if (!session()->has('userAgent')) {
+                    $request->session()->put('userAgent', $userAgent);
+                }
+
+                $request->session()->put('referrer', $request->header('referer'));
+
+                if (!session()->has('isMobile')) {
+                    $request->session()->put('isMobile', $this->isMobile($userAgent));
+                }
+
+                if (!session()->has('isBot')) {
+                    $crawlerDetect = new CrawlerDetect();
+                    $isBot = $crawlerDetect->isCrawler($userAgent);
+                    $request->session()->put('isBot', $isBot);
+                }
+
+                $uri = $request->getRequestUri();
+                $request->session()->put('lastUri', $uri);
+
+                $itemInfo = $this->getItemInfoFromRoute($request);
+                $request->session()->put('lastRoute', [
+                    'page_name' => $this->getPageName($request),
+                    'item_id' => $itemInfo['id'],
+                ]);
+
+            }
+        } catch (Exception $e) {
+
+        }
+
+
+
+        return $response;
+    }
+
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handleOld(Request $request, Closure $next): Response
+    {
         $sid = $request->cookie('sid') ?? bin2hex(random_bytes(8));
         $ip = $request->ip();
         $itsMe = MyIp::where('ip', $ip)->exists();
@@ -31,15 +91,8 @@ class RegisterVisit
 
         // Проверяем, есть ли уже cookie
         if (!$request->hasCookie('sid')) {
-
-            // Генерируем уникальный ID
-            //$sid = /*Str::uuid(); // или*/ bin2hex(random_bytes(8));
-
             // Создаем cookie на 5 лет
             $response->headers->setCookie(cookie('sid', $sid, 2628000));
-//            $cookie = cookie('sid', $sid, 2628000);
-//            $response = $next($request);
-//            return $response->cookie($cookie);
         }
 
         if ($itsMe) {

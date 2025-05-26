@@ -8,9 +8,9 @@
  */
 
 //$uReviews = 'd8e734d3-0347-4a7e-a8eb-fe3826745659';
-$uReviews = 'd30d4e7e-1683-4300-b724-31fc418fdac7';
-$uChar = 'ae72b0f5-8ee3-4967-a5b5-8c84292fc0de';
-$uDesc = 'e1459484-97b0-4e41-a0be-e06fb8a0ff01';
+//$uReviews = 'd30d4e7e-1683-4300-b724-31fc418fdac7';
+//$uChar = 'ae72b0f5-8ee3-4967-a5b5-8c84292fc0de';
+//$uDesc = 'e1459484-97b0-4e41-a0be-e06fb8a0ff01';
 
 
 return [
@@ -19,7 +19,7 @@ return [
     'debug_file' => 'debug_product.txt',
     'debug_extra_file' => 'debug_extra.txt',
     'debug_extra2_file' => 'debug_extra2.txt',
-    'debug_parse_url' => 'https://aliexpress.ru/item/4000181532181.html',//если debug_source = url
+    'debug_parse_url' => 'https://aliexpress.ru/item/1005001305461626.html',//если debug_source = url
     //'url' => 'https://mytoolkit.loc',
     'url' => 'https://deshevyi.ru',//'url' => 'https://mtk.deshevyi.ru',//урл для вызова скриптов
     'url_shop' => 'https://deshevyi.ru',
@@ -36,3 +36,8 @@ return [
         'pikabu_url' => 'https://promokod.pikabu.ru'
     ]
 ];
+
+/**
+ * https://aliexpress.ru/item/1005003392769891.html
+ * debug_extra.txt: widget_by_uuid async widget not found: ae72b0f5-8ee3-4967-a5b5-8c84292fc0de
+ */

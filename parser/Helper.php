@@ -184,7 +184,13 @@ class Helper
             $data['reviews'] = json_encode($reviewBasic, JSON_UNESCAPED_UNICODE);
         }
 
-        $propsList = $json["widgets"]["1"]["state"]["data"]["groups"]["0"]["properties"] ?? null;
+        $propsList = null;
+        $i=0;
+        while (!$propsList && $i<20) {
+            $propsList = $json["widgets"][$i]["state"]["data"]["groups"]["0"]["properties"] ?? null;
+            $i++;
+        }
+
         $props = '';
         if (is_array($propsList) && count($propsList))
         {
@@ -229,7 +235,14 @@ class Helper
 
         $data['photo'] = $img;
 
-        $data['price'] = $json["data"]["skuInfo"]["priceList"]["0"]["activityAmount"]["value"];
+        //$data['price'] = $json["data"]["skuInfo"]["priceList"]["0"]["activityAmount"]["value"];
+        $priceLow = $json["data"]["price"]["minAmount"]["value"] ?? null;
+        $data['priceLow'] = (int) $priceLow;
+        $priceHigh = $json["data"]["price"]["maxAmount"]["value"] ?? null;
+        $data['priceHigh'] = (int) $priceHigh;
+        $data['price'] = $data['priceLow'] ?: $data['priceHigh'];
+
+
 
         return $data;
     }
@@ -317,7 +330,7 @@ class Helper
         $price = $lowPrice;
         /////////////////////
         $rating =   $basic["props"]["rating"]["middle"] ?? null;
-        $rating = $rating ?: $basic["children"]["8"]["children"]["1"]["children"]["0"]["children"]["2"]["children"]["0"]["children"]["2"]["children"]["0"]["children"]["0"]["props"]["analyticEvents"]["viewWidgetReview"]["trackingInfo"]["overallRating"];
+        $rating = $rating ?: $basic["children"]["8"]["children"]["1"]["children"]["0"]["children"]["2"]["children"]["0"]["children"]["2"]["children"]["0"]["children"]["0"]["props"]["analyticEvents"]["viewWidgetReview"]["trackingInfo"]["overallRating"] ?? '';
         $rating = floatval(str_replace(',', '.', $rating))*10;
         /////////////////////
         $imgList = $basic["props"]["gallery"];
@@ -401,6 +414,18 @@ class Helper
     {
         $errors = [];
 
+        $canBeEmpty = ['priceLow', 'priceHigh', 'video'];
+
+        foreach ($aliData as $k => $v) {
+            if (empty($v) && !in_array($k, $canBeEmpty)) {
+                $errors[] = 'empty ' . $k;
+            }
+        }
+
+        return $errors;
+
+        /*$errors = [];
+
         if (!$aliData['id_ae']) {
             $errors[] = 'empty id_ae';
         }
@@ -433,7 +458,7 @@ class Helper
             $errors[] = 'empty reviews';
         }
 
-         return $errors;
+         return $errors;*/
     }
 
     private static function extractAndSetUuids(array $array): array {
@@ -457,9 +482,24 @@ class Helper
         $url = 'https://aliexpress.ru/widget?';
 
         $uuids = [
-            'd30d4e7e-1683-4300-b724-31fc418fdac7',//reviews
+            '27a9f04d-c23c-4aa7-9446-572f753a5305',
             'ae72b0f5-8ee3-4967-a5b5-8c84292fc0de',//char
+            'd8e734d3-0347-4a7e-a8eb-fe3826745659',
+            'd30d4e7e-1683-4300-b724-31fc418fdac7',//reviews
+            '008d7ddf-ddb8-44ee-8f0b-49b779857027',
+            'fa76ca80-52f3-4bb3-95db-f46d96760bb5',
+            'c3eea9e2-c6a5-4239-9656-8ef38da58334',
+            '5e035d48-df37-4901-9711-977dca5b6da8',
+            '43946a0a-40f8-48e9-a5bd-5a53598e37db',
+            '55cedca7-d9f4-4a8e-96c4-b94df7f5cc66',
+            'ef9105ef-a550-433f-bdf2-0637bd47c32f',
+            'fed85114-3104-453b-bc5d-ca001922ebde',
             'e1459484-97b0-4e41-a0be-e06fb8a0ff01',//description
+            '3398848f-8cbc-4d62-81c8-d915468dde12',
+            'a5b4609f-cdac-4ad5-9bec-9cd518a056e6',
+            'f38e308c-ef6f-467b-b12c-e8e4dce2b728',
+            '8dec9aaf-2124-48d2-bf39-d390832c4152',
+            'ac237c57-23d7-42d7-8b08-3b78407e0045'
         ];
 
         foreach (static::$uuids as $uuid) {
@@ -468,7 +508,17 @@ class Helper
             }
         }
         $url .= '_bx-v=2.5.28';
-
         return $url;
+    }
+
+    public static function merge(array $array1, array $array2): array
+    {
+        foreach ($array2 as $key => $value) {
+            if (empty($array1[$key])) {
+                $array1[$key] = $value;
+            }
+        }
+
+        return $array1;
     }
 }

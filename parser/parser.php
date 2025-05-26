@@ -45,7 +45,6 @@ try {
     if (!$baseData['id_ae']) {
         throw new Exception("Can't get id_ae in Helper::parseContent");
     }
-
     if ($config['debug'] && $config['debug_source'] == 'file') {
         $extraContent = file_get_contents($config['debug_extra_file']);
     } else {
@@ -65,7 +64,7 @@ try {
 
     $extraData = Helper::parseExtraContent($extraContent);
 
-    $aliData = array_merge($baseData, $extraData);
+    $aliData = Helper::merge($baseData, $extraData);
 
     $extra2Content = '';
     if (Helper::$version == 2) {
@@ -85,7 +84,8 @@ try {
         }
 
         $extra2Data = Helper::parseExtra2Content($extra2Content);
-        $aliData = array_merge($aliData, $extra2Data);
+
+        $aliData = Helper::merge($aliData, $extra2Data);
     }
 
     $validateErrors = Helper::validateErrors($aliData);

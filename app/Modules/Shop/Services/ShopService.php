@@ -8,12 +8,15 @@ use App\Helpers\ShopCouponHelper;
 use App\Helpers\StringHelper;
 use App\Models\MyIp;
 use App\Modules\Shop\Models\ShopProduct;
+use App\Modules\Shop\Models\ShopVisit;
 use App\Modules\ShopArticle\Models\ShopArticle;
 use App\Modules\ShopArticle\Services\Shared\ShopArticleService;
 use App\Services\BaseService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use Illuminate\Support\Facades\Log;
 
@@ -133,5 +136,55 @@ class ShopService extends BaseService
     public function getMainPageArticles(): Collection
     {
         return $this->articleService->getMainPageArticles();
+    }
+
+    public function registerVisit(array $session, ?string $sid, ?string $ip): bool
+    {
+        $itsMe = MyIp::where('ip', $ip)->exists();
+
+        /*if ($itsMe) {
+            return false;
+        }*/
+
+        $referrer = $session['referrer'] ?? null;
+
+        $isExternal = $referrer ? !Str::contains($referrer, config('app.shop_url')) : null;
+
+        $uri = $session['lastUri'];
+        $userAgent = $session['userAgent'];
+
+        if ($session['isBot'] ?? null) {
+            Log::channel('bot_visits')->info('Bot: ', [
+                'page_name' => $session['lastRoute']['page_name'] ?? null,
+                'user_agent' => $userAgent ? Str::limit($userAgent, 255) : null,
+                'sid' => $sid,
+                'ip' => $ip,
+                'uri' => $uri ? Str::limit($uri, 255) : null,
+                'referrer' => $referrer ? Str::limit($referrer, 255) : null,
+                'item_id' => $session['lastRoute']['item_id'] ?? null,
+                'visit_num' => $session['visitNum'] ?? null,
+                'is_bot' => $session['isBot'] ?? null,
+                'is_mobile' => $session['isMobile'] ?? null,
+                'is_external' => $isExternal,
+            ]);
+        } else {
+            // Создаем запись о визите
+            ShopVisit::create([
+                'page_name' => $session['lastRoute']['page_name'] ?? null,
+                'user_agent' => $userAgent ? Str::limit($userAgent, 255) : null,
+                'sid' => $sid,
+                'ip' => $ip,
+                'uri' => $uri ? Str::limit($uri, 255) : null,
+                'referrer' => $referrer ? Str::limit($referrer, 255) : null,
+                'item_id' => $session['lastRoute']['item_id'] ?? null,
+                'visit_num' => $session['visitNum'] ?? null,
+                'is_bot' => $session['isBot'] ?? null,
+                'is_mobile' => $session['isMobile'] ?? null,
+                'is_external' => $isExternal,
+                'created_at' => Carbon::now(),
+            ]);
+        }
+
+        return true;
     }
 }

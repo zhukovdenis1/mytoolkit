@@ -16,6 +16,7 @@ Route::middleware(['shop_visits'])->group(function () {
     Route::any('new-order', [ShopController::class, 'newOrder']);
     Route::get('robots.txt', [ShopController::class, 'robots'])->name('robots');
     Route::get('get-categories', [ShopController::class, 'getCategories'])->name('getCategories');
+    Route::get('shop/visit', [ShopController::class, 'visit']);
 
 
     Route::get('coupons', [ShopCouponController::class, 'index'])->name('coupons');
@@ -27,6 +28,7 @@ Route::middleware(['shop_visits'])->group(function () {
     Route::get('/s/{selectionName}/', [ShopController::class, 'selection'])->name('selection');
     Route::get('pa-{id_ae}', [ShopController::class, 'aedetail'])->name('aedetail')
         ->where(['id_ae' => '[0-9]+']);
+
 
 
 //old site pages
