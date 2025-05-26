@@ -142,9 +142,9 @@ class ShopService extends BaseService
     {
         $itsMe = MyIp::where('ip', $ip)->exists();
 
-        /*if ($itsMe) {
+        if ($itsMe) {
             return false;
-        }*/
+        }
 
         $referrer = $session['referrer'] ?? null;
 
