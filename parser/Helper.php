@@ -3,6 +3,7 @@
 class Helper
 {
     public static $version = 0;
+    private static array $uuids = [];
 
     public static function request($url, $postParams = [], $headers=[])
     {
@@ -136,14 +137,12 @@ class Helper
             throw new Exception(ParserError::NotFound->value);
         }
 
-        if (!strpos($content, 'SnowProductGallery_SnowProductGallery__container')) {
-            if (!strpos($content, 'HazeProductGridItem_HazeProductGridItem__item__1xcur')) {
-                throw new Exception(ParserError::WrongPage->value);//не страница с детальным описаниме товара
-            } else {
-                static::$version = 2;//example: https://aliexpress.ru/item/32798240122.html?gatewayAdapt=glo2rus&sku_id=64043994862
-            }
-        } else {
+        if (strpos($content, 'HazeProductGridItem_HazeProductGridItem__item__1xcur')) {
+            static::$version = 2;//example: https://aliexpress.ru/item/32798240122.html?gatewayAdapt=glo2rus&sku_id=64043994862
+        } elseif (strpos($content, 'SnowProductGallery_SnowProductGallery__container')) {
             static::$version = 1;
+        } else {
+            throw new Exception(ParserError::WrongPage->value);//не страница с детальным описаниме товара
         }
 
         if (strpos($content, 'Товар уже разобрали</h3>')) {
@@ -157,7 +156,7 @@ class Helper
         if (!$basic) {
             throw new Exception('Не удалось найти basic');
         }
-//var_dump(static::extractUuids($json));die;
+        static::extractAndSetUuids($json);
         return static::getBasicData($basic);
     }
 
@@ -185,7 +184,7 @@ class Helper
             $data['reviews'] = json_encode($reviewBasic, JSON_UNESCAPED_UNICODE);
         }
 
-        $propsList = $json["widgets"]["1"]["state"]["data"]["groups"]["0"]["properties"];
+        $propsList = $json["widgets"]["1"]["state"]["data"]["groups"]["0"]["properties"] ?? null;
         $props = '';
         if (is_array($propsList) && count($propsList))
         {
@@ -437,7 +436,7 @@ class Helper
          return $errors;
     }
 
-    /*private static function extractUuids(array $array): array {
+    private static function extractAndSetUuids(array $array): array {
         $uuids = [];
 
         foreach ($array as $key => $value) {
@@ -446,10 +445,30 @@ class Helper
             }
 
             if (is_array($value)) {
-                $uuids = array_merge($uuids, static::extractUuids($value));
+                $uuids = array_merge($uuids, static::extractAndSetUuids($value));
             }
         }
-
+        static::$uuids = $uuids;
         return $uuids;
-    }*/
+    }
+
+    public static function formExtraContentUrl(): string
+    {
+        $url = 'https://aliexpress.ru/widget?';
+
+        $uuids = [
+            'd30d4e7e-1683-4300-b724-31fc418fdac7',//reviews
+            'ae72b0f5-8ee3-4967-a5b5-8c84292fc0de',//char
+            'e1459484-97b0-4e41-a0be-e06fb8a0ff01',//description
+        ];
+
+        foreach (static::$uuids as $uuid) {
+            if (in_array($uuid, $uuids)) {
+                $url .= 'uuid=' . $uuid . '&';
+            }
+        }
+        $url .= '_bx-v=2.5.28';
+
+        return $url;
+    }
 }

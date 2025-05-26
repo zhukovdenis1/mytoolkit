@@ -49,8 +49,10 @@ try {
     if ($config['debug'] && $config['debug_source'] == 'file') {
         $extraContent = file_get_contents($config['debug_extra_file']);
     } else {
+        $extraUrl = Helper::formExtraContentUrl();
         $extraContent = Helper::getAeContent(
-            $config['url_extra'],
+            //Helper::$version == 2 ? $config['url_extra_2'] : $config['url_extra'],
+            $extraUrl,
             [],
             ['Aer-Url: https://aliexpress.ru/item/' . $baseData['id_ae'] . '.html']
         );
@@ -58,6 +60,7 @@ try {
         if (($config['debug'] && $config['debug_source'] == 'url')) {
             file_put_contents($config['debug_extra_file'], $extraContent);
         }
+        file_put_contents($config['debug_extra_file'], $extraContent);
     }
 
     $extraData = Helper::parseExtraContent($extraContent);
@@ -78,6 +81,7 @@ try {
             if ($config['debug'] && $config['debug_source'] == 'url') {
                 file_put_contents($config['debug_extra2_file'], $extra2Content);
             }
+            file_put_contents($config['debug_extra2_file'], $extra2Content);
         }
 
         $extra2Data = Helper::parseExtra2Content($extra2Content);
@@ -106,7 +110,7 @@ try {
 
         $responseData = json_decode($response, true);
 
-        echo date('H:i:s ') . 'ok: ' . $config['url_shop'] . '/p-' . $responseData['data']['product']['id'] . '/ ; id_queue='.$data['id'];
+        echo date('H:i:s ') . 'v'. Helper::$version . ' ok: ' . $config['url_shop'] . '/p-' . $responseData['data']['product']['id'] . '/ ; id_queue='.$data['id'];
     }
 } catch (Exception $e) {
     $message = $e->getMessage();
@@ -126,7 +130,7 @@ try {
         ]);
     }
 
-    echo date('H:i:s ') . 'er: ' . $message . ' url:' . $parseUrl;
+    echo date('H:i:s ') . 'v'. Helper::$version. ' er: ' . $message . ' url:' . $parseUrl;
 }
 
 echo PHP_EOL;

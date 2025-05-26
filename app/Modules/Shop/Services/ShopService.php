@@ -69,7 +69,7 @@ class ShopService extends BaseService
                     $searchText = implode(' ', $ssTextArr);
                     //временно
                     //$searchText = $this->stringHelper->transliterate($searchText);
-                    $redirectUrl = 'https://aliexpress.ru/wholesale?SearchText=' . $searchText;
+                    $redirectUrl = 'https://aliexpress.ru/wholesale?SearchText=' . urlencode($searchText);
                 }
             } else {
                 $redirectUrl = 'https://aliexpress.ru/item/' . $aliProductId . '.html';
@@ -86,7 +86,7 @@ class ShopService extends BaseService
             } elseif ($search == '{login}') {
                 $redirectUrl = 'https://login.aliexpress.ru/';
             } else {
-                $redirectUrl = 'https://aliexpress.ru/wholesale?SearchText=' . $search;
+                $redirectUrl = 'https://aliexpress.ru/wholesale?SearchText=' . urlencode($search);
             }
         }
 
@@ -96,7 +96,7 @@ class ShopService extends BaseService
 
         if ($redirectUrl && str_contains($redirectUrl, 'aliexpress.ru')) {
              //$goUrl = 'http://click.deshevyi.ru/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl;
-             $goUrl = 'https://shopnow.pub/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . $redirectUrl;
+             $goUrl = 'https://shopnow.pub/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . urlencode($redirectUrl);
              //$goUrl = 'http://shopnow.pub/redirect/cpa/o/swacrnvh0ri1q4e1i5jitag6ro8w0uhf/?erid=2SDnjckbu97&to=' . $redirectUrl;//new link
         } else {
             Log::channel('daily')->warning('Переход без афилиатной ссылки: ', ['url' => $redirectUrl]);

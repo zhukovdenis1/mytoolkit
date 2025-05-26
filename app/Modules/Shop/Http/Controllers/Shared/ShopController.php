@@ -282,7 +282,7 @@ class ShopController extends Controller
         $result['keywords'] = $keywordsMatches[1] ?? null;
 
         // Извлечение содержимого div с id="ru-title"
-        preg_match('/<!--contentstrat-->(.*?)<!--contentend-->/is', $html, $contentMatches);
+        preg_match('/<!--contentstrat-->(.*?)<!--contentend-->/isU', $html, $contentMatches);
         $result['content'] = $contentMatches[1] ?? null;
 
         preg_match('/<h1>(.*?)<\/h1>/is', $result['content'], $contentMatches);
