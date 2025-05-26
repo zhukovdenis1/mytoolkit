@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id()->autoIncrement();
             $table->char('sid',16)->nullable();
             $table->binary('ip', 16)->nullable();
+            $table->string('ip_address', 45)->nullable();
             $table->string('user_agent',255)->nullable();
             $table->string('referrer',255)->nullable();
             $table->string('uri',255)->nullable();

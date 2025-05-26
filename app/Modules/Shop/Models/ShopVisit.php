@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property int $id Автоинкрементный ID
  * @property string|null $sid Уникальный идентификатор сессии (16 символов)
  * @property string|null $ip IP-адрес посетителя (в бинарном формате)
+ * @property string|null ip_address IP-адрес посетителя
  * @property string|null $user_agent User agent посетителя
  * @property string|null $referrer Реферер
  * @property string|null $uri URI страницы
@@ -33,6 +34,7 @@ class ShopVisit extends BaseModel
     protected $fillable = [
         'sid',
         'ip',
+        'ip_address',
         'user_agent',
         'referrer',
         'uri',

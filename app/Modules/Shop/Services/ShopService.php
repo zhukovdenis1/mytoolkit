@@ -174,6 +174,7 @@ class ShopService extends BaseService
                 'user_agent' => $userAgent ? Str::limit($userAgent, 255) : null,
                 'sid' => $sid,
                 'ip' => $ip,
+                'ip_address' => $ip,
                 'uri' => $uri ? Str::limit($uri, 255) : null,
                 'referrer' => $referrer ? Str::limit($referrer, 255) : null,
                 'item_id' => $session['lastRoute']['item_id'] ?? null,
