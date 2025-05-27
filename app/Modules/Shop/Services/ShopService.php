@@ -6,6 +6,7 @@ namespace App\Modules\Shop\Services;
 use App\Helpers\ShopArticleHelper;
 use App\Helpers\ShopCouponHelper;
 use App\Helpers\StringHelper;
+use App\Logging\AppLogger;
 use App\Models\MyIp;
 use App\Modules\Shop\Models\ShopProduct;
 use App\Modules\Shop\Models\ShopVisit;
@@ -28,6 +29,7 @@ class ShopService extends BaseService
         //private readonly StringHelper $stringHelper,
         private readonly ShopCouponService $couponService,
         private readonly ShopArticleService $articleService,
+        private readonly AppLogger $appLogger
     ){}
 
 
@@ -50,14 +52,20 @@ class ShopService extends BaseService
 
         $url = $validated['url'] ?? '';
         $aliProductId = $validated['aid'] ?? 0;
+        $productId = $validated['id'] ?? 0;
         $search = $validated['search'] ?? '';
         //$title = $validated['title'] ?? '';
         $couponId = intval($validated['coupon_id'] ?? 0);
 
         $redirectUrl = 'https://aliexpress.ru/';
 
-        if ($aliProductId) {
-            $product = ShopProduct::query()->where('id_ae', $aliProductId)->first();
+        if ($productId || $aliProductId) {
+            if ($productId) {
+                $product = ShopProduct::query()->where('id', $productId)->first();
+            } else {
+                $product = ShopProduct::query()->where('id_ae', $aliProductId)->first();
+            }
+
             if ($product && $product->not_found_at) {
                 $categoryId = $product->category_id;
                 if ($categoryId) {
@@ -74,7 +82,9 @@ class ShopService extends BaseService
                     //$searchText = $this->stringHelper->transliterate($searchText);
                     $redirectUrl = 'https://aliexpress.ru/wholesale?SearchText=' . urlencode($searchText);
                 }
-            } else {
+            } elseif ($product) {
+                $redirectUrl = 'https://aliexpress.ru/item/' . $product->id_ae . '.html';
+            } elseif ($aliProductId) {
                 $redirectUrl = 'https://aliexpress.ru/item/' . $aliProductId . '.html';
             }
         } elseif ($couponId) {
@@ -102,7 +112,7 @@ class ShopService extends BaseService
              $goUrl = 'https://shopnow.pub/redirect/cpa/o/sn6o728y02533c8wkahea3zoo0s0qodj/?erid=2SDnjdhZBWB&to=' . urlencode($redirectUrl);
              //$goUrl = 'http://shopnow.pub/redirect/cpa/o/swacrnvh0ri1q4e1i5jitag6ro8w0uhf/?erid=2SDnjckbu97&to=' . $redirectUrl;//new link
         } else {
-            Log::channel('daily')->warning('Переход без афилиатной ссылки: ', ['url' => $redirectUrl]);
+            $this->appLogger->critical('Переход без афилиатной ссылки', ['redirectUrl' => $redirectUrl]);
             $goUrl = $redirectUrl;
         }
 
@@ -112,7 +122,7 @@ class ShopService extends BaseService
 
     public function incViews(Request $request, int $productId): void
     {
-        $detector = new CrawlerDetect();
+        /*$detector = new CrawlerDetect();
 
         if (!$detector->isCrawler($request->header('User-Agent'))) {
             $ip = $request->ip();
@@ -125,7 +135,7 @@ class ShopService extends BaseService
                         ]);
                 }
             }
-        }
+        }*/
     }
 
     public function getMainPageCoupons(): Collection
@@ -138,7 +148,7 @@ class ShopService extends BaseService
         return $this->articleService->getMainPageArticles();
     }
 
-    public function registerVisit(array $session, ?string $sid, ?string $ip): bool
+    public function registerVisit(array $session, ?string $sid, ?string $ip, ?string $goref): bool
     {
         $itsMe = MyIp::where('ip', $ip)->exists();
 
@@ -146,23 +156,47 @@ class ShopService extends BaseService
             return false;
         }
 
-        $referrer = $session['referrer'] ?? null;
-
-        $isExternal = $referrer ? !Str::contains($referrer, config('app.shop_url')) : null;
-
         $uri = $session['lastUri'];
+        $referrer = $session['referrer'] ?? null;
+        $pageName = $session['lastRoute']['page_name'] ?? null;
+        $itemId = $session['lastRoute']['item_id'] ?? null;
+        $isExternal = $referrer ? !Str::contains($referrer, config('app.shop_url')) : null;
+        $visitNum = $session['visitNum'] ?? null;
+
+        if ($goref) {
+            $goParams = (function() use ($goref) {
+                // Здесь может быть любая логика
+                if (!$goref) return [];
+                $parsedUrl = parse_url($goref);
+                $query = $parsedUrl['query'] ?? '';
+                parse_str($query, $params);
+                return $params;
+            })();
+            $pageName = 'go';
+            $referrer = $uri;
+            $uri = (function() use ($goref) {
+                $parsed = parse_url($goref);
+                $path = $parsed['path'] ?? '';
+                $query = $parsed['query'] ?? '';
+                return $path . ($query ? '?' . $query : '');
+            })();
+            $itemId = $goParams['id'] ?? null;
+            $isExternal = 0;
+            $visitNum++;
+        }
+
         $userAgent = $session['userAgent'];
 
         if ($session['isBot'] ?? null) {
             Log::channel('bot_visits')->info('Bot: ', [
-                'page_name' => $session['lastRoute']['page_name'] ?? null,
+                'page_name' => $pageName,
                 'user_agent' => $userAgent ? Str::limit($userAgent, 255) : null,
                 'sid' => $sid,
                 'ip' => $ip,
                 'uri' => $uri ? Str::limit($uri, 255) : null,
                 'referrer' => $referrer ? Str::limit($referrer, 255) : null,
-                'item_id' => $session['lastRoute']['item_id'] ?? null,
-                'visit_num' => $session['visitNum'] ?? null,
+                'item_id' => $itemId,
+                'visit_num' => $visitNum,
                 'is_bot' => $session['isBot'] ?? null,
                 'is_mobile' => $session['isMobile'] ?? null,
                 'is_external' => $isExternal,
@@ -170,15 +204,15 @@ class ShopService extends BaseService
         } else {
             // Создаем запись о визите
             ShopVisit::create([
-                'page_name' => $session['lastRoute']['page_name'] ?? null,
+                'page_name' => $pageName,
                 'user_agent' => $userAgent ? Str::limit($userAgent, 255) : null,
                 'sid' => $sid,
                 'ip' => $ip,
                 'ip_address' => $ip,
                 'uri' => $uri ? Str::limit($uri, 255) : null,
                 'referrer' => $referrer ? Str::limit($referrer, 255) : null,
-                'item_id' => $session['lastRoute']['item_id'] ?? null,
-                'visit_num' => $session['visitNum'] ?? null,
+                'item_id' => $itemId,
+                'visit_num' => $visitNum,
                 'is_bot' => $session['isBot'] ?? null,
                 'is_mobile' => $session['isMobile'] ?? null,
                 'is_external' => $isExternal,

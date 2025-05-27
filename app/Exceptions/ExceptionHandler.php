@@ -62,7 +62,7 @@ class ExceptionHandler
             //get_class($e) //ParseError
             //if (($e instanceof HttpException || $) && $e->getStatusCode() >= 500) {die('daf');
 
-                Log::channel($this->logPrefix.'critical')->error('500 error', [
+                Log::channel($this->logPrefix.'err500')->error('500 error', [
                     'message' => $e->getMessage(),
                     //'trace' => $e->getTraceAsString(),
                     'url' => $request->fullUrl(),

@@ -65,7 +65,7 @@ class ShopParseController extends Controller
 
             $queueItem = ShopProductParseQueue::findOrFail($idQueue);
 
-            if ($queueItem['parsed_at']) {
+            if ($queueItem['parsed_at'] && $errorCode) {
                 //throw new \Exception('Данные были распарсены ранее: ' . $queueItem['parsed_at']->format('Y-m-d H:i:s'));
                 return new AnonymousResource(['error' => 'Данные были распарсены ранее: ' . $queueItem['parsed_at']->format('Y-m-d H:i:s')]);
             }

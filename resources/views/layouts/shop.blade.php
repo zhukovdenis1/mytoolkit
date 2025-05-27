@@ -41,9 +41,9 @@
             </div>
             <div class="right">
                 <noindex>
-                <div class="account"><a href="{{ route('go', ['search' => '{login}']) }}" rel="nofollow" target="_blank">Войти</a><br /><a href="{{ route('go', ['search' => '{login}']) }}" rel="nofollow" target="_blank">Регистрация</a></div>
-                    <a class="wish" href="{{ route('go', ['search' => '{wishlist}']) }}" target="_blank" rel="nofollow">Мои<br />желания</a>
-                    <a class="cart" href="{{ route('go', ['search' => '{basket}']) }}" target="_blank" rel="nofollow"><span class="counter">0</span>Корзина</a>
+                <div class="account"><a href="{{ route('go', ['search' => '{login}']) }}" class="_go" rel="nofollow" target="_blank">Войти</a><br /><a href="{{ route('go', ['search' => '{login}']) }}" class="_go" rel="nofollow" target="_blank">Регистрация</a></div>
+                    <a class="wish _go" href="{{ route('go', ['search' => '{wishlist}']) }}"  target="_blank" rel="nofollow">Мои<br />желания</a>
+                    <a class="cart _go" href="{{ route('go', ['search' => '{basket}']) }}" target="_blank" rel="nofollow"><span class="counter">0</span>Корзина</a>
                 </noindex>
             </div>
         </header>
@@ -61,7 +61,7 @@
         <footer>Подборка товаров с <a href="{{route('articles')}}">Алиэкспресс</a> &copy;{{ date('Y') }}</footer>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>$.get('/shop/visit')</script>
+    <script src="/shop/js/visit.js"></script>
     <script src="/shop/js/jquery.colorbox-min.js"></script>
 
     <script>

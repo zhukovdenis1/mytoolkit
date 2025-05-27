@@ -124,7 +124,7 @@ return [
         ],
 
         'emergency' => [
-            'path' => storage_path('logs/laravel.log'),
+            'path' => storage_path('logs/emergency.log'),
         ],
 
         'bot_visits' => [
@@ -139,15 +139,21 @@ return [
             'level' => 'error',
             'days' => 14,
         ],
-        'critical' => [
+        'err500' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/critical.log'),
+            'path' => storage_path('logs/err500.log'),
             'level' => 'error',
             'days' => 7,
         ],
-        'bot_critical' => [
+        'bot_err500' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/critical_bot.log'),
+            'path' => storage_path('logs/err500_bot.log'),
+            'level' => 'error',
+            'days' => 7,
+        ],
+        'critical' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/_critical.log'),
             'level' => 'error',
             'days' => 7,
         ],

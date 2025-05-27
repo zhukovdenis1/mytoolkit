@@ -11,13 +11,15 @@
     else {
         $href = route('go', ['aid' => $product->id_ae]);
     }*/
-    $href = route('go', ['aid' => $product->id_ae]);
+    //$href = route('go', ['aid' => $product->id_ae]);
+    $href = route('go', ['id' => $product->id]);
 @endphp
 
 <a
     href="{{ $href }}"
     rel="nofollow"
     target="_blank"
+    {{ $attributes->merge(['class' => '_go'])->except(['product']) }}
     {{ $attributes->except(['product']) }}
 >
     {{ $slot }}

@@ -124,7 +124,11 @@ try {
 
         $responseData = json_decode($response, true);
 
-        $output .= date('H:i:s ') . 'v'. Helper::$version . ' ok: ' . $config['url_shop'] . '/p-' . $responseData['data']['product']['id'] . '/ ; id_queue='.$qData['id'] . ' ; id_ae='. $qData['id_ae'];
+        if (!empty($responseData['data']['error'])) {
+            $output .= date('H:i:s ') . 'v'. Helper::$version . ' err: ' . $responseData['data']['error'] . ' ; id_ae='. $qData['id_ae'];
+        } else {
+            $output .= date('H:i:s ') . 'v'. Helper::$version . ' ok: ' . $config['url_shop'] . '/p-' . $responseData['data']['product']['id'] . '/ ; id_queue='.$qData['id'] . ' ; id_ae='. $qData['id_ae'];
+        }
     }
 } catch (Exception $e) {
     $message = $e->getMessage();

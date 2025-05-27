@@ -81,7 +81,7 @@ class RegisterVisit
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handleOld(Request $request, Closure $next): Response
+/*    public function handleOld(Request $request, Closure $next): Response
     {
         $sid = $request->cookie('sid') ?? bin2hex(random_bytes(8));
         $ip = $request->ip();
@@ -150,7 +150,7 @@ class RegisterVisit
         }
 
         return $response;
-    }
+    }*/
 
     protected function isMobile(?string $userAgent): bool
     {

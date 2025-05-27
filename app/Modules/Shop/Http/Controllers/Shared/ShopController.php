@@ -26,6 +26,7 @@ class ShopController extends Controller
         $validated = $request->validate([
             'url' => ['nullable', 'string', 'min:1', 'max:255'],
             'aid' => ['nullable', 'string', 'min:1', 'max:30'],
+            'id' => ['nullable', 'integer'],
             'coupon_id' => ['nullable', 'integer', 'min:1'],
             'search' => ['nullable', 'string', 'min:1', 'max:1000'],
         ]);
@@ -324,11 +325,15 @@ class ShopController extends Controller
 
     public function visit(Request $request): \Illuminate\Http\JsonResponse
     {
+        $validated = $request->validate([
+            'goref'        => ['nullable', 'string', 'min:0', 'max:1000'],
+        ]);
 
         $registered = $this->service->registerVisit(
             session()->all(),
             $request->cookie('sid'),
-            $request->ip()
+            $request->ip(),
+            $validated['goref'] ?? null
         );
 
         return response()->json(['registered' => $registered]);
