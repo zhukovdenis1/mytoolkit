@@ -3,7 +3,7 @@
 require_once 'Helper.php';
 require_once 'ParseError.php';
 
-$config = include 'config.php';
+$config = include dirname(__FILE__).'/config.php';
 $output = PHP_EOL;
 $dbFile = dirname(__FILE__).'/db/parser.json';
 $logFile = dirname(__FILE__).'/../storage/logs/parser-'.date('Y-m').'.log';

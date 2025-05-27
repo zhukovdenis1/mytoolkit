@@ -73,8 +73,8 @@ class Helper
         curl_setopt($ch, CURLOPT_REFERER, $connect['referer']);
         curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_COOKIEFILE,'db/cookie' . $connect['i'].'.txt' );//запись
-        curl_setopt($ch, CURLOPT_COOKIEJAR, 'db/cookie' . $connect['i'].'.txt' );//чтение
+        curl_setopt($ch, CURLOPT_COOKIEFILE,dirname(__FILE__).'/db/cookie' . $connect['i'].'.txt' );//запись
+        curl_setopt($ch, CURLOPT_COOKIEJAR, dirname(__FILE__).'/db/cookie' . $connect['i'].'.txt' );//чтение
         curl_setopt($ch, CURLOPT_COOKIESESSION, TRUE);
 
         if ($postParams)
