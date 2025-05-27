@@ -4,11 +4,25 @@ require_once 'Helper.php';
 require_once 'ParseError.php';
 
 $config = include 'config.php';
+$output = PHP_EOL;
+$dbFile = dirname(__FILE__).'/db/parser.json';
+$logFile = dirname(__FILE__).'/../storage/logs/parser-'.date('Y-m').'.log';
+
+$db = file_get_contents($dbFile);
+$dbJson = json_decode($db, true);
+
+$dbCaptchaCounter = $dbJson['captchaCount'] ?? 0;
+$dbLastRequestDateTime = $dbJson['lastRequest'] ?? 0;
+$delay = 30*($dbCaptchaCounter+1);
+
+if ((strtotime($dbLastRequestDateTime) + $delay) > time()) {
+    die('*');
+}
 
 //if (!$config['debug']) sleep(mt_rand(0,25));
 
 $parseUrl = '';
-$data = ['id' => 1];//for debug case
+$qData = ['id' => 1];//for debug case
 $message = '';
 try {
     if ($config['debug'] && $config['debug_source'] == 'file') {
@@ -21,17 +35,17 @@ try {
     } else {
         $json = Helper::request($config['url'] . $config['get_uri']);
 
-        $data = json_decode($json, true);
-        if (empty($data['data'])) {
+        $qData = json_decode($json, true);
+        if (empty($qData['data'])) {
             throw new Exception('Empty parse queue');
         }
-        $data = $data['data'];
+        $qData = $qData['data'];
 
-        $queueItemId = $data['id'];
-        if ($data['source'] == 'epn_hot') {
-            $parseUrl = $data['info']['attributes']['directUrl'];
-        } elseif ($data['source'] = 'epn_top') {
-            $parseUrl = 'https://aliexpress.ru/item/'.$data['id_ae'].'.html';
+        $queueItemId = $qData['id'];
+        if ($qData['source'] == 'epn_hot') {
+            $parseUrl = $qData['info']['attributes']['directUrl'];
+        } elseif ($qData['source'] = 'epn_top') {
+            $parseUrl = 'https://aliexpress.ru/item/'.$qData['id_ae'].'.html';
         } else {
             throw new Exception('Unknown source');
         }
@@ -88,29 +102,29 @@ try {
         $aliData = Helper::merge($aliData, $extra2Data);
     }
 
-    $validateErrors = Helper::validateErrors($aliData);
+    $validateErrors = Helper::validateErrors($aliData, $qData);
 
     if ($validateErrors) {
-        echo implode(PHP_EOL, $validateErrors) . PHP_EOL;
+        $output.= implode(PHP_EOL, $validateErrors) . PHP_EOL;
         throw new Exception(ParserError::ValidationError->value);
     }
 
-    if (empty($data['id'])) {
+    if (empty($qData['id'])) {
         throw new Exception(ParserError::EmptyIdQueue->value);
     }
 
     if ($config['debug']) {
-        var_dump(['id_queue' => $data['id'], 'data' => $aliData, 'brcr' => $brcr, 'version' => Helper::$version]);
+        var_dump(['id_queue' => $qData['id'], 'data' => $aliData, 'brcr' => $brcr, 'version' => Helper::$version]);
     } else {
         $response = Helper::request($config['url'] . $config['set_uri'],
-            ['id_queue' => $data['id'], 'data' => $aliData, 'brcr' => $brcr, 'version' => Helper::$version]
+            ['id_queue' => $qData['id'], 'data' => $aliData, 'brcr' => $brcr, 'version' => Helper::$version]
         );
 //        var_dump($data['id']);
         file_put_contents('response.html', $response);
 
         $responseData = json_decode($response, true);
 
-        echo date('H:i:s ') . 'v'. Helper::$version . ' ok: ' . $config['url_shop'] . '/p-' . $responseData['data']['product']['id'] . '/ ; id_queue='.$data['id'];
+        $output .= date('H:i:s ') . 'v'. Helper::$version . ' ok: ' . $config['url_shop'] . '/p-' . $responseData['data']['product']['id'] . '/ ; id_queue='.$qData['id'] . ' ; id_ae='. $qData['id_ae'];
     }
 } catch (Exception $e) {
     $message = $e->getMessage();
@@ -124,13 +138,28 @@ try {
     if (!$config['debug'] && $errorCode) {
 
         $json = Helper::request($config['url'] . $config['set_uri'], [
-            'id_queue' => $data['id'],
+            'id_queue' => $qData['id'],
             'error_code' => $errorCode,
             'version' => Helper::$version,
         ]);
     }
 
-    echo date('H:i:s ') . 'v'. Helper::$version. ' er: ' . $message . ' url:' . $parseUrl;
+    $output .= date('H:i:s ') . 'v'. Helper::$version. ' er: ' . $message . ' url:' . $parseUrl .  ' ; id_queue='.$qData['id'];
 }
 
-echo PHP_EOL;
+if ($message == 'Captcha') {
+    $dbCaptchaCounter++;
+} else {
+    $dbCaptchaCounter && $dbCaptchaCounter--;
+}
+
+$output .= ' cc=' . $dbCaptchaCounter;
+
+file_put_contents($dbFile, json_encode([
+    'captchaCount' => $dbCaptchaCounter,
+    'lastRequest' => date('Y-m-d H:i:s')
+]));
+
+file_put_contents($logFile, $output, FILE_APPEND);
+
+echo $output;

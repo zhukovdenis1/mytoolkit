@@ -3,6 +3,7 @@
 class Helper
 {
     public static $version = 0;
+    private static $connect = 0;
     private static array $uuids = [];
 
     public static function request($url, $postParams = [], $headers=[])
@@ -58,7 +59,7 @@ class Helper
             ],
         );
 
-        $connect = $connects[mt_rand(0,3)];
+        $connect = $connects[static::$connect];
 
         $ch = curl_init();
         if ($headers) {
@@ -72,8 +73,8 @@ class Helper
         curl_setopt($ch, CURLOPT_REFERER, $connect['referer']);
         curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_COOKIEFILE,'cookie/cookie' . $connect['i'].'.txt' );//запись
-        curl_setopt($ch, CURLOPT_COOKIEJAR, 'cookie/cookie' . $connect['i'].'.txt' );//чтение
+        curl_setopt($ch, CURLOPT_COOKIEFILE,'db/cookie' . $connect['i'].'.txt' );//запись
+        curl_setopt($ch, CURLOPT_COOKIEJAR, 'db/cookie' . $connect['i'].'.txt' );//чтение
         curl_setopt($ch, CURLOPT_COOKIESESSION, TRUE);
 
         if ($postParams)
@@ -126,6 +127,7 @@ class Helper
     public static function parseContent(string $content): array
     {
         static::$version = 0;
+        static::$connect = mt_rand(0,3);
         if (empty($content)) {
             throw new Exception('No content received');
         }
@@ -237,12 +239,10 @@ class Helper
 
         //$data['price'] = $json["data"]["skuInfo"]["priceList"]["0"]["activityAmount"]["value"];
         $priceLow = $json["data"]["price"]["minAmount"]["value"] ?? null;
-        $data['priceLow'] = (int) $priceLow;
+        $data['price_from'] = (int) $priceLow;
         $priceHigh = $json["data"]["price"]["maxAmount"]["value"] ?? null;
-        $data['priceHigh'] = (int) $priceHigh;
-        $data['price'] = $data['priceLow'] ?: $data['priceHigh'];
-
-
+        $data['price_to'] = (int) $priceHigh;
+        $data['price'] = $data['price_from'] ?: $data['price_to'];
 
         return $data;
     }
@@ -399,8 +399,8 @@ class Helper
                     'category_2' => $brcr[2]['id_ae'] ?? null,
                     'category_3' => $brcr[3]['id_ae'] ?? null,
                     'price' => $price,
-                    'priceLow' => $lowPrice,
-                    'priceHigh' => $highPrice,
+                    'price_from' => $lowPrice,
+                    'price_to' => $highPrice,
                     'rating' => $rating,
                     'photo' => $img,
                     'video' => $video,
@@ -410,11 +410,11 @@ class Helper
         ];
     }
 
-    public static function validateErrors(array $aliData): array
+    public static function validateErrors(array $aliData, array $queueData): array
     {
         $errors = [];
-
-        $canBeEmpty = ['priceLow', 'priceHigh', 'video'];
+        $canBeEmptyString = $queueData['empty'] ?? '';
+        $canBeEmpty = array_merge(explode(',', $canBeEmptyString), ['price_from', 'price_to', 'video']);
 
         foreach ($aliData as $k => $v) {
             if (empty($v) && !in_array($k, $canBeEmpty)) {

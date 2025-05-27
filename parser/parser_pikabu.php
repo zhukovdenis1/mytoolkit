@@ -3,6 +3,20 @@
 require_once 'Helper.php';
 require_once 'ParseError.php';
 $config = include 'config.php';
+$output = PHP_EOL;
+$dbFile = dirname(__FILE__).'/db/pikabu.json';
+$logFile = dirname(__FILE__).'/../storage/logs/parser_pikabu-'.date('Y-m').'.log';
+
+$db = file_get_contents($dbFile);
+$dbJson = json_decode($db, true);
+
+$dbCaptchaCounter = $dbJson['captchaCount'] ?? 0;
+$dbLastRequestDateTime = $dbJson['lastRequest'] ?? 0;
+$delay = 30*($dbCaptchaCounter+1);
+
+if ((strtotime($dbLastRequestDateTime) + $delay) > time()) {
+    die('*');
+}
 
 //if (!$config['debug']) sleep(mt_rand(0,25));
 
@@ -62,8 +76,8 @@ try {
         'url' => $newUrl,
         'coupon_id' => $couponId
     ]);
-    //echo $json.PHP_EOL;
-    echo date('H:i:s ') . 'ok: coupon_id:' . $couponId . ' url=' . $newUrl . PHP_EOL;
+    //$output .= $json.PHP_EOL;
+    $output .= date('H:i:s ') . 'ok: coupon_id:' . $couponId . ' url=' . $newUrl . PHP_EOL;
 } catch (Exception $e) {
     $message = $e->getMessage();
     $errorCode = 0;
@@ -78,8 +92,25 @@ try {
         ]);
     }
 
-    echo date('H:i:s ') . 'er: ' . $message . ' coupon_id:' . $couponId . PHP_EOL;
+    $output .= date('H:i:s ') . 'er: ' . $message . ' coupon_id:' . $couponId . PHP_EOL;
 }
+
+if ($message == 'Captcha') {
+    $dbCaptchaCounter++;
+} else {
+    $dbCaptchaCounter && $dbCaptchaCounter--;
+}
+
+$output .= ' cc=' . $dbCaptchaCounter;
+
+file_put_contents($dbFile, json_encode([
+    'captchaCount' => $dbCaptchaCounter,
+    'lastRequest' => date('Y-m-d H:i:s')
+]));
+
+file_put_contents($logFile, $output, FILE_APPEND);
+
+echo $output;
 
 
 
