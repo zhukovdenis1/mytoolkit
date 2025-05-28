@@ -1,0 +1,24 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Запрещаем прямой доступ к файлам вне public/ (кроме самого .htaccess)
+    RewriteCond %{REQUEST_URI} !^/public/ [NC]
+    RewriteCond %{REQUEST_URI} !^/\.well-known/ [NC]  # Для Let's Encrypt и подобного
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [F,L]
+
+    # Если файл или папка существуют в public/, отдаем их напрямую
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -d
+    RewriteRule ^(.*)$ public/$1 [L,QSA]
+
+    # Все остальные запросы перенаправляем на index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ public/index.php [L,QSA]
+</IfModule>
+
+# Дополнительная защита - явно запрещаем доступ к конкретным файлам
+<FilesMatch "(^\.|\.(env|log|sql|htpasswd|bak|conf|ini|key|pem|crt|lock|sh|md|gitignore|gitattributes)$)">
+Require all denied
+</FilesMatch>

@@ -27,8 +27,8 @@
         <h3>Информационный блок:</h3>
 
         <div class="articles-wrap">
-            @foreach($articles as $article)
-                <a href="{{route('article.detail', ['article' => $article->id, 'articleHru' => $article->uri])}}">{{$article->h1}}</a>
+            @foreach($articles as $a)
+                <a href="{{route('article.detail', ['article' => $a->id, 'articleHru' => $a->uri])}}">{{$a->h1}}</a>
             @endforeach
         </div>
     @endif

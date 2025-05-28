@@ -1,15 +1,12 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Если файл или папка существуют в public/, отдаем их напрямую
+    # Если запрос идет к реальному файлу/папке внутри public/ — отдаем его
     RewriteCond %{DOCUMENT_ROOT}/public/$1 -f [OR]
     RewriteCond %{DOCUMENT_ROOT}/public/$1 -d
     RewriteRule ^(.*)$ public/$1 [L,QSA]
 
-    # Все остальные запросы перенаправляем на index.php
-    # Исключаем статические файлы и папки
-    #RewriteCond %{REQUEST_URI} !\.(jpg|jpeg|png|gif|css|js|ico|txt|pdf|woff|woff2|ttf|svg)$ [NC]
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
+    # Все остальные запросы (включая попытки доступа к файлам выше public/)
+    # перенаправляем на public/index.php
     RewriteRule ^(.*)$ public/index.php [L,QSA]
 </IfModule>
