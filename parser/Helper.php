@@ -414,7 +414,10 @@ class Helper
     {
         $errors = [];
         $canBeEmptyString = $queueData['empty'] ?? '';
-        $canBeEmpty = array_merge(explode(',', $canBeEmptyString), ['price_from', 'price_to', 'video']);
+        $canBeEmpty = array_merge(
+            explode(',', $canBeEmptyString),
+            ['price_from', 'price_to', 'video', 'category_2', 'category_3']
+        );
 
         foreach ($aliData as $k => $v) {
             if (empty($v) && !in_array($k, $canBeEmpty)) {

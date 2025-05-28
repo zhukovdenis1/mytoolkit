@@ -32,7 +32,7 @@ if(true || $_SERVER['HTTP_HOST'] == 'deshevyi.ru')
 
         //if ($_SERVER['REMOTE_ADDR'] == '92.39.219.112')
         {
-            file_get_contents('http://api.deshevii.ru/home/redirect_register?aliProductId='.$aliProductId.'&siteId='.$siteId.'&sText='.urlencode($sText).'&ip='.urlencode($ip).'&referer='.urlencode($referer).'&agent='.urlencode($agent));
+            //file_get_contents('http://api.deshevii.ru/home/redirect_register?aliProductId='.$aliProductId.'&siteId='.$siteId.'&sText='.urlencode($sText).'&ip='.urlencode($ip).'&referer='.urlencode($referer).'&agent='.urlencode($agent));
             /*require_once(ROOT_DIR . '../admin.deshevii.ru/Api.php');
             $api = new Api();
             $api->aliProductRedirectRegister($aliProductId, $siteId, $sText, $ip, $agent, $referer);*/

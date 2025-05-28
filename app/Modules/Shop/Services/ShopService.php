@@ -46,7 +46,6 @@ class ShopService extends BaseService
 //        $agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 //        if (!(strpos($agent, 'Bot/') || strpos($agent, 'bot/'))) {
         if ($detector->isCrawler($request->header('User-Agent'))) {
-            //Log::channel('bot')->info('Bot: ', $request->all());
             return $goUrl;
         }
 
@@ -98,8 +97,12 @@ class ShopService extends BaseService
                 $redirectUrl = 'https://aliexpress.ru/wishlist';
             } elseif ($search == '{login}') {
                 $redirectUrl = 'https://login.aliexpress.ru/';
-            } else {
-                $redirectUrl = 'https://aliexpress.ru/wholesale?SearchText=' . urlencode($search);
+            } else {//здесь могут быть так же h1 из oldDetail
+                $sTextArr = explode(' ', trim($search));
+                $ssTextArr = array();
+                for ($i = 0; $i < 5; $i++) $ssTextArr[] = $sTextArr[$i];
+                $sText = implode(' ', $ssTextArr);
+                $redirectUrl = 'https://aliexpress.ru/wholesale?SearchText=' . urlencode($sText);
             }
         }
 
@@ -115,7 +118,6 @@ class ShopService extends BaseService
             $this->appLogger->critical('Переход без афилиатной ссылки', ['redirectUrl' => $redirectUrl]);
             $goUrl = $redirectUrl;
         }
-
 
         return $goUrl;
     }
