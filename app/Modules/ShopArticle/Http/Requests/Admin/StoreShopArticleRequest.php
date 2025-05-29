@@ -19,6 +19,7 @@ class StoreShopArticleRequest extends BaseFormRequest
             'keywords' => 'nullable|string|max:16000',
             'description' => 'nullable|string|max:16000',
             'text' => 'nullable|string|max:16000',
+            'note' => 'nullable|string|max:16000',
             'code' => 'nullable|string|max:255',
             'separation' => 'nullable|string|max:255',
         ];

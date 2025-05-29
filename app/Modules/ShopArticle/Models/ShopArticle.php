@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $code
  * @property string $separation
  * @property array|null $text Текст заметки (массив в JSON, может быть null)
+ * @property string $note заметка (может быть null)
  * @property Carbon $created_at Время создания записи (дата и время)
  * @property Carbon $updated_at Время обновления записи (дата и время)
  *
@@ -41,6 +42,7 @@ class ShopArticle extends BaseModel
         'code',
         'separation',
         'text',
+        'note',
     ];
 
     protected $dates = [

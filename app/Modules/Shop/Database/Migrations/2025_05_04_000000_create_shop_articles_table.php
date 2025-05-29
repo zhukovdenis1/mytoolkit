@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('code')->nullable();
             $table->string('separation')->nullable();
             $table->json('text')->nullable();
+            $table->text('note')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

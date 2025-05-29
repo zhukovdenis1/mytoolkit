@@ -1,7 +1,8 @@
 import React from "react";
 import {EditorHandle} from "./Editor";
 import {Space, Dropdown, Confirmable} from "ui"
-import {ArrowUpOutlined, ArrowDownOutlined, PlusOutlined, DeleteOutlined, VideoCameraOutlined, PictureOutlined, CodeOutlined, EyeOutlined, EyeInvisibleOutlined} from "./icons"
+import {ArrowUpOutlined, ArrowDownOutlined, PlusOutlined, DeleteOutlined, VideoCameraOutlined
+    , PictureOutlined, CodeOutlined, EyeOutlined, EyeInvisibleOutlined, ShoppingCartOutlined} from "./icons"
 
 
 type EditorToolBarProps = {
@@ -78,26 +79,17 @@ const EditorToolBar: React.FC<EditorToolBarProps> = ({ boxKey, boxType, editor, 
                     type="button" title="Visual source editor"
                     className={boxType == 'visualSource' ? 'active' : ''}
                 >
-                    <EyeInvisibleOutlined />
+                    <EyeInvisibleOutlined/>
                 </button>
-                <Dropdown menu={getCodeMenu(boxKey)} trigger={["click"]}>
-                    <button
-                        type="button"
-                        title="Code"
-                        className={boxType == "code" ? "active" : ""}
-                    >
-                        <CodeOutlined/>
-                    </button>
-                </Dropdown>
 
                 <button
                     onClick={() => {
-                        editor?.edit(boxKey, {type: 'video'})
+                        editor?.edit(boxKey, {type: 'product'})
                     }}
-                    type="button" title="Video"
-                    className={boxType == 'video' ? 'active' : ''}
+                    type="button" title="Product"
+                    className={boxType == 'product' ? 'active' : ''}
                 >
-                    <VideoCameraOutlined/>
+                    <ShoppingCartOutlined />
                 </button>
 
                 <button
@@ -109,6 +101,27 @@ const EditorToolBar: React.FC<EditorToolBarProps> = ({ boxKey, boxType, editor, 
                 >
                     <PictureOutlined/>
                 </button>
+
+                <button
+                    onClick={() => {
+                        editor?.edit(boxKey, {type: 'video'})
+                    }}
+                    type="button" title="Video"
+                    className={boxType == 'video' ? 'active' : ''}
+                >
+                    <VideoCameraOutlined/>
+                </button>
+
+                <Dropdown menu={getCodeMenu(boxKey)} trigger={["click"]}>
+                    <button
+                        type="button"
+                        title="Code"
+                        className={boxType == "code" ? "active" : ""}
+                    >
+                        <CodeOutlined/>
+                    </button>
+                </Dropdown>
+
                 <button onClick={() => {
                     editor?.move(boxKey, -1)
                 }} type="button" title="Up">

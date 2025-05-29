@@ -14,5 +14,6 @@ export {
     PictureOutlined,
     CodeOutlined,
     EyeOutlined,
-    EyeInvisibleOutlined
+    EyeInvisibleOutlined,
+    ShoppingCartOutlined
 } from '@ant-design/icons';

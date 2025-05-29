@@ -104,6 +104,10 @@ export const ShopArticlesFormPage: React.FC = ({}) => {
                         }}
                     />
                 }
+
+                <Form.Item name="note" label="Note">
+                    <Input.TextArea disabled={loading} />
+                </Form.Item>
                 <Form.Item>
                     <Space>
                         <Button disabled={loading} type="default" htmlType="submit" onClick={() => form.setFieldValue("exit", 0)}>Save</Button>

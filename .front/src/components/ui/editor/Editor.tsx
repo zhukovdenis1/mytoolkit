@@ -6,6 +6,7 @@ import VisualSourceEditor from "./VisualEditor/VisualSourceEditor";
 import EditorToolBar from "./EditorToolBar";
 import VideoEditor, {VideoEditorData} from "./VideoEditor";
 import ImageEditor, {ImageEditorData} from "./ImageEditor";
+import ProductEditor, {ProductEditorData} from "./ProductEditor";
 import { html } from "js-beautify";
 import {VisualEditorData, VisualSourceEditorData} from './VisualEditor/types'
 import {EditorConfig} from './types'
@@ -354,6 +355,14 @@ const EditorComponent: React.FC<EditorProps> = ({
                         <ImageEditor
                             data={item.data as ImageEditorData}
                             onChange={(val: ImageEditorData) => editor.edit(key, { data: val })}
+                            disabled={disabled}
+                            mode={mode}
+                            config={config}
+                        />
+                    ) : item.type === "product" ? (
+                        <ProductEditor
+                            data={item.data as ProductEditorData}
+                            onChange={(val: ProductEditorData) => editor.edit(key, { data: val })}
                             disabled={disabled}
                             mode={mode}
                             config={config}

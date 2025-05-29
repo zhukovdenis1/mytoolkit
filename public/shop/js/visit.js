@@ -3,7 +3,7 @@ let triggered = false;
 function isProbablyHuman() {
     try {
         // Проверка наличия плагинов
-        if (!navigator.plugins || navigator.plugins.length === 0) return false;
+        //if (!navigator.plugins || navigator.plugins.length === 0) return false; //в мобильниках может быть 0
 
         // Проверка количества логических ядер (0 или 1 — подозрительно)
         if (!navigator.hardwareConcurrency || navigator.hardwareConcurrency < 2) return false;
