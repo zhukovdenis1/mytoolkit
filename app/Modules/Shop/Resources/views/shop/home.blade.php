@@ -14,6 +14,13 @@
         @endforeach
         </ul>
     </div>
+
+
+    @if(!$popular->isEmpty() && !$searchString)
+        <p><strong>Популярное: </strong></p>
+        <x-shop::product-list :products="$popular" :more="false" />
+    @endif
+
     @if(!$coupons->isEmpty() && !$searchString)
         <a class="h" href="{{route('coupons')}}">
             <h2>Действующие промокоды и купоны Алиэкспресс на {{$monthName}} {{date('Y')}}</h2> <span class="lnk">посмотреть все</span>
@@ -28,7 +35,6 @@
         <p style="margin-bottom: 50px;">
             <a  href="{{route('coupons')}}">Посмотреть все скидки &raquo;</a>
         </p>
-
     @endif
 
 

@@ -267,8 +267,20 @@ class ShopService extends BaseService
 
         if ($epnCategory) {
             $query->where('epn_category_id', $epnCategory);
-            $query->orderBy('epn_cashback', 'desc');
+            $query->orderBy('epn_month_income', 'desc');
         }
+
+        return $query->get();
+    }
+
+    public function getPopular(): Collection
+    {
+        $query = ShopProduct::query()
+            ->select('id', 'title', 'title_ae', 'photo', 'rating', 'price', 'price_from', 'price_to', 'hru')
+            ->whereNull('deleted_at')
+            ->whereNull('not_found_at')
+            ->orderBy('epn_month_income', 'desc')
+            ->limit(24);
 
         return $query->get();
     }

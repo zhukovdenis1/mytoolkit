@@ -42,16 +42,18 @@ class ShopController extends Controller
             'search'      => ['nullable', 'string', 'max:50'],
         ]);
 
-        $page = $validated['page'] ?? 0;
+        //$page = $validated['page'] ?? 0;
         $search = $validated['search'] ?? '';
 
-        $products = $this->service->filter($page, 0, $search);
+        $products = $this->service->filter(0, 0, $search);
+        $popular = $this->service->getPopular();
         $coupons = $this->service->getMainPageCoupons();
         $articles = $this->service->getMainPageArticles();
 
         return view('Shop::shop.home', [
             'monthName' => mb_ucfirst($this->dateTimeHelper->getMonthName(date('m'), 'nominative')),
             'epnCategories' => $this->service->getEpnMenu(),
+            'popular' => $popular,
             'products' => $products,
             'coupons' => $coupons,
             'articles' => $articles,

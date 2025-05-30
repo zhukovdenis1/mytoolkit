@@ -2,7 +2,7 @@
     @if ($products->isEmpty())
         {{__('Не найдено')}}
     @else
-        <ul class="prod-list" id="prodList">
+        <ul class="prod-list" id="{{($more ?? true) ? 'prodList' : ''}}">
             @foreach($products as $product)
                 <li>
                     <a class="prod-item" href="{{ route('detail', ['product' => $product, 'productHru'=>$product->hru]) }}">
@@ -22,6 +22,8 @@
                 </li>
             @endforeach
         </ul>
-        <div class="loading" id="loading"></div>
+        @if ($more ?? true)
+            <div class="loading" id="loading"></div>
+        @endif
     @endif
 </div>
