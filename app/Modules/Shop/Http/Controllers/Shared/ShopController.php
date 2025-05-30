@@ -65,8 +65,8 @@ class ShopController extends Controller
 
         $query = ShopProduct::query()
             ->select('id', 'hru','created_at')
-            //->whereNull('deleted_at')
-            //->whereNotIn('category_0', [16002,1309])
+            ->whereNull('deleted_at')
+            ->whereNotIn('category_0', [16002,1309])
             ->orderBy('id', 'desc')
             ->limit(5000);
 
