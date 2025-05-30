@@ -35,7 +35,7 @@ class ShopParseController extends Controller
             ->orderBy('created_at')
             ->first();
 
-        if ($data->exists) {
+        if (!empty($data) && $data->exists) {
             if ($data->important) {
                 $blockedUntil = Carbon::now()->addMinutes(3);
             } else {
