@@ -76,11 +76,11 @@ class EditorHelper
 
                 $html .= view('Shop::shop.editor-product', [
                     'product' => $product,
-                    'title' => $d['data']['title'],
-                    'description' => $d['data']['description'],
-                    'props' =>  array_filter(array_map('trim', explode("\n", $d['data']['props']))),
-                    'cons' => array_filter(array_map('trim', explode("\n", $d['data']['cons']))),
-                    'idAe' => $d['data']['id_ae']
+                    'title' => $d['data']['title'] ?? '',
+                    'description' => $d['data']['description'] ?? '',
+                    'props' =>  array_filter(array_map('trim', explode("\n", $d['data']['props'] ?? ''))),
+                    'cons' => array_filter(array_map('trim', explode("\n", $d['data']['cons'] ?? ''))),
+                    'idAe' => $d['data']['id_ae'] ?? ''
                 ])->render();
             }
         }

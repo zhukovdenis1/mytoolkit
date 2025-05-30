@@ -386,11 +386,12 @@ ol.brcr {
 .editor-product {
     display: flex;
     flex-direction: row;
-    gap: 20px;
-    margin-bottom: 70px;
+    gap: 50px;
+    margin-top: 50px;
     }
     .editor-product .prod-item {
         min-width: 200px;
+        height: auto;
     }
     .editor-product h3 {
         font-weight: normal;
@@ -689,6 +690,10 @@ ul.reviews {
         height: 170px;
     }
     .prod-list .price, .prod-list .title {
+        width: 170px;
+    }
+
+    .prod-item {
         width: 170px;
     }
 
