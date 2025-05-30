@@ -38,7 +38,17 @@ h2 {
 .clearing {
     clear: left;
 }
-
+.form-item {
+    line-height: 1em;
+    }
+    .form-item input {
+        padding: 4px 4px 3px 4px;
+        font-size: 1em;
+    }
+    .form-item button {
+        padding: 4px 4px 3px 4px;
+        font-size: 1em;
+    }
 table.default {
     border-collapse:collapse;
 }
@@ -615,6 +625,7 @@ ul.prod-list li:hover a {
     margin-bottom: 5px;
 }
 .detail-menu a.buy-button2 {
+    border: 1px solid #60bc03;
     background: #60bc03;
 }
 .detail-menu a.coupon-button {
@@ -772,8 +783,9 @@ ul.reviews {
         background: #fff;
         top: 69px;
         padding: 10px 0;
+        font-size: 0.9em;
     }
-    .detail-menu a:first-child {
+    .detail-menu>a:first-child {
         padding-left: 0;
     }
     .detail-menu a {
@@ -782,6 +794,7 @@ ul.reviews {
         background: none;
         text-decoration: underline;
         line-height: 2em;
+        padding: 4px 14px;
     }
     .detail-menu a:hover {
         background: none;
@@ -925,8 +938,9 @@ nav .pagination {
         text-decoration: none;
         border: 1px solid #ccc;
         border-radius: 3px;
-        margin-left: 10px;
+        margin: 5px 10px 0 0px;
         padding: 5px 10px;
+        display: inline-block;
         }
         a.coupon-type-lnk:hover, a.coupon-type-lnk.active {
             background: #ccc;

@@ -10,12 +10,18 @@
     {!! isset($article['content'][1]) && $isIndexPage ? $article['content'][1] : '' !!}
 
     <form method="GET" action="">
-            <input type="hidden" name="page" value="1" />
-            <input type="text" name="search" value="{{ request('search') }}"
-                   placeholder="Поиск купонов...">
-            <button type="submit">
+        <span class="form-item"><input type="hidden" name="page" value="1" /></span>
+        <span class="form-item">
+                <input type="text" name="search" value="{{ request('search') }}"
+                   placeholder="Поиск купонов..." />
+        </span>
+        <span class="form-item">
+             <button type="submit">
                 Найти
             </button>
+        </span>
+
+
         <a class="coupon-type-lnk {{$type == 'code' ? 'active' : ''}}" href="{{route('coupons', ['page' => 1,'type'=>'code'])}}">Промокоды: <b>{{$counts['code']}}</b></a>
         <a class="coupon-type-lnk {{$type == 'discount_amount' ? 'active' : ''}}"href="{{route('coupons', ['page' => 1, 'type'=>'discount_amount'])}}">Скидка, руб: <b>{{$counts['discount_amount']}}</b></a>
         <a class="coupon-type-lnk {{$type == 'discount_percent' ? 'active' : ''}}" href="{{route('coupons', ['page' => 1, 'type'=>'discount_percent'])}}">Скидка, %: <b>{{$counts['discount_percent']}}</b></a>
