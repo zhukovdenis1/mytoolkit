@@ -299,6 +299,10 @@ class ShopController extends Controller
                 : file_get_contents('https://old.deshevyi.ru/p/'. $productHru);
         }
 
+        if (strpos($html, 'page404')) {
+            abort(404);
+        }
+
 
         $result = [];
 
