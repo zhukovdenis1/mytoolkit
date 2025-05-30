@@ -26,7 +26,7 @@ class ShopArticleService extends BaseService
 //        $limit = empty($validatedData['_limit']) ? 10 : intval($validatedData['_limit']);
 //        $sortColumn = $validatedData['_sort'] ?? 'id';
 //        $order = $validatedData['_order'] ?? 'desc';
-        $limit = 10;
+        $limit = 50;
         $sortColumn = 'id';
         $order = 'desc';
 
@@ -44,6 +44,10 @@ class ShopArticleService extends BaseService
 
         //Пагинация
         $dataPaginated = $articles->paginate($limit, ['*'], 'page', $page);
+
+        foreach ($dataPaginated as $article) {
+            $article->h1 = $this->articleHelper->replace($article->h1);
+        }
 
         return $dataPaginated;
     }

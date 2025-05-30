@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\ShopArticle\Http\Controllers\Shared;
 
+use App\Helpers\ShopArticleHelper;
 use App\Http\Controllers\Controller;
 use App\Modules\ShopArticle\Models\ShopArticle;
 use App\Modules\ShopArticle\Services\Shared\ShopArticleService;
@@ -11,7 +12,9 @@ use Illuminate\Http\Request;
 
 class ShopArticleController extends Controller
 {
-    public function __construct(private readonly ShopArticleService $service) {}
+    public function __construct(
+        private readonly ShopArticleService $service,
+    ) {}
     public function index(Request $request)
     {
         $validated = $request->validate([
@@ -20,7 +23,6 @@ class ShopArticleController extends Controller
         ]);
 
         $articles = $this->service->findPaginated($validated);
-
         return view('Shop::shop.articles', [
             'articles' => $articles,
         ]);

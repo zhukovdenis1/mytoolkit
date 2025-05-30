@@ -19,9 +19,9 @@
     @if($articles->isEmpty())
         <p>Ничего не найдено</p>
     @else
-        <ul class="article-list">
+        <ul class="ul">
         @foreach($articles as $article)
-            <li><a href="{{route('article.detail', ['article' => $article, 'articleHru' => $article->uri])}}">{{$article->name}}</a></li>
+            <li><a href="{{route('article.detail', ['article' => $article, 'articleHru' => $article->uri])}}">{{$article->h1}}</a></li>
         @endforeach
         </ul>
     @endif
