@@ -50,9 +50,10 @@ class ShopArticleHelper
         return $text;
     }
 
-    public function getDataByCode(string $code): array
+    public function getDataByCode(string $code): ?array
     {
         $article = ShopArticle::query()->where('code', $code)->first();
+        if (!$article) return null;
         $textData = json_decode($article->text ?? '', true);
 
         $contentParts = [];

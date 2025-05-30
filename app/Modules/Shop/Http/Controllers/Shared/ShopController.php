@@ -45,17 +45,18 @@ class ShopController extends Controller
         $page = $validated['page'] ?? 0;
         $search = $validated['search'] ?? '';
 
-        $products = ShopProduct::filter($page, 0, $search);
+        $products = $this->service->filter($page, 0, $search);
         $coupons = $this->service->getMainPageCoupons();
         $articles = $this->service->getMainPageArticles();
 
         return view('Shop::shop.home', [
             'monthName' => mb_ucfirst($this->dateTimeHelper->getMonthName(date('m'), 'nominative')),
+            'epnCategories' => $this->service->getEpnMenu(),
             'products' => $products,
             'coupons' => $coupons,
             'articles' => $articles,
             'searchString' => $search,
-            'article' => $this->service->getArticleData()
+            'article' => $this->service->getArticleData('home')
         ]);
     }
 
@@ -80,14 +81,16 @@ class ShopController extends Controller
         $validated = $request->validate([
             'page'        => ['nullable', 'integer', 'min:1', 'max:100'],
             'category_id' => ['nullable', 'integer'],
+            'epn_category_id' => ['nullable', 'integer'],
             'search'      => ['nullable', 'string', 'max:50'],
         ]);
 
         $page = $validated['page'] ?? 0;
         $category = $validated['category_id'] ?? 0;
+        $epnCategory = $validated['epn_category_id'] ?? 0;
         $search = $validated['search'] ?? '';
 
-        $products = ShopProduct::filter($page, $category, $search);
+        $products = $this->service->filter($page, $category, $search, $epnCategory);
 
         return view('Shop::shop.more', ['products' => $products]);
     }
@@ -108,12 +111,41 @@ class ShopController extends Controller
             return redirect()->route('category', ['category' => $category->id_ae, 'categoryHru' => $category->hru], 301);
         }
 
-        $products = ShopProduct::filter($page, $category->id_ae, $search);
+        $products = $this->service->filter($page, $category->id_ae, $search);
 
         return view('Shop::shop.category', [
             'products' => $products,
             'category' => $category,
             'searchString' => $search
+        ]);
+    }
+
+    public function epnCategory(Request $request, string $categoryId, string $categoryHru='')
+    {
+        $validated = $request->validate([
+            'page'        => ['nullable', 'integer', 'min:1', 'max:100'],
+            'search'      => ['nullable', 'string', 'max:50'],
+        ]);
+
+        $page = $validated['page'] ?? 0;
+        $search = $validated['search'] ?? '';
+
+        $categories = config('epn.categories');
+        $category = ($key = array_search($categoryId, array_column($categories, 'id'))) !== false ? $categories[$key] : null;
+        if (!$category) {
+            return redirect()->route('home');
+        }
+        if ($categoryHru != $category['uri']) {
+            return redirect()->route('epnCategory', ['categoryId' => $category['id'], 'categoryHru' => $category['uri']], 301);
+        }
+
+        $products = $this->service->filter($page, 0, $search, $categoryId);
+
+        return view('Shop::shop.epn-category', [
+            'products' => $products,
+            'category' => $category,
+            'searchString' => $search,
+            'article' => $this->service->getArticleData('epn-'.$category['id'])
         ]);
     }
 
@@ -311,7 +343,7 @@ class ShopController extends Controller
         $search = 'фонар';
         if ($selectionName == 'flashlights') {
 
-            $products = ShopProduct::filter(0, 0, $search);
+            $products = $this->service->filter(0, 0, $search);
 
             return view('Shop::shop.selection', [
                 'products' => $products,

@@ -5,6 +5,15 @@
 @section('description',$article['description'] ?? $title)
 
 @section('content')
+    <div class="top-menu">
+        <ul>
+        @foreach ($epnCategories as $c)
+            <li>
+                <a href="{{route('epnCategory', ['categoryId' => $c['id'], 'categoryHru' => $c['uri']])}}">{{$c['name']}}</a>
+            </li>
+        @endforeach
+        </ul>
+    </div>
     @if(!$coupons->isEmpty() && !$searchString)
         <a class="h" href="{{route('coupons')}}">
             <h2>Действующие промокоды и купоны Алиэкспресс на {{$monthName}} {{date('Y')}}</h2> <span class="lnk">посмотреть все</span>

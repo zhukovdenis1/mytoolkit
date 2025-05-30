@@ -24,6 +24,7 @@ Route::middleware(['shop_visits'])->group(function () {
     Route::get('a', [ShopArticleController::class, 'index'])->name('articles');
     Route::get('a-{article}/{articleHru?}', [ShopArticleController::class, 'detail'])->name('article.detail');
     Route::get('c-{category}/{categoryHru?}', [ShopController::class, 'category'])->name('category');
+    Route::get('ce-{categoryId}/{categoryHru?}', [ShopController::class, 'epnCategory'])->name('epnCategory');
     Route::get('p-{product}/{productHru?}', [ShopController::class, 'detail'])->name('detail');
     Route::get('/s/{selectionName}/', [ShopController::class, 'selection'])->name('selection');
     Route::get('pa-{id_ae}', [ShopController::class, 'aedetail'])->name('aedetail')

@@ -14,6 +14,7 @@ use App\Modules\ShopArticle\Models\ShopArticle;
 use App\Modules\ShopArticle\Services\Shared\ShopArticleService;
 use App\Services\BaseService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,9 +34,9 @@ class ShopService extends BaseService
     ){}
 
 
-    public function getArticleData(): array
+    public function getArticleData($code): ?array
     {
-       return $this->articleHelper->getDataByCode('home');
+       return $this->articleHelper->getDataByCode($code);
     }
 
     public function getGoRedirectUrl(array $validated, Request $request): string
@@ -223,5 +224,52 @@ class ShopService extends BaseService
         }
 
         return true;
+    }
+
+    public function getEpnMenu(): array
+    {
+        $data = config('epn.categories');
+        return array_filter($data, function($v, $k) {
+            return (!empty($v['uri']) && !empty($v['active']));
+        }, ARRAY_FILTER_USE_BOTH);
+
+    }
+
+    public function filter(int $page = 1, int $category = 0, string $search = '', int $epnCategory = 0): Collection
+    {
+        $limit = 48;
+        $offset = $limit * ($page - 1);
+
+        $query = ShopProduct::query()
+            ->select('id', 'title', 'title_ae', 'photo', 'rating', 'price', 'price_from', 'price_to', 'hru')
+            ->whereNull('deleted_at')
+            ->whereNull('not_found_at')
+            ->whereNotIn('category_0', [16002,1309])
+            ->orderBy('id', 'desc')
+            ->offset($offset)
+            ->limit($limit);
+
+        if ($search) {
+            $query->where('title', 'like', "%{$search}%");
+        }
+
+        if ($category) {
+            //$query->where('category_id', $category);
+
+            $query->where(function (Builder $query) use ($category) {
+                $query->orWhere('category_id', $category)
+                    ->orWhere('category_0', $category)
+                    ->orWhere('category_1', $category)
+                    ->orWhere('category_2', $category)
+                    ->orWhere('category_3', $category);
+            });
+        }
+
+        if ($epnCategory) {
+            $query->where('epn_category_id', $epnCategory);
+            $query->orderBy('epn_cashback', 'desc');
+        }
+
+        return $query->get();
     }
 }

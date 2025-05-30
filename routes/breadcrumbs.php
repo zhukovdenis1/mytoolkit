@@ -43,6 +43,15 @@ Breadcrumbs::for('article.detail', function (BreadcrumbTrail $trail, ShopArticle
 
 });
 
+Breadcrumbs::for('epnCategory', function (BreadcrumbTrail $trail, $categoryId): void {
+
+    $categories = config('epn.categories');
+    $category = ($key = array_search($categoryId, array_column($categories, 'id'))) !== false ? $categories[$key] : null;
+    $trail->parent('home');
+    $trail->push($category['name'], '');
+
+});
+
 Breadcrumbs::for('category', function (BreadcrumbTrail $trail, $category): void {
 //    $query = ShopCategory::query()
 //        ->select('id_ae', 'title', 'hru', 'parents')
@@ -54,6 +63,8 @@ Breadcrumbs::for('category', function (BreadcrumbTrail $trail, $category): void 
     $trail->push($category->title, '');
 
 });
+
+
 
 Breadcrumbs::for('detail', function (BreadcrumbTrail $trail, ShopProduct $product): void {
     //$pd = ShopProduct::query()->find($productId, ['category_0','category_1','category_2','category_3', 'title']);

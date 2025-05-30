@@ -1,6 +1,7 @@
 let ProductLoader =
     {
         categoryId: 0,
+        epnCategoryId: 0,
         searchString: '',
         activeRequest: false,
         page: 1,
@@ -8,7 +9,8 @@ let ProductLoader =
         init : function(data) {
             $this = this;
 
-            this.categoryId = data.category_id;
+            this.categoryId = data.categoryId;
+            this.epnCategoryId = data.epnCategoryId;
             this.searchString = data.searchString;
 
             $(document).ready(function() {
@@ -30,7 +32,7 @@ let ProductLoader =
                     $this.page++;
                     $.ajax({
                         url: '/more',
-                        data: {page: $this.page, category_id: $this.categoryId, search: $this.searchString},
+                        data: {page: $this.page, category_id: $this.categoryId, search: $this.searchString, epn_category_id: $this.epnCategoryId},
                         dataType: 'html',
                         success: function(data){
                             if (data.length == 0) {

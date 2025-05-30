@@ -333,6 +333,56 @@ header .account a:hover {
 }
 /*End haader*/
 
+/*== top-menu ===*/
+.top-menu {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin: 0px 0 40px 0;
+    font-size: 1em;
+}
+
+.top-menu::-webkit-scrollbar {
+    display: none;
+}
+
+.top-menu ul {
+    display: flex;
+    min-width: max-content; /* Запрещаем сжатие меньше содержимого */
+    width: 100%;
+    padding: 10px 0;
+    margin: 0;
+    list-style: none;
+}
+
+.top-menu li {
+    flex: 1 0 auto; /* Растягиваем равномерно */
+    min-width: fit-content; /* Минимальная ширина по содержимому */
+    margin-right: 20px;
+}
+
+.top-menu li:last-child {
+    margin-right: 0;
+}
+
+.top-menu a {
+    display: block;
+    padding: 4px 6px;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    background: #f5f5f5;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.top-menu a:hover {
+    background: #e0e0e0;
+}
+/*== end top-menu ===*/
+
 
 /*=== breadcrumbs ===*/
 ol.brcr {

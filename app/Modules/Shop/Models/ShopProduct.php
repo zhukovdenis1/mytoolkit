@@ -63,39 +63,39 @@ class ShopProduct extends BaseModel
         'info' => 'array',
     ];
 
-    public static function filter($page = 1, $category = 0, $search = '')
-    {
-        $limit = 48;
-        $offset = $limit * ($page - 1);
-
-
-        $query = ShopProduct::query()
-            ->select('id', 'title', 'title_ae', 'photo', 'rating', 'price', 'price_from', 'price_to', 'hru')
-            ->whereNull('deleted_at')
-            ->whereNull('not_found_at')
-            ->whereNotIn('category_0', [16002,1309])
-            ->orderBy('id', 'desc')
-            ->offset($offset)
-            ->limit($limit);
-
-        if ($search) {
-            $query->where('title', 'like', "%{$search}%");
-        }
-
-        if ($category) {
-            //$query->where('category_id', $category);
-
-            $query->where(function (Builder $query) use ($category) {
-                $query->orWhere('category_id', $category)
-                      ->orWhere('category_0', $category)
-                      ->orWhere('category_1', $category)
-                      ->orWhere('category_2', $category)
-                      ->orWhere('category_3', $category);
-            });
-        }
-
-        return $query->get();
-    }
+//    public static function filter($page = 1, $category = 0, $search = '')
+//    {
+//        $limit = 48;
+//        $offset = $limit * ($page - 1);
+//
+//
+//        $query = ShopProduct::query()
+//            ->select('id', 'title', 'title_ae', 'photo', 'rating', 'price', 'price_from', 'price_to', 'hru')
+//            ->whereNull('deleted_at')
+//            ->whereNull('not_found_at')
+//            ->whereNotIn('category_0', [16002,1309])
+//            ->orderBy('id', 'desc')
+//            ->offset($offset)
+//            ->limit($limit);
+//
+//        if ($search) {
+//            $query->where('title', 'like', "%{$search}%");
+//        }
+//
+//        if ($category) {
+//            //$query->where('category_id', $category);
+//
+//            $query->where(function (Builder $query) use ($category) {
+//                $query->orWhere('category_id', $category)
+//                      ->orWhere('category_0', $category)
+//                      ->orWhere('category_1', $category)
+//                      ->orWhere('category_2', $category)
+//                      ->orWhere('category_3', $category);
+//            });
+//        }
+//
+//        return $query->get();
+//    }
 
     public static function saveProduct(array $data)
     {

@@ -52,7 +52,7 @@
         </nav-->
         <main>
             <article>
-                @if(!Route::is('home')) {{ Breadcrumbs::render() }} @else <ol class="brcr"></ol> @endif
+                @if(!Route::is('home')) {{ Breadcrumbs::render() }} @else <!--ol class="brcr"></ol--> @endif
                 @yield('content')
             </article>
             <!--aside>Asided</aside-->

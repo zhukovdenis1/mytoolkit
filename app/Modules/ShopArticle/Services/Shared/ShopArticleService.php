@@ -55,7 +55,7 @@ class ShopArticleService extends BaseService
     public function prepareForDisplay(ShopArticle $article): ShopArticle
     {
         $article->title = $this->articleHelper->replace($article->title);
-        $article->text = $this->editorHelper->jsonToHtml($article->text, $article->title);
+        $article->text = $this->editorHelper->jsonToHtml($article->text, $article->title ?? '');
         $article->text = $this->articleHelper->replace($article->text);
         $article->h1 = $this->articleHelper->replace($article->h1);
         $article->keywords = $this->articleHelper->replace($article->keywords);
