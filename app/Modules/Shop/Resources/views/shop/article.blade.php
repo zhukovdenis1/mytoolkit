@@ -5,7 +5,9 @@
 @section('description', $article->description)
 
 @section('content')
-    <h1>{{$article->h1}}</h1>
-    {!! $article->text !!}
+    <div class="article">
+        <h1>{{$article->h1}}</h1>
+        {!! $article->text !!}
+    </div>
 @endsection
 

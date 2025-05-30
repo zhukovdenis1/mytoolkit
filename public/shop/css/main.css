@@ -685,6 +685,10 @@ ul.reviews {
     header .middle {margin-right: 0}
     header .logo {width: 50px;background: url("/shop/img/mlogo.png")}
 
+    .center-wrap {
+        min-width: 100%;
+    }
+
     .prod-list .img-wrap, .prod-list img {
         width: 170px;
         height: 170px;
@@ -757,6 +761,11 @@ ul.reviews {
         max-width: 90vw;
         overflow-x: scroll;
     }
+
+    .editor-product .props-cons {
+        display: block;
+    }
+
 }
 
 /** pagination */
@@ -958,6 +967,14 @@ a.short-coupon:hover {
     color: #fff;
     background: #ccc;
 }
+
+.article {
+
+    }
+    .article img {
+        max-width: 100%;
+    }
+
 @media (max-width: 1000px) {
     .articles-wrap a {
         flex: 1 1 100%;

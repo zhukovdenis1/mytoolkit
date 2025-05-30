@@ -22,7 +22,7 @@ class EditorHelper
 
     }
 
-    public function arrayToHtml(array $data): string
+    public function arrayToHtml(array $data, string $title = ''): string
     {
         $html = '';
 
@@ -60,12 +60,15 @@ class EditorHelper
             }
         }
 
+        $imgCounter = 0;
+
         foreach ($data as $d) {
             if ($d['type'] == 'visual' || $d['type'] == 'visualSource') {
                 $html .= $d['data']['text'] . PHP_EOL;
             } elseif ($d['type'] == 'image') {
+                $imgCounter++;
                 //var_dump($d['data']);die;
-                $html .= '<p><img src="' . $d['data']['src'] . '" alt="' . $d['data']['text']. '" /></p>' . PHP_EOL;
+                $html .= '<p><img src="' . $d['data']['src'] . '" alt="' . htmlspecialchars($title) . ' №'. $imgCounter . '" /></p>' . PHP_EOL;
             } elseif ($d['type'] == 'product') {
                 $product = null;
                 if (isset($d['data']['id']) && isset($productsByIds[$d['data']['id']])) {
