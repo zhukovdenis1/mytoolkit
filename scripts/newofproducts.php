@@ -23,6 +23,7 @@ $data = $sth->fetchAll(PDO::FETCH_ASSOC);
 foreach ($data as $d) {
     $p = [];
     $p['id_ae'] = $d['id_ae'];
+    $p['id_adm'] = $d['id'];
     $p['category'] = $d['vk_category'];
     $p['category_id'] = $d['category_id'];
     $p['category_0'] = $d['category_0'];
