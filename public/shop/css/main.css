@@ -86,9 +86,9 @@ table.default tr:nth-child(even):hover td {
 
 main {
     min-height: 100%;
-    display: flex;
+    /*display: flex;
     flex-direction: row;
-    flex: 1;
+    flex: 1;*/
     /*flex: 1 1 auto;*/
 }
 
@@ -766,6 +766,12 @@ ul.reviews {
         display: block;
     }
 
+}
+
+@media (max-width: 500px) {
+    .editor-product {
+        display: block;
+    }
 }
 
 /** pagination */
