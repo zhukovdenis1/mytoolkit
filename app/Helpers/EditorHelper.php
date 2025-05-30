@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class EditorHelper
 {
-    public function jsonToHtml(?string $json): string
+    public function jsonToHtml(?string $json, string $title = ''): string
     {
         if (empty($json)) {
             return '';
@@ -17,7 +17,7 @@ class EditorHelper
 
         $data = json_decode($json, true);
 
-        return $this->arrayToHtml($data);
+        return $this->arrayToHtml($data, $title);
 
 
     }

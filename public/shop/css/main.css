@@ -485,6 +485,7 @@ ul.prod-list li:hover a {
 
 }
 .prod-item .bg {
+    display: block;
     width: 200px;
     height: 200px;
     background: #222;
@@ -937,7 +938,7 @@ a.short-coupon:hover {
     margin-top: auto; /* Прижимаем к низу .info */
     text-align: right;
     color: #aaa;
-    font-size: 0.9em;
+    font-size: 0.8em;
     white-space: nowrap; /* Запрет переноса текста */
 }
 
