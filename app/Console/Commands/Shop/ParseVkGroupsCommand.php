@@ -20,7 +20,7 @@ class ParseVkGroupsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'shop:parse-vk-groups';
+    protected $signature = 'shop:parseVkGroups';
 
     /**
      * The console command description.

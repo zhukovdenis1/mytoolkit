@@ -13,7 +13,7 @@ class AppSchedule
     {
         //$schedule->command('shop:coupons')->dailyAt('01:00');
         $schedule->exec('php parser/parser.php')->everyMinute();
-        $schedule->exec('shop:parse-vk-groups')->everyTwoHours();
+        $schedule->exec('shop:parseVkGroups')->everyTwoHours();
     }
 }
 /* с логированием
