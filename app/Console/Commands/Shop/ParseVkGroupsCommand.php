@@ -65,7 +65,7 @@ class ParseVkGroupsCommand extends Command
         $insertCount = 0;
 
         if ($data) {
-            $insertCount = $this->addProductsToParseQueue($data, $group->id);
+            $insertCount = $this->addProductsToParseQueue($data, $group);
         }
 
         $output = "Group: vk.com/public" . $group->id . " Income: " . count($data) . "; Inserted: " . $insertCount . ";\n";
@@ -95,7 +95,7 @@ class ParseVkGroupsCommand extends Command
 
 
 
-    private function addProductsToParseQueue(array $products, int $vkGroupId): int
+    private function addProductsToParseQueue(array $products, ShopVkGroup $group): int
     {
         $chunkSize = 50;
         $insertedCount = 0;
@@ -105,9 +105,9 @@ class ParseVkGroupsCommand extends Command
             $rows = array_map(fn($item) => [
                 'source' => 'vk',
                 'important' => 0,
-                'vk_group_id' => $vkGroupId,
+                'vk_group_id' => $group->id,
                 'vk_post_id' => $item['post_id'],
-                'info' => json_encode($item, JSON_UNESCAPED_UNICODE),
+                'info' => json_encode(array_merge($item,['vk_category' => $group->category]), JSON_UNESCAPED_UNICODE),
                 'created_at' => Carbon::now(),
             ], $chunk);
 
@@ -176,7 +176,6 @@ class ParseVkGroupsCommand extends Command
 
         return [
             'post_id' => $result['id'],
-            'vk_category' => $result['category'],
             'url' => $url,
             'title' => $this->removeEmoji($title ?? ''),
             'description' => $this->removeEmoji($description)
