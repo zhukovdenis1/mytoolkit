@@ -176,6 +176,7 @@ class ParseVkGroupsCommand extends Command
 
         return [
             'post_id' => $result['id'],
+            'vk_category' => $result['category'],
             'url' => $url,
             'title' => $this->removeEmoji($title ?? ''),
             'description' => $this->removeEmoji($description)
