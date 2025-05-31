@@ -1,12 +1,14 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Если запрос идет к реальному файлу/папке внутри public/ — отдаем его
+    # Редирект с www.deshevyi.ru на deshevyi.ru
+    RewriteCond %{HTTP_HOST} ^www\.deshevyi\.ru$ [NC]
+    RewriteRule ^(.*)$ https://deshevyi.ru/$1 [L,R=301]
+
+    # Остальные правила (работа с public/)
     RewriteCond %{DOCUMENT_ROOT}/public/$1 -f [OR]
     RewriteCond %{DOCUMENT_ROOT}/public/$1 -d
     RewriteRule ^(.*)$ public/$1 [L,QSA]
 
-    # Все остальные запросы (включая попытки доступа к файлам выше public/)
-    # перенаправляем на public/index.php
     RewriteRule ^(.*)$ public/index.php [L,QSA]
 </IfModule>

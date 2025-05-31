@@ -13,6 +13,14 @@ class ShopProductParseQueue extends BaseModel
     public $timestamps = false;
 
     //protected $connection = 'mysql_shop';
+    protected $fillable = [
+        'source',
+        'important',
+        'info',
+        'id_ae',
+        'id_vk_post',
+        'id_vk_group'
+    ];
 
     protected $casts = [
         'info' => 'array',
