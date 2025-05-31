@@ -44,10 +44,10 @@ try {
         $queueItemId = $qData['id'];
         if ($qData['source'] == 'epn_hot') {
             $parseUrl = $qData['info']['attributes']['directUrl'];
-        } elseif ($qData['source'] = 'epn_top') {
+        } elseif ($qData['source'] == 'epn_top') {
             $parseUrl = 'https://aliexpress.ru/item/'.$qData['id_ae'].'.html';
-        } elseif ($qData['source'] = 'vk') {
-            $parseUrl = $qData['info']['attributes']['url'];
+        } elseif ($qData['source'] == 'vk') {
+            $parseUrl = $qData['info']['url'];
         } else {
             throw new Exception('Unknown source');
         }
