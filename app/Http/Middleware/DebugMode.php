@@ -23,6 +23,7 @@ class DebugMode
         if (!$debugMode && in_array($request->ip(), $debugIps)) {
             config(['app.debug' => true]);
         }
+
         //var_dump(app()->hasDebugModeEnabled());die;
         return $next($request);
     }

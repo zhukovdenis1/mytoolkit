@@ -328,11 +328,13 @@ class ShopController extends Controller
         preg_match('/<h1>(.*?)<\/h1>/is', $result['content'], $contentMatches);
         $result['h1'] = $contentMatches[1] ?? null;
 
+        $content = str_replace('/img/captcha.php', '#', $result['content']);
+
         return view('Shop::shop.detailOld', [
             'title' => $result['title'],
             'description' => $result['description'],
             'keywords' => $result['keywords'],
-            'content' => $result['content'],
+            'content' => $content,
             'h1' => $result['h1']
         ]);
 

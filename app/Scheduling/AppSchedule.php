@@ -12,7 +12,8 @@ class AppSchedule
     public static function handle(Schedule $schedule): void
     {
         //$schedule->command('shop:coupons')->dailyAt('01:00');
-        $schedule->exec('php parser/parser.php')->everyMinute();
+        //$schedule->exec('php parser/parser.php')->everyMinute();
+        $schedule->exec('php parser/parser.php')->everyTenMinutes();
         $schedule->exec('shop:parseVkGroups')->everyTwoHours();
     }
 }

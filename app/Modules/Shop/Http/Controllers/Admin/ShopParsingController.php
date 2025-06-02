@@ -170,7 +170,12 @@ class ShopParsingController extends BaseController
             $price = $xpath->query('.//td[5]', $row)->item(0)->nodeValue;
             $rowData['price'] = trim($price);
 
-            $rowData['cashback'] = ceil(intval($rowData['income']) / intval($rowData['orders_amount']));
+            if (!intval($rowData['orders_amount'])) {
+                $rowData['cashback'] = 0;
+            } else {
+                $rowData['cashback'] = ceil(intval($rowData['income']) / intval($rowData['orders_amount']));
+            }
+
 
             $result[] = $rowData;
         }

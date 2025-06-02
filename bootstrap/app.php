@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\ExceptionHandler;
+use App\Http\Middleware\FirewallMiddleware;
 use App\Http\Middleware\HandleCors;
 use App\Http\Middleware\JsonUnescapeUnicode;
 use App\Scheduling\AppSchedule;
@@ -8,7 +9,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\DebugMode;
+//use App\Http\Middleware\DebugMode;
 
 
 $domain = $_SERVER['HTTP_HOST'] ?? '';
@@ -26,7 +27,7 @@ if ($domain === 'deshevyi.loc' || $domain === 'deshevyi.ru') {
                 'shop_visits' => \App\Http\Middleware\RegisterVisit::class,
             ]);
             //$middleware->append(JwtMiddleware::class);
-            $middleware->append(DebugMode::class);
+            $middleware->append(FirewallMiddleware::class);
             $middleware->append(JsonUnescapeUnicode::class);
             $middleware->append(HandleCors::class);
             //$middleware->append(\App\Http\Middleware\RegisterVisit::class); - перенесено в routes
