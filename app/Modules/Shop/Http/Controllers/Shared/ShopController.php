@@ -10,6 +10,7 @@ use App\Modules\Shop\Services\ShopCouponService;
 use App\Modules\Shop\Services\ShopService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
@@ -377,5 +378,72 @@ class ShopController extends Controller
         return response()->json(['registered' => $registered]);
     }
 
+    public function addToCart(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $validated = $request->validate([
+            'id' => ['required', 'integer']
+        ]);
+
+        $id = (int) $validated['id'];
+        $cart = Session::get('cart') ?? [];
+
+        if ($id && !in_array($id, $cart) && count($cart) < 100) {
+            $cart[] = $id;
+            Session::put('cart', $cart);
+        }
+
+        return response()
+            ->json(['amount' => count($cart)], $status = 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function cart()
+    {
+        $cart = Session::get('cart') ?? [];
+
+        $query = ShopProduct::query()
+            ->select('*')
+            ->whereIn('id', $cart)
+            ->limit(100);
+
+        $products = $query->get();
+
+        return view('Shop::shop.cart', [
+            'products' => $products
+        ]);
+    }
+
+    public function addToWishlist(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $validated = $request->validate([
+            'id' => ['required', 'integer']
+        ]);
+
+        $id = (int) $validated['id'];
+        $wishlist = Session::get('wishlist') ?? [];
+
+        if ($id && !in_array($id, $wishlist) && count($wishlist) < 100) {
+            $wishlist[] = $id;
+            Session::put('wishlist', $wishlist);
+        }
+
+        return response()
+            ->json(['amount' => count($wishlist)], $status = 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function wishlist()
+    {
+        $wishlist = Session::get('wishlist') ?? [];
+
+        $query = ShopProduct::query()
+            ->select('*')
+            ->whereIn('id', $wishlist)
+            ->limit(100);
+
+        $products = $query->get();
+
+        return view('Shop::shop.wishlist', [
+            'products' => $products
+        ]);
+    }
 
 }

@@ -13,6 +13,7 @@
 
 
     <link rel="stylesheet" href="/shop/css/main.css?{{date('H')}}" />
+    <link rel="stylesheet" href="/shop/css/font-awesome.min.css">
     <link rel="stylesheet" href="/shop/css/colorbox.css" />
     @stack('css')
 
@@ -42,8 +43,8 @@
             <div class="right">
                 <noindex>
                 <div class="account"><a href="{{ route('go', ['search' => '{login}']) }}" class="_go" rel="nofollow" target="_blank">Войти</a><br /><a href="{{ route('go', ['search' => '{login}']) }}" class="_go" rel="nofollow" target="_blank">Регистрация</a></div>
-                    <a class="wish _go" href="{{ route('go', ['search' => '{wishlist}']) }}"  target="_blank" rel="nofollow">Мои<br />желания</a>
-                    <a class="cart _go" href="{{ route('go', ['search' => '{basket}']) }}" target="_blank" rel="nofollow"><span class="counter">0</span>Корзина</a>
+                    <a class="wish" href="{{ route('wishlist')}}" rel="nofollow">Мои<br />желания</a>
+                    <a class="cart" href="{{ route('cart') }}" rel="nofollow"><span class="counter _cartCounter">{{count(session('cart', []))}}</span>Корзина</a>
                 </noindex>
             </div>
         </header>

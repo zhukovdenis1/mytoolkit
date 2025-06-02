@@ -25,11 +25,12 @@
     @if ($p->reviews)
         <a href="#reviews">Отзывы</a>
     @endif
-    <noindex>
+    <!--noindex>
         <x-shop::product-go-link :product="$p" class="buy-button2">
             Купить на AliExpress
         </x-shop::product-go-link>
-    </noindex>
+    </noindex-->
+        <span class="buy-button2 _cart" data-id="{{$p->id}}">В корзину</span>
     <a href="{{ route('coupons') }}" target="_blank" class="coupon-button">Купоны</a>
 </div>
 
@@ -65,13 +66,17 @@
                 <!--Цена могла измениться. Актуальную цену смотрите на AliExpress-->
             </p>
             Цена: <strong><x-shop::price :product="$p" /></strong>
+            <div style="float: right">
+                <span class="wishlist _wishlist" data-id="{{$p->id}}">В избраное</span>
+            </div>
         </div>
 
-        <noindex>
+        <!--noindex>
             <x-shop::product-go-link :product="$p" class="ae-link">
                 Купить на AliExpress
             </x-shop::product-go-link>
-        </noindex>
+        </noindex-->
+        <span class="cart-link _cart" data-id="{{$p->id}}"><strong>В корзину</strong> <span>также будет ссылка на Алиэкспресс</span></span>
     </div>
 
     <div class="images" id="photo">
@@ -106,6 +111,78 @@
     </div>
     @endif
 
+    @if ($p->reviews)
+        <div class="clearing"></div>
+        <div class="reviews" id="reviews">
+            <h2>Отзывы</h2>
+            <ul class="reviews">
+                @foreach ($p->reviews as $r)
+                    @if (isset($r['reviewer']))
+                        <li>
+                            <div class="profile">
+                                <div class="profile-photo">
+                                    <img class="profile" src="{{ $r['reviewer']['avatar'] }}" />
+                                    @isset($r['reviewer']['countryFlag'])
+                                        <img class="country" src="{{ $r['reviewer']['countryFlag'] }}" />
+                                    @endisset
+                                </div>
+                                <div>
+                                    @if (isset($r['root']['grade']) && isset($r['reviewer']['name']) && isset($r['root']['date']))
+                                        <x-shop::rating :rating="$r['root']['grade']*10" />
+                                        <span class="user-name">{{ $r['reviewer']['name'] }}</span>
+                                        <span class="date">{{ $r['root']['date'] }}</span>
+                                    @endif
+                                </div>
+
+                            </div>
+                            @isset($r['root']['text'])
+                                <span class="text">{{ $r['root']['text'] }}</span>
+                            @endisset
+
+                            <div class="img-list">
+                                @isset($r['root']['images'])
+                                    @foreach ($r['root']['images'] as $img)
+                                        <a class="reviewImg" rel="review-img" target="_blank" href="{{ $img['url'] }}"><img class="img" src="{{ $img['url'] }}_100x100.jpg" /></a>
+                                    @endforeach
+                                @endisset
+                            </div>
+                        </li>
+                    @elseif ($r)
+                        <li>
+                            <div class="profile">
+                                <div class="profile-photo">
+                                    <img class="profile" src="{{ $r['user']['profileImageUrl'] ?? '' }}" />
+                                    @isset($r['user']['countryImageUrl'])
+                                        <img class="country" src="{{ $r['user']['countryImageUrl'] }}" />
+                                    @endisset
+                                </div>
+                                <div>
+                                    @if (isset($r['grade']) && isset($r['user']['name']) && isset($r['date']))
+                                        <x-shop::rating :rating="$r['grade']*10" />
+                                        <span class="user-name">{{ $r['user']['name'] }}</span>
+                                        <span class="date">{{ $r['date'] }}</span>
+                                    @endif
+                                </div>
+
+                            </div>
+                            @isset($r['text'])
+                                <span class="text">{{ $r['text'] }}</span>
+                            @endisset
+
+                            <div class="img-list">
+                                @isset($r['images'])
+                                    @foreach ($r['images'] as $img)
+                                        <a class="reviewImg" rel="review-img" target="_blank" href="{{ $img['url'] }}"><img class="img" src="{{ $img['url'] }}_100x100.jpg" /></a>
+                                    @endforeach
+                                @endisset
+                            </div>
+                        </li>
+                    @endif
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     @if ($p->description)
     <div class="clearing"></div>
     <div class="description" id="description">
@@ -114,85 +191,8 @@
     </div>
     @endif
 
-    @if ($p->reviews)
-    <div class="clearing"></div>
-    <div class="reviews" id="reviews">
-        <h2>Отзывы</h2>
-        <ul class="reviews">
-        @foreach ($p->reviews as $r)
-                @if (isset($r['reviewer']))
-                    <li>
-                        <div class="profile">
-                            <div class="profile-photo">
-                                <img class="profile" src="{{ $r['reviewer']['avatar'] }}" />
-                                @isset($r['reviewer']['countryFlag'])
-                                    <img class="country" src="{{ $r['reviewer']['countryFlag'] }}" />
-                                @endisset
-                            </div>
-                            <div>
-                                @if (isset($r['root']['grade']) && isset($r['reviewer']['name']) && isset($r['root']['date']))
-                                    <x-shop::rating :rating="$r['root']['grade']*10" />
-                                    <span class="user-name">{{ $r['reviewer']['name'] }}</span>
-                                    <span class="date">{{ $r['root']['date'] }}</span>
-                                @endif
-                            </div>
-
-                        </div>
-                        @isset($r['root']['text'])
-                            <span class="text">{{ $r['root']['text'] }}</span>
-                        @endisset
-
-                        <div class="img-list">
-                            @isset($r['root']['images'])
-                                @foreach ($r['root']['images'] as $img)
-                                    <a class="reviewImg" rel="review-img" target="_blank" href="{{ $img['url'] }}"><img class="img" src="{{ $img['url'] }}_100x100.jpg" /></a>
-                                @endforeach
-                            @endisset
-                        </div>
-                    </li>
-                @elseif ($r)
-                <li>
-                    <div class="profile">
-                        <div class="profile-photo">
-                            <img class="profile" src="{{ $r['user']['profileImageUrl'] ?? '' }}" />
-                            @isset($r['user']['countryImageUrl'])
-                            <img class="country" src="{{ $r['user']['countryImageUrl'] }}" />
-                            @endisset
-                        </div>
-                        <div>
-                            @if (isset($r['grade']) && isset($r['user']['name']) && isset($r['date']))
-                            <x-shop::rating :rating="$r['grade']*10" />
-                            <span class="user-name">{{ $r['user']['name'] }}</span>
-                            <span class="date">{{ $r['date'] }}</span>
-                            @endif
-                        </div>
-
-                    </div>
-                    @isset($r['text'])
-                    <span class="text">{{ $r['text'] }}</span>
-                    @endisset
-
-                    <div class="img-list">
-                    @isset($r['images'])
-                        @foreach ($r['images'] as $img)
-                            <a class="reviewImg" rel="review-img" target="_blank" href="{{ $img['url'] }}"><img class="img" src="{{ $img['url'] }}_100x100.jpg" /></a>
-                        @endforeach
-                    @endisset
-                    </div>
-                </li>
-                @endif
-        @endforeach
-        </ul>
-    </div>
-    @endif
 
     <div class="clearing"></div>
-
-
-    <!--div class="packaging">
-        <h2>Упаковка</h2>
-        {!! $p->packaging !!}
-    </div-->
 
     <div class="clearing"></div>
 
@@ -224,6 +224,42 @@
     <script type="text/javascript">
         $('a.prodImg').colorbox({rel:'gal', maxWidth:'100%', maxHeight: '100%'});
         $('a.reviewImg').colorbox({rel:'review-img', maxWidth:'100%', maxHeight: '100%'});
+        $('._cart').click(function() {
+            let productId = $(this).attr('data-id');
+            $.ajax({
+                dataType: 'json',
+                type: "GET",
+                url: "{{route('addToCart')}}",
+                data: {'id': productId},
+                cache: false,
+                async: true,
+                success: function(json){
+                    $('._cartCounter').text(json.amount);
+                }
+            });
+
+            $.colorbox({html:'<div style="margin:0 10px;text-align: center">' +
+                "<h2 style='margin:0;'>Товар добавлен в корзину </h2>" +
+                '<p><a href="/cart" style="font-size: 1.2em">Перейти в корзину</a></p></div>'
+            });
+        });
+
+        $('._wishlist').click(function() {
+            let productId = $(this).attr('data-id');
+            $.ajax({
+                dataType: 'json',
+                type: "GET",
+                url: "{{route('addToWishlist')}}",
+                data: {'id': productId},
+                cache: false,
+                async: true,
+            });
+
+            $.colorbox({html:'<div style="margin:0 10px;text-align: center">' +
+                    "<h2 style='margin:0;'>Товар добавлен в избранное </h2>" +
+                    '<p><a href="/wishlist" style="font-size: 1.2em">Перейти в избранное</a></p></div>'
+            });
+        })
     </script>
 @endsection
 

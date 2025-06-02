@@ -1,22 +1,22 @@
 @extends('layouts.shop')
 
-@section('title', 'Корзина / Недорогой интернет-магазин')
-@section('description', 'Корзина товаров')
-@section('keywords', 'Корзина')
+@section('title', 'Избранное / Недорогой интернет-магазин')
+@section('description', 'Избранные товары товаров')
+@section('keywords', 'Избранное')
 
 @section('content')
 
-    <h1>Корзина</h1>
+    <h1>Избранное</h1>
 
     @if ($products->isEmpty())
-        <p>{{__('Корзина пуста')}}</p>
+        <p>{{__('Список желаний пуст')}}</p>
         <p>Перейти на <a href="/">главную</a></p>
     @else
         <p>Выбранные товары вы можете приобрести по указанной для кадой позициии ссылке</p>
 
             @foreach($products as $product)
             <div class="editor-product">
-                <a class="prod-item"  href="{{ route('detail', ['product' => $product, 'productHru'=>$product->hru]) }}" target="_blank">
+                <x-shop::product-go-link :product="$product" class="prod-item">
                     <span class="img-wrap">
                         <x-shop::preview :product="$product" />
                         <span class="bg"></span>
@@ -26,7 +26,7 @@
                         <span title="Бесплатная доставка">бесплатно</span>
                     </span>
                     <x-shop::rating :rating="$product->rating" />
-                </a>
+                </x-shop::product-go-link>
                 <div>
                     <h3>{{ $product->title_source ?? $product?->title }}</h3>
                     <span class="price"><x-shop::price :product="$product" /></span>

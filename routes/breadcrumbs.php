@@ -12,6 +12,16 @@ Breadcrumbs::for('home', function (BreadcrumbTrail $trail): void {
     $trail->push('Главная', route('home'));
 });
 
+Breadcrumbs::for('cart', function (BreadcrumbTrail $trail): void {
+    $trail->push('Главная', route('home'));
+    $trail->push('Корзина', route('cart'));
+});
+
+Breadcrumbs::for('wishlist', function (BreadcrumbTrail $trail): void {
+    $trail->push('Главная', route('home'));
+    $trail->push('Избранное', route('wishlist'));
+});
+
 Breadcrumbs::for('oldDetail', function (BreadcrumbTrail $trail): void {
     $trail->push('Главная', route('home'));
     $trail->push('Страница товара', route('home'));

@@ -17,6 +17,10 @@ Route::middleware(['shop_visits'])->group(function () {
     Route::get('robots.txt', [ShopController::class, 'robots'])->name('robots');
     Route::get('get-categories', [ShopController::class, 'getCategories'])->name('getCategories');
     Route::get('shop/visit', [ShopController::class, 'visit']);
+    Route::get('add-to-cart', [ShopController::class, 'addToCart'])->name('addToCart');
+    Route::get('cart', [ShopController::class, 'cart'])->name('cart');
+    Route::get('add-to-wishlist', [ShopController::class, 'addToWishlist'])->name('addToWishlist');
+    Route::get('wishlist', [ShopController::class, 'wishlist'])->name('wishlist');
 
 
     Route::get('coupons', [ShopCouponController::class, 'index'])->name('coupons');

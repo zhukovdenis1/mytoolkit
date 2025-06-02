@@ -616,7 +616,7 @@ ul.prod-list li:hover a {
     top: 90px;
     z-index: 2;
 }
-.detail-menu a {
+.detail-menu a, .detail-menu span {
     display: block;
     text-decoration: none;
     padding: 5px 15px;
@@ -624,16 +624,22 @@ ul.prod-list li:hover a {
     background: #e62e04;
     margin-bottom: 5px;
 }
-.detail-menu a.buy-button2 {
+.detail-menu .buy-button2 {
     border: 1px solid #60bc03;
     background: #60bc03;
-}
+    cursor: pointer;
+    }
+    .detail-menu .buy-button2:before{
+        display:inline-block;font:normal normal normal 14px /1 FontAwesome;text-rendering:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+        font-size: 1.3em;
+        content:"\f07a";margin-right: 10px
+    }
 .detail-menu a.coupon-button {
     background: #fff;
     border: 1px solid #e62e04;
     color: #e62e04;
 }
-.detail-menu a:hover {
+.detail-menu a:hover, .detail-menu span:hover {
     background: #000;
 }
 
@@ -672,6 +678,46 @@ ul.prod-list li:hover a {
     display: block;
     text-decoration: underline;
 }
+
+.cart-link {
+    display: block;
+    font-size: 2.5em;
+    margin: 40px 0 25px 0;
+    text-decoration: none;
+    cursor: pointer;
+    color: #036;
+    }
+    .cart-link strong {
+        font-weight: normal;
+        text-decoration: underline;
+    }
+    .cart-link span {
+        font-size: 0.5em;
+        color: #bbb;
+        text-decoration: none;
+    }
+    .cart-link:before{
+        display:inline-block;font:normal normal normal 14px /1 FontAwesome;text-rendering:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+        font-size: 1.3em;
+        content:"\f07a";margin-right: 10px
+    }
+    .cart-link:hover {
+        color: #f60;
+    }
+
+.wishlist {
+    font-size: 0.8em;
+    cursor: pointer;
+    color: #aaa;
+    }
+    .wishlist:hover {
+        color: #f60;
+    }
+    .wishlist:after{
+        display:inline-block;font:normal normal normal 14px /1 FontAwesome;text-rendering:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+        font-size: 1.3em;
+        content:"\f08a";margin-right: 10px
+    }
 
 .detail .description img {
     max-width: 100%!important;
