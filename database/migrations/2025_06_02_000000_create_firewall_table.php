@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string( 'ip', 45);
             $table->string('uri');
+            $table->string('user_agent');
             $table->integer('counter')->default(0)->unsigned();
+            $table->timestamp('blocked_until')->nullable();
             $table->timestamps();
         });
     }

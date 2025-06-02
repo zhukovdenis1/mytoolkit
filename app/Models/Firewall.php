@@ -23,6 +23,8 @@ class Firewall extends Model
         'ip',
         'uri',
         'counter',
+        'blocked_until',
+        'user_agent'
     ];
 
     protected $casts = [
@@ -30,14 +32,15 @@ class Firewall extends Model
         'counter' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'blocked_until' => 'datetime',
     ];
 
     /**
      * Увеличивает счётчик запросов
      */
-    public function incrementCounter(): void
-    {
-        $this->counter++;
-        $this->save();
-    }
+//    public function incrementCounter(): void
+//    {
+//        $this->counter++;
+//        $this->save();
+//    }
 }

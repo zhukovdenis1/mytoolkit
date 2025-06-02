@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Firewall;
+use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,18 +16,20 @@ class FirewallMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $ip = $request->ip();
+        $userAgent = $request->userAgent() ?? null;
         $uri = $request->getRequestUri();
 
-        $firewallEntry = Firewall::where('ip', $ip)->first();
+        $firewallEntry = Firewall::where('ip', $ip)
+            ->first();
 
         $counter = $firewallEntry->counter ?? 0;
 
-        if ($counter > 2) {
+        if ($firewallEntry && (new Carbon($firewallEntry->blocked_until) > Carbon::now())) {
             // Увеличиваем счетчик и блокируем запрос
-            $firewallEntry->incrementCounter();
+            $firewallEntry->counter = $counter + 1;
+            $firewallEntry->save();
             return response('Access denied', 403);
         }
-
 
         //$dangerousPatterns = ['.env', 'wp-content', '.php'];
         $danger = false;
@@ -39,13 +42,18 @@ class FirewallMiddleware
 
         if ($danger) {
             if ($firewallEntry) {
-                $firewallEntry->incrementCounter();
+                $firewallEntry->counter = $counter + 1;
+                if ($counter > 2) {
+                    $firewallEntry->blocked_until = Carbon::now()->addHours(2);
+                }
+                $firewallEntry->save();
             } else {
                 // Добавляем IP в черный список
                 Firewall::create([
                     'ip' => $ip,
                     'uri' => $uri,
-                    'counter' => 1
+                    'counter' => 1,
+                    'user_agent' => $userAgent
                 ]);
             }
         }
