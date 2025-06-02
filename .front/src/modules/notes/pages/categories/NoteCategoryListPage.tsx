@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { DownOutlined } from '@ui/icons';
 import { Input, Tree, Space, Spin, Button, message, showModal, Confirmable } from 'ui';
 import type { TreeDataNode } from '@ui/types';
-import { api } from "api";
+import {api, route} from "api";
 import { NoteCategoryFormPage } from "./NoteCategoryFormPage";
 import {convertTreeData} from "@/utils/ui.ts";
+import {Link} from "react-router-dom";
 
 export const NoteCategoryListPage: React.FC = () => {
     const [search, setSearch] = useState('');
@@ -169,6 +170,7 @@ const nodeHtml = (id: string, title: React.ReactNode, reload: () => void = () =>
                 <Confirmable onConfirm={() => deleteCategory(id, reload)}>
                     <Button type="link">delete</Button>
                 </Confirmable>
+                <Link to={route('notes', {'categories': id})}>notes</Link>
             </Space>
         </div>
     );

@@ -45,7 +45,7 @@ if ($domain === 'deshevyi.loc' || $domain === 'deshevyi.ru') {
         ->withMiddleware(function (Middleware $middleware) {
             //$middleware->append(JwtMiddleware::class);
             $middleware->append(\App\Http\Middleware\MyIp::class);
-            $middleware->append(DebugMode::class);
+            //$middleware->append(DebugMode::class);
             $middleware->append(JsonUnescapeUnicode::class);
             $middleware->append(HandleCors::class);
         })

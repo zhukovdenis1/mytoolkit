@@ -121,8 +121,8 @@ export const NoteSearchPage: React.FC<NoteSearchPageProps> = ({ action = '' }) =
         setLoading(false);
 
         const categoriesTreeResponse = await api.safeRequest("notes.categories.tree");
-        if (categoriesTreeResponse.data.success) {
-            setCategoriesTree(convertTreeData(categoriesTreeResponse.data.data, { id: 'value', name: 'title' }));
+        if (categoriesTreeResponse.success) {
+            setCategoriesTree(convertTreeData(categoriesTreeResponse.data.categories, { id: 'value', name: 'title' }));
         }
     };
 
