@@ -842,6 +842,9 @@ ul.reviews {
         line-height: 2em;
         padding: 4px 14px;
     }
+    .detail-menu .buy-button2 {
+        display: inline-block;
+    }
     .detail-menu a:hover {
         background: none;
     }

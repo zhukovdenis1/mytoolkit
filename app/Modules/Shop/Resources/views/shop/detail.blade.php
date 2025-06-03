@@ -76,7 +76,7 @@
                 Купить на AliExpress
             </x-shop::product-go-link>
         </noindex-->
-        <span class="cart-link _cart" data-id="{{$p->id}}"><strong>В корзину</strong> <span>также будет ссылка на Алиэкспресс</span></span>
+        <span class="cart-link _cart" data-id="{{$p->id}}"><strong>В корзину</strong> <span>также&nbsp;будет&nbsp;ссылка&nbsp;на&nbsp;Алиэкспресс</span></span>
     </div>
 
     <div class="images" id="photo">
