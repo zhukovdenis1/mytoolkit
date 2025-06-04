@@ -629,11 +629,11 @@ ul.prod-list li:hover a {
     background: #60bc03;
     cursor: pointer;
     }
-    .detail-menu .buy-button2:before{
+    /*.detail-menu .buy-button2:before{
         display:inline-block;font:normal normal normal 14px /1 FontAwesome;text-rendering:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
         font-size: 1.3em;
         content:"\f07a";margin-right: 10px
-    }
+    }*/
 .detail-menu a.coupon-button {
     background: #fff;
     border: 1px solid #e62e04;
@@ -676,13 +676,23 @@ ul.prod-list li:hover a {
     font-size: 2em;
     margin: 40px 0 25px;
     display: block;
-    text-decoration: underline;
-}
+    cursor: pointer;
+    color: #036;
+    }
+    .ae-link strong {
+        font-weight: normal;
+        text-decoration: underline;
+    }
+    .ae-link span {
+        font-size: 0.5em;
+        color: #bbb;
+        text-decoration: none;
+    }
 
 .cart-link {
     display: block;
-    font-size: 2.5em;
-    margin: 40px 0 25px 0;
+    font-size: 1.5em;
+    margin: 40px 0 10px 0;
     text-decoration: none;
     cursor: pointer;
     color: #036;
@@ -695,6 +705,9 @@ ul.prod-list li:hover a {
         font-size: 0.5em;
         color: #bbb;
         text-decoration: none;
+    }
+    .ae-link:hover {
+        color: #f60;
     }
     .cart-link:before{
         display:inline-block;font:normal normal normal 14px /1 FontAwesome;text-rendering:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;

@@ -238,7 +238,18 @@ class Helper
         $data['photo'] = $img;
 
         //$data['price'] = $json["data"]["skuInfo"]["priceList"]["0"]["activityAmount"]["value"];
-        $priceLow = $json["data"]["price"]["minAmount"]["value"] ?? null;
+        $priceLow1 = $json["data"]["price"]["minAmount"]["value"] ?? null;
+        $priceLow2 = $json["data"]["price"]["minActivityAmount"]["value"] ?? null;
+        $priceLow = null;
+
+        if ($priceLow1 && $priceLow2) {
+            $priceLow = min(intval($priceLow1), intval($priceLow2));
+        } elseif ($priceLow2) {
+            $priceLow = $priceLow2;
+        } elseif ($priceLow1) {
+            $priceLow = $priceLow1;
+        }
+
         $data['price_from'] = (int) $priceLow;
         $priceHigh = $json["data"]["price"]["maxAmount"]["value"] ?? null;
         $data['price_to'] = (int) $priceHigh;

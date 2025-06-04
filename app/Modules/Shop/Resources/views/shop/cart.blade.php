@@ -35,6 +35,7 @@
                             Посмотреть на AliExpress
                         </x-shop::product-go-link>
                     </noindex>
+                    <a href="{{route('detail', ['product' => $product, 'productHru'=>$product->hru])}}">Вернуться на страницу товара</a>
                 </div>
             </div>
             @endforeach

@@ -30,7 +30,7 @@
             Купить на AliExpress
         </x-shop::product-go-link>
     </noindex-->
-        <span class="buy-button2 _cart" data-id="{{$p->id}}">В корзину</span>
+        <span class="buy-button2 _aeLink" data-id="{{$p->id}}" data-id_ae="{{$p->id_ae}}">Купить на AliExpress</span>
     <a href="{{ route('coupons') }}" target="_blank" class="coupon-button">Купоны</a>
 </div>
 
@@ -71,12 +71,10 @@
             </div>
         </div>
 
-        <!--noindex>
-            <x-shop::product-go-link :product="$p" class="ae-link">
-                Купить на AliExpress
-            </x-shop::product-go-link>
-        </noindex-->
-        <span class="cart-link _cart" data-id="{{$p->id}}"><strong>В корзину</strong> <span>также&nbsp;будет&nbsp;ссылка&nbsp;на&nbsp;Алиэкспресс</span></span>
+        <span class="cart-link _cart" data-id="{{$p->id}}"><strong>В корзину</strong> <!--span>также&nbsp;будет&nbsp;ссылка&nbsp;на&nbsp;Алиэкспресс</span--></span>
+            <span data-id="{{$p->id}}" data-id_ae="{{$p->id_ae}}" class="ae-link _aeLink">
+                <strong>Купить на AliExpress</strong> <span>(цена&nbsp;могла&nbsp;измениться)</span>
+            </span>
     </div>
 
     <div class="images" id="photo">
@@ -258,6 +256,18 @@
             $.colorbox({html:'<div style="margin:0 10px;text-align: center">' +
                     "<h2 style='margin:0;'>Товар добавлен в избранное </h2>" +
                     '<p><a href="/wishlist" style="font-size: 1.2em">Перейти в избранное</a></p></div>'
+            });
+        });
+
+
+        $('._aeLink').click(function() {
+            let id = $(this).attr('data-id');
+            let idae = $(this).attr('data-id_ae');
+            let goUrl = '/go?id='+ id;
+
+            $.colorbox({html:'<div style="margin:0 10px;text-align: center"><noindex>' +
+                    "<h2 style='margin:0;'>Ссылка на товар на Aliexpress: </h2>" +
+                    '<p><a onclick="goVisit(\'' + goUrl + '\');" class="_go" rel="nofollow" target="_blank" href="' + goUrl + '" style="font-size: 1.2em">https://aliexpress.ru/' + idae + '.html</a></p></noindex></div>'
             });
         })
     </script>

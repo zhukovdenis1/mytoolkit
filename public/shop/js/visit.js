@@ -36,6 +36,9 @@ document.addEventListener('click', logVisit, { once: true });
 document.addEventListener('scroll', logVisit, { once: true });
 
 $('._go').on('click', function() {
-    let $this = $(this);
-    $.get('/shop/visit?goref=' + $this.attr('href'));
+    goVisit($(this).attr('href'));
 });
+
+function goVisit(href) {
+    $.get('/shop/visit?goref=' + href);
+}
