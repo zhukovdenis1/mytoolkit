@@ -67,7 +67,7 @@
             </p>
             Цена: <strong><x-shop::price :product="$p" /></strong>
             <div style="float: right">
-                <span class="wishlist _wishlist" data-id="{{$p->id}}">В избраное</span>
+                <span class="wishlist _wishlist" data-id="{{$p->id}}">В избранное</span>
             </div>
         </div>
 

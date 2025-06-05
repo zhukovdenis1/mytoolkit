@@ -250,7 +250,15 @@ class ShopService extends BaseService
             ->limit($limit);
 
         if ($search) {
-            $query->where('title', 'like', "%{$search}%");
+            //$query->where('title_ae', 'like', "%{$search}%");
+
+            $query->where(function (Builder $query) use ($search) {
+                $query
+                    ->orWhere('title_ae', 'like', "%{$search}%")
+                    ->orWhere('title_source', 'like', "%{$search}%")
+                    ->orWhere('title', 'like', "%{$search}%")
+                    ;
+            });
         }
 
         if ($category) {

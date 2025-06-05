@@ -47,9 +47,16 @@ class ShopController extends Controller
         $search = $validated['search'] ?? '';
 
         $products = $this->service->filter(0, 0, $search);
-        $popular = $this->service->getPopular();
-        $coupons = $this->service->getMainPageCoupons();
-        $articles = $this->service->getMainPageArticles();
+        $popular = null;
+        $coupons = null;
+        $articles = null;
+
+        if (!$search) {
+            $popular = $this->service->getPopular();
+            $coupons = $this->service->getMainPageCoupons();
+            $articles = $this->service->getMainPageArticles();
+        }
+
 
         return view('Shop::shop.home', [
             'monthName' => mb_ucfirst($this->dateTimeHelper->getMonthName(date('m'), 'nominative')),

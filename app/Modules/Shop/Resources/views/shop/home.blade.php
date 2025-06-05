@@ -16,12 +16,12 @@
     </div>
 
 
-    @if(!$popular->isEmpty() && !$searchString)
+    @if($popular?->isNotEmpty())
         <p><strong>Популярное: </strong></p>
         <x-shop::product-list :products="$popular" :more="false" />
     @endif
 
-    @if(!$coupons->isEmpty() && !$searchString)
+    @if($coupons?->isNotEmpty())
         <a class="h" href="{{route('coupons')}}">
             <h2>Действующие промокоды и купоны Алиэкспресс на {{$monthName}} {{date('Y')}}</h2> <span class="lnk">посмотреть все</span>
         </a>
@@ -38,7 +38,7 @@
     @endif
 
 
-    @if(!$articles->isEmpty() && !$searchString)
+    @if($articles?->isNotEmpty())
         <h3>Информационный блок:</h3>
 
         <div class="articles-wrap">
