@@ -4,6 +4,7 @@ use App\Exceptions\ExceptionHandler;
 use App\Http\Middleware\FirewallMiddleware;
 use App\Http\Middleware\HandleCors;
 use App\Http\Middleware\JsonUnescapeUnicode;
+use App\Http\Middleware\RequestStatsMiddleware;
 use App\Scheduling\AppSchedule;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
@@ -30,6 +31,7 @@ if ($domain === 'deshevyi.loc' || $domain === 'deshevyi.ru') {
             $middleware->append(FirewallMiddleware::class);
             $middleware->append(JsonUnescapeUnicode::class);
             $middleware->append(HandleCors::class);
+            $middleware->append(RequestStatsMiddleware::class);
             //$middleware->append(\App\Http\Middleware\RegisterVisit::class); - перенесено в routes
         })
         ->withExceptions(new ExceptionHandler())

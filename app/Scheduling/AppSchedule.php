@@ -15,6 +15,7 @@ class AppSchedule
         //$schedule->exec('php parser/parser.php')->everyMinute();
         $schedule->exec('php parser/parser.php')->everyThirtyMinutes();
         $schedule->exec('shop:parseVkGroups')->everyTwoHours();
+        //$schedule->command('stats:clean --days=30')->daily();
     }
 }
 /* с логированием
