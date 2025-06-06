@@ -242,9 +242,9 @@ class ShopService extends BaseService
 
         $query = ShopProduct::query()
             ->select('id', 'title', 'title_ae', 'photo', 'rating', 'price', 'price_from', 'price_to', 'hru')
-            ->whereNull('deleted_at')
-            ->whereNull('not_found_at')
-            ->whereNotIn('category_0', [16002,1309])
+            //->whereNull('deleted_at') soft delete автоматически это делает
+            //->whereNull('not_found_at')
+            //->whereNotIn('category_0', [16002,1309])
             ->orderBy('id', 'desc')
             ->offset($offset)
             ->limit($limit);
@@ -285,8 +285,7 @@ class ShopService extends BaseService
     {
         $query = ShopProduct::query()
             ->select('id', 'title', 'title_ae', 'photo', 'rating', 'price', 'price_from', 'price_to', 'hru')
-            ->whereNull('deleted_at')
-            ->whereNull('not_found_at')
+            //->whereNull('not_found_at')
             ->orderBy('epn_month_income', 'desc')
             ->limit(24);
 
