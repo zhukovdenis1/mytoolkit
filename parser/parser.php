@@ -52,6 +52,7 @@ try {
             throw new Exception('Unknown source');
         }
         $content = Helper::getAeContent($parseUrl);
+        file_put_contents($config['debug_file'], $content);
     }
 
     $parsedData = Helper::parseContent($content);
@@ -147,14 +148,16 @@ try {
         $message = ParserError::getMessageByCode($errorCode);
     }
 
-    if (!$config['debug'] && $errorCode) {
+    if (!$config['debug'] && ($errorCode || $fix)) {
 
-        $json = Helper::request($config['url'] . $config['set_uri'], [
+        $response = Helper::request($config['url'] . $config['set_uri'], [
             'id_queue' => $qData['id'],
             'error_code' => $errorCode,
             'version' => Helper::$version,
             'fix' => $fix
         ]);
+
+        file_put_contents('response.html', $response);
     }
 
     $output .= date('H:i:s ') . 'v'. Helper::$version. ' er: ' . $message . ' url:' . $parseUrl .  ' ; id_queue='.$qData['id'];

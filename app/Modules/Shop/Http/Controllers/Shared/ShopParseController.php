@@ -174,6 +174,7 @@ class ShopParseController extends Controller
             $errorMessage = $e->getMessage();
 
             if ($errorMessage == 'fix') {
+
             } else {
                 $errorCode = intval($e->getMessage());
                 $errorCode = $errorCode ?: -1;
@@ -194,7 +195,7 @@ class ShopParseController extends Controller
 
         ShopProductParseQueue::where('id', $idQueue)
             ->update([
-                'parsed_at' => Carbon::now(),
+                'parsed_at' => empty($fix) ? Carbon::now() : null,
                 'error_code' => $errorCode,
                 'version' => $version,
                 'fix' => empty($fix)

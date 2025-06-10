@@ -337,11 +337,18 @@ class Helper
     {
         $lowPrice = $basic["props"]["price"]["minActivityAmount"]["value"] ?? null;
         $highPrice = $basic["props"]["price"]["maxActivityAmount"]["value"] ?? null;
-        if (empty($lowPrice))
-        {
-            $lowPrice = $basic["props"]["price"]["minAmount"]["value"] ?? null;
-            $highPrice = $basic["props"]["price"]["maxAmount"]["value"] ?? null;
+
+        $lowPrice2 = $basic["props"]["price"]["minAmount"]["value"] ?? null;
+        $highPrice2 = $basic["props"]["price"]["maxAmount"]["value"] ?? null;
+
+        if ($lowPrice && $lowPrice2) {
+            $lowPrice = min(intval($lowPrice), intval($lowPrice2));
         }
+
+        if ($highPrice && $highPrice2) {
+            $highPrice = max(intval($highPrice), intval($highPrice2));
+        }
+
         $price = $lowPrice;
         /////////////////////
         $rating =   $basic["props"]["rating"]["middle"] ?? null;
@@ -518,24 +525,24 @@ class Helper
         $url = 'https://aliexpress.ru/widget?';
 
         $uuids = [
-            '27a9f04d-c23c-4aa7-9446-572f753a5305',
+            //'27a9f04d-c23c-4aa7-9446-572f753a5305',
             'ae72b0f5-8ee3-4967-a5b5-8c84292fc0de',//char
-            'd8e734d3-0347-4a7e-a8eb-fe3826745659',
+            //'d8e734d3-0347-4a7e-a8eb-fe3826745659',
             'd30d4e7e-1683-4300-b724-31fc418fdac7',//reviews
-            '008d7ddf-ddb8-44ee-8f0b-49b779857027',
+            /*'008d7ddf-ddb8-44ee-8f0b-49b779857027',
             'fa76ca80-52f3-4bb3-95db-f46d96760bb5',
             'c3eea9e2-c6a5-4239-9656-8ef38da58334',
             '5e035d48-df37-4901-9711-977dca5b6da8',
             '43946a0a-40f8-48e9-a5bd-5a53598e37db',
             '55cedca7-d9f4-4a8e-96c4-b94df7f5cc66',
             'ef9105ef-a550-433f-bdf2-0637bd47c32f',
-            'fed85114-3104-453b-bc5d-ca001922ebde',
+            'fed85114-3104-453b-bc5d-ca001922ebde',*/
             'e1459484-97b0-4e41-a0be-e06fb8a0ff01',//description
-            '3398848f-8cbc-4d62-81c8-d915468dde12',
+            /*'3398848f-8cbc-4d62-81c8-d915468dde12',
             'a5b4609f-cdac-4ad5-9bec-9cd518a056e6',
             'f38e308c-ef6f-467b-b12c-e8e4dce2b728',
             '8dec9aaf-2124-48d2-bf39-d390832c4152',
-            'ac237c57-23d7-42d7-8b08-3b78407e0045'
+            'ac237c57-23d7-42d7-8b08-3b78407e0045'*/
         ];
 
         foreach (static::$uuids as $uuid) {
