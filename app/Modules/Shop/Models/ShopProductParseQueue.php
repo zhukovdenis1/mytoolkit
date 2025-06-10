@@ -19,7 +19,8 @@ class ShopProductParseQueue extends BaseModel
         'info',
         'id_ae',
         'id_vk_post',
-        'id_vk_group'
+        'id_vk_group',
+        'fix'
     ];
 
     protected $casts = [

@@ -64,7 +64,7 @@ try {
     if ($config['debug'] && $config['debug_source'] == 'file') {
         $extraContent = file_get_contents($config['debug_extra_file']);
     } else {
-        $extraUrl = Helper::formExtraContentUrl();
+        $extraUrl = Helper::formExtraContentUrl($qData);
         $extraContent = Helper::getAeContent(
             //Helper::$version == 2 ? $config['url_extra_2'] : $config['url_extra'],
             $extraUrl,
@@ -79,6 +79,8 @@ try {
     }
 
     $extraData = Helper::parseExtraContent($extraContent);
+
+
 
     $aliData = Helper::merge($baseData, $extraData);
 
@@ -135,8 +137,12 @@ try {
 } catch (Exception $e) {
     $message = $e->getMessage();
     $errorCode = 0;
+    $fix = '';
 
-    if (is_numeric($message)) {
+    if (str_contains($message, 'widget404-')) {
+        $fix = $message;
+        $message = 'Not found in extra ' . $message;
+    } elseif (is_numeric($message)) {
         $errorCode = $message;
         $message = ParserError::getMessageByCode($errorCode);
     }
@@ -147,6 +153,7 @@ try {
             'id_queue' => $qData['id'],
             'error_code' => $errorCode,
             'version' => Helper::$version,
+            'fix' => $fix
         ]);
     }
 

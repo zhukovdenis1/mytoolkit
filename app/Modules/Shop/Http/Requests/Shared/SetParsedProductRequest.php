@@ -17,6 +17,7 @@ class SetParsedProductRequest extends BaseFormRequest
             'brcr' => 'nullable|array',
             'error_code' => 'nullable|integer',
             'version' => 'nullable|integer',
+            'fix' => 'nullable',
         ];
     }
 }

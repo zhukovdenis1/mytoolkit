@@ -167,6 +167,10 @@ class Helper
         $json = json_decode($jsonTxt, JSON_OBJECT_AS_ARRAY);
 
         if (!$json) {
+            if (str_contains($jsonTxt, 'widget_by_uuid async widget not found:')) {
+                $wCode = trim(str_replace('widget_by_uuid async widget not found:', '', $jsonTxt));
+                throw new Exception('widget404-' . $wCode);
+            }
             throw new Exception('Невалидный json в extra документе');
         }
 
@@ -424,9 +428,16 @@ class Helper
     public static function validateErrors(array $aliData, array $queueData): array
     {
         $errors = [];
-        $canBeEmptyString = $queueData['empty'] ?? '';
+        $canBeEmptyString = [];
+        $fixes = explode(',', $queueData['fix'] ?? '');
+        foreach ($fixes as $fix) {
+            if (str_contains($fix, 'empty-')) {
+                $canBeEmptyString[] = str_replace('empty-', '', $fix);
+            }
+        }
+
         $canBeEmpty = array_merge(
-            explode(',', $canBeEmptyString),
+            $canBeEmptyString,
             ['price_from', 'price_to', 'video', 'category_2', 'category_3']
         );
 
@@ -491,8 +502,19 @@ class Helper
         return $uuids;
     }
 
-    public static function formExtraContentUrl(): string
+    public static function formExtraContentUrl(array $queueData): string
     {
+
+        $fixes = explode(',', $queueData['fix'] ?? '');
+
+        $notFoundWidgets = [];
+
+        foreach ($fixes as $fix) {
+            if (str_contains($fix, 'widget404-')) {
+                $notFoundWidgets[] = str_replace('widget404-', '', $fix);
+            }
+        }
+
         $url = 'https://aliexpress.ru/widget?';
 
         $uuids = [
@@ -517,7 +539,7 @@ class Helper
         ];
 
         foreach (static::$uuids as $uuid) {
-            if (in_array($uuid, $uuids)) {
+            if (in_array($uuid, $uuids) && !in_array($uuid, $notFoundWidgets)) {
                 $url .= 'uuid=' . $uuid . '&';
             }
         }

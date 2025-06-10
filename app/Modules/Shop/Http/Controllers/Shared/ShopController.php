@@ -258,9 +258,6 @@ class ShopController extends Controller
     public function robots()
     {
         echo 'User-agent: *' . PHP_EOL
-            . 'Disallow: /css/' . PHP_EOL
-            . 'Disallow: /img/' . PHP_EOL
-            . 'Disallow: /js/' . PHP_EOL
             . 'Disallow: /more*' . PHP_EOL
             . 'Disallow: /?search=*' . PHP_EOL
             . 'Disallow: /go?*' . PHP_EOL

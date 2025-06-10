@@ -8,6 +8,7 @@ enum ParserError: int
     case OutOfStock = 4;
     case ValidationError = 5;
     case SQLError = 6;
+    //case NotValidExtraJson = 7;
 
 
     public function message(): string
@@ -19,6 +20,7 @@ enum ParserError: int
             self::OutOfStock => 'Товар закончился',
             self::ValidationError => 'Ошибка валидации полученных данных',
             self::SQLError => 'Ошибка сохранения данных в бд',
+            //self::NotValidExtraJson => 'Невалидный json в extra документе',
         };
     }
 

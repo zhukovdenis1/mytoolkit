@@ -55,6 +55,7 @@ class ShopParseController extends Controller
         $newProduct = null;
         $errorMessage = '';
         $version = 0;
+        $fix = $request->input('fix') ?? null;
 
         try {
             $idQueue = $request->input('id_queue');
@@ -62,6 +63,7 @@ class ShopParseController extends Controller
             $brcr = $request->input('brcr') ?? [];
             $errorCode = $request->input('error_code') ?? 0;
             $version = $request->input('version') ?? 0;
+
 
             $queueItem = ShopProductParseQueue::findOrFail($idQueue);
 
@@ -72,6 +74,10 @@ class ShopParseController extends Controller
 
             if ($errorCode) {
                 throw new \Exception($errorCode);
+            }
+
+            if ($fix) {
+                throw new \Exception('fix');
             }
 
             $categoryParents = [];
@@ -166,8 +172,12 @@ class ShopParseController extends Controller
                 ]);
         } catch (\Exception $e) {
             $errorMessage = $e->getMessage();
-            $errorCode = intval($e->getMessage());
-            $errorCode = $errorCode ?: -1;
+
+            if ($errorMessage == 'fix') {
+            } else {
+                $errorCode = intval($e->getMessage());
+                $errorCode = $errorCode ?: -1;
+            }
 
             if ($e instanceof QueryException) {
                 $errorCode = 6;
@@ -186,7 +196,10 @@ class ShopParseController extends Controller
             ->update([
                 'parsed_at' => Carbon::now(),
                 'error_code' => $errorCode,
-                'version' => $version
+                'version' => $version,
+                'fix' => empty($fix)
+                    ? $queueItem['fix'] ?? null
+                    : (empty($queueItem['fix']) ? $fix : $queueItem['fix'] . ',' . $fix)
             ]);
 
         return new AnonymousResource(['product' => $newProduct, 'message' => $errorMessage]);
