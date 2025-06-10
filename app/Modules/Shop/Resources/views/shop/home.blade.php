@@ -7,6 +7,9 @@
 @section('content')
     <div class="top-menu">
         <ul>
+            <li>
+                <a href="{{route('coupons')}}">Скидки</a>
+            </li>
         @foreach ($epnCategories as $c)
             <li>
                 <a href="{{route('epnCategory', ['categoryId' => $c['id'], 'categoryHru' => $c['uri']])}}">{{$c['name']}}</a>

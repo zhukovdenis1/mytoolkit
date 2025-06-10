@@ -23,7 +23,9 @@ if ((strtotime($dbLastRequestDateTime) + $delay) > time()) {
 $json = Helper::request($config['url_shop'] . $config['coupons']['get_uri']);
 
 $data = json_decode($json, true);
-
+if (!empty($data['data']['info']) && is_string($data['data']['info'])) {
+    $data['data']['info'] = json_decode($data['data']['info'], true);
+}
 $uri = $data['data']['info']['url'] ?? null;
 
 $couponId = $data['data']['id'] ?? 0;
@@ -58,20 +60,33 @@ try {
         throw new Exception(ParserError::NotFound->value);
     }
 
+    file_put_contents($config['coupons']['pikabu_debug_file'], $content);
+
+    $url = '';
+
     // Регулярное выражение для извлечения значения request.URL
     if (preg_match('/"request\.URL":"([^"]+)"/', $content, $matches)) {
         $url = $matches[1];
         // Декодирование Unicode-символов (например, \u0026 -> &)
         $url = json_decode('"' . str_replace('"', '\"', $url) . '"');
-        $url = trim($url);
-        $url = strtok($url, '?');
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new Exception('URL not valid');
-        }
-        $newUrl = $url;
-    } else {
+    } elseif (preg_match('/<meta\s+content="([^"]+)"\s+property="og:url"\s*\/?>/i', $content, $matches)) {
+        $url = $matches[1];
+    }
+
+    if (!$url) {
         throw new Exception('URL not found');
     }
+
+    $url = trim($url);
+    $url = strtok($url, '?');
+    if (!filter_var($url, FILTER_VALIDATE_URL)) {
+        throw new Exception('URL not valid');
+    }
+
+    $newUrl = $url;
+
+
+
     $json = Helper::request($config['url_shop'] . $config['coupons']['set_uri'], [
         'url' => $newUrl,
         'coupon_id' => $couponId

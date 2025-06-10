@@ -31,7 +31,7 @@
         </x-shop::product-go-link>
     </noindex-->
         <span class="buy-button2 _aeLink" data-id="{{$p->id}}" data-id_ae="{{$p->id_ae}}">Купить на AliExpress</span>
-    <a href="{{ route('coupons') }}" target="_blank" class="coupon-button">Купоны</a>
+    <a href="{{ route('coupons') }}" target="_blank" class="coupon-button">Купоны&nbsp;на&nbsp;скидку</a>
 </div>
 
 <div class="detail-inner">

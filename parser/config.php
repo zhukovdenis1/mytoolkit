@@ -33,7 +33,8 @@ return [
     'coupons' => [
         'get_uri'  => '/api/shop/get-coupon-for-parse',
         'set_uri'  => '/api/shop/set-parsed-coupon',
-        'pikabu_url' => 'https://promokod.pikabu.ru'
+        'pikabu_url' => 'https://promokod.pikabu.ru',
+        'pikabu_debug_file' => 'debug_pikabu.txt',
     ]
 ];
 
