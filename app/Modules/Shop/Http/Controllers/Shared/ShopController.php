@@ -285,10 +285,26 @@ class ShopController extends Controller
 
     public function oldDetail(Request $request, $productHru, $lang = null)
     {
+        $idAe = null;
         if ($lang == 'ali') {
             $html = file_get_contents('https://old.deshevyi.ru/ali/'. $productHru);
             $idAe = str_replace('redirect_to_id_ae=', '', $html);
             $idAe = trim($idAe);
+        } else {
+            $lang
+                ? Storage::append('old.txt', date('Y-m-d H:i:s ') . 'https://old.deshevyi.ru/p/'. $productHru . '/' . $lang)
+                : Storage::append('old.txt', date('Y-m-d H:i:s ') . 'https://old.deshevyi.ru/p/'. $productHru);
+            $html = $lang
+                ? file_get_contents('https://old.deshevyi.ru/p/'. $productHru . '/' . $lang)
+                : file_get_contents('https://old.deshevyi.ru/p/'. $productHru);
+
+            if (str_contains($html, 'redirect_to_id_ae=')) {
+                $idAe = str_replace('redirect_to_id_ae=', '', $html);
+                $idAe = trim($idAe);
+            }
+        }
+
+        if ($idAe) {
             $product = ShopProduct::query()->where('id_ae', $idAe)->first();
             if ($product) {
                 Storage::append('old_ali_found.txt', date('Y-m-d H:i:s ') . 'https://old.deshevyi.ru/ali/'. $productHru . ' ' . $html);
@@ -297,13 +313,6 @@ class ShopController extends Controller
                 Storage::append('old_ali_not_found.txt', date('Y-m-d H:i:s ') . 'https://old.deshevyi.ru/ali/'. $productHru . ' ' . $html);
                 return redirect()->route('home');
             }
-        } else {
-            $lang
-                ? Storage::append('old.txt', date('Y-m-d H:i:s ') . 'https://old.deshevyi.ru/p/'. $productHru . '/' . $lang)
-                : Storage::append('old.txt', date('Y-m-d H:i:s ') . 'https://old.deshevyi.ru/p/'. $productHru);
-            $html = $lang
-                ? file_get_contents('https://old.deshevyi.ru/p/'. $productHru . '/' . $lang)
-                : file_get_contents('https://old.deshevyi.ru/p/'. $productHru);
         }
 
         if (strpos($html, 'page404')) {
