@@ -182,7 +182,7 @@ class SocialPostingCommand extends Command
         $productUrl = 'https://deshevyi.ru/p-' . $product->id . '/' . $product->hru;
 
         //$message = $product['title_ae'] . PHP_EOL . 'Цена: ' . $product->price . PHP_EOL . $productUrl . $hashtag;
-        $vkMessage = $product['title_ae'] . PHP_EOL . 'Цена: ' . $product->price . ' руб' . PHP_EOL . $hashtag . PHP_EOL . '↓↓↓ подробнее здесь ↓↓↓';
+        $vkMessage = $product['title_ae'] . PHP_EOL . 'Цена: ' . $product->price . ' руб' . PHP_EOL . $hashtag . PHP_EOL . '↓↓↓ подробнее по ссылке ниже ↓↓↓';
         $tgMessage = '<b>' . $product['title_ae'] . '</b>' . PHP_EOL . PHP_EOL
             . 'Цена: <i>' . $product['price'] . ' руб.</i>' . PHP_EOL . PHP_EOL
             . '<a href="' . $productUrl . '">Подробнее</a>';
@@ -230,7 +230,7 @@ class SocialPostingCommand extends Command
 
         $url = 'https://deshevyi.ru/coupons/' . $coupon->id . '/' . $coupon->uri;
 
-        $vkMessage = $coupon->title . PHP_EOL . $coupon->description. PHP_EOL . $hashtag . PHP_EOL . '↓↓↓ подробнее здесь ↓↓↓';
+        $vkMessage = $coupon->title . PHP_EOL . $coupon->description. PHP_EOL . $hashtag . PHP_EOL . '↓↓↓ подробнее по ссылке ниже ↓↓↓';
 
         $tgMessage = "<b>{$coupon->title}</b>"
             . PHP_EOL. PHP_EOL . $coupon->description
