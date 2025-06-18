@@ -9,6 +9,12 @@
         .tr-notice {
             display: none;
         }
+        .pimgsubbox table {
+            width: auto!important;
+        }
+        .pimgsubbox table td {
+            width: auto!important;
+        }
     </style>
     <div class="detail">
         <div class="detail-menu">
