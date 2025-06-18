@@ -47,6 +47,7 @@ class ShopProduct extends BaseModel
         'epn_cashback',
         'info',
         'not_found_at',
+        'posted_at'
     ];
 
     protected $dates = [
@@ -54,6 +55,7 @@ class ShopProduct extends BaseModel
         'updated_at',
         'deleted_at',
         'not_found_at',
+        'posted_at'
     ];
 
     protected $casts = [

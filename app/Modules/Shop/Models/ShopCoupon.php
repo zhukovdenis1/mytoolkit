@@ -39,7 +39,8 @@ class ShopCoupon extends BaseModel
         'uri',
         'title',
         'description',
-        'info'
+        'info',
+        'posted_at'
     ];
 
     protected $dates = [
@@ -47,6 +48,7 @@ class ShopCoupon extends BaseModel
         'updated_at',
         'date_from',
         'date_to',
+        'posted_at'
     ];
 
     protected $casts = [
@@ -57,6 +59,7 @@ class ShopCoupon extends BaseModel
         'date_to' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'posted_at' => 'datetime',
     ];
 
     public static function filter($page = 1, $search = '')

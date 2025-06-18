@@ -21,7 +21,7 @@ class RunCommandRequest extends BaseFormRequest
     {
         return [
             'category' => 'nullable|string|in:shop',
-            'command' => 'required|string|in:deploy,refresh,test,epnHot,coupons,parseVkGroups',
+            'command' => 'required|string|in:deploy,refresh,test,epnHot,coupons,parseVkGroups,post',
         ];
     }
 }
