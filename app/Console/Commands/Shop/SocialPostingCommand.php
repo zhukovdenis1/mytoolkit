@@ -51,19 +51,6 @@ class SocialPostingCommand extends Command
     protected $description = 'Post to social media';
 
 
-//    public function handle()
-//    {
-//        $name = $this->ask('Как вас зовут?');
-//        $this->info("Привет, $name!");
-//
-//        if ($this->confirm('Хотите продолжить?')) {
-//            $this->info('Продолжаем...');
-//            // Дополнительная логика
-//        } else {
-//            $this->error('Действие отменено.');
-//        }
-//    }
-
     public function __construct(private readonly VkHelper $vkHelper) {
         parent::__construct();
     }
@@ -79,16 +66,16 @@ class SocialPostingCommand extends Command
         $output = '';
 
         $product = ShopProduct::query()
-            ->where('source', 'vk')
+            //->where('source', 'vk')
             ->whereNull('posted_at')
-            ->orderByDesc('id')
+            ->orderByDesc('epn_month_income')
+            //->orderByDesc('id')
             ->first();
 
         if ($product) {
             echo '<a href="https://vk.com/club' . $groupId . '" target="_blank">go to group</a><br><br />';
             $result = $this->postProduct($product, $accessToken, $groupId);
             var_dump($result);
-            return 0;
         }
 
         $coupon = ShopCoupon::query()
@@ -102,11 +89,7 @@ class SocialPostingCommand extends Command
             echo '<a href="https://vk.com/club' . $groupId . '" target="_blank">go to group</a><br><br />';
             $result = $this->postCoupon($coupon, $accessToken, $groupId);
             var_dump($result);
-            return 0;
         }
-
-
-
 
         //$output = "Group: vk.com/public" . $group->id . " Income: " . count($data) . "; Inserted: " . $insertCount . ";\n";
 
@@ -199,7 +182,10 @@ class SocialPostingCommand extends Command
         $productUrl = 'https://deshevyi.ru/p-' . $product->id . '/' . $product->hru;
 
         //$message = $product['title_ae'] . PHP_EOL . 'Цена: ' . $product->price . PHP_EOL . $productUrl . $hashtag;
-        $message = $product['title_ae'] . PHP_EOL . 'Цена: ' . $product->price . ' руб' . PHP_EOL . $hashtag;
+        $vkMessage = $product['title_ae'] . PHP_EOL . 'Цена: ' . $product->price . ' руб' . PHP_EOL . $hashtag;
+        $tgMessage = '<b>' . $product['title_ae'] . '</b>' . PHP_EOL . PHP_EOL
+            . 'Цена: <i>' . $product['price'] . ' руб.</i>' . PHP_EOL . PHP_EOL
+            . '<a href="' . $productUrl . '">Подробнее</a>';
 
         //$result = postToGroup($groupId, $message, $photoAttachment . ',' . $productUrl);
 
@@ -209,11 +195,11 @@ class SocialPostingCommand extends Command
         }
 
 
-        $result = $this->postToGroup($groupId, $message, $pAttachment );
+        $result = $this->postToGroup($groupId, $vkMessage, $pAttachment );
 
         //if ($pd['category'] == ModelAliProduct::CAT_KRUTYEVESHI || empty($pd['category']))
         {
-            //$this->postToTelegram($message, $photos);
+            $result = $this->postToTelegram($tgMessage, $photos);
         }
 
 
@@ -244,16 +230,19 @@ class SocialPostingCommand extends Command
 
         $url = 'https://deshevyi.ru/coupons/' . $coupon->id . '/' . $coupon->uri;
 
-        $message = $coupon->title . PHP_EOL . $coupon->description. PHP_EOL . $hashtag;
+        $vkMessage = $coupon->title . PHP_EOL . $coupon->description. PHP_EOL . $hashtag;
 
+        $tgMessage = "<b>{$coupon->title}</b>"
+            . PHP_EOL. PHP_EOL . $coupon->description
+            . PHP_EOL . '<a href="' . $url . '">Подробнее</a>          <a href="https://deshevyi.ru/coupons">Все купоны</a>';
 
         $pAttachment = $url;
 
-        $result = $this->postToGroup($groupId, $message, $pAttachment );
+        $result = $this->postToGroup($groupId, $vkMessage, $pAttachment );
 
         //if ($pd['category'] == ModelAliProduct::CAT_KRUTYEVESHI || empty($pd['category']))
         {
-            //$this->postToTelegram($message, $photos);
+            $result = $this->postToTelegram($tgMessage, []);
         }
 
 
@@ -319,37 +308,49 @@ class SocialPostingCommand extends Command
         $botToken = '7983496183:AAFVULz9fk7FgiF9t3kkzh1wdZyFov4W15E';
         $chatId = '-1001177719353';
 
-        $images = [];
+        if ($photos) {
+            $url = "https://api.telegram.org/bot{$botToken}/sendMediaGroup";
 
-        /*for ($i = 1; $i < 7; $i++) {
-            if (is_file(app()->basePath() . '/tmp/tmp' . $i . '.jpg')) {
-                $images[] = ['path' => app()->basePath() . '/tmp/tmp' . $i . '.jpg', 'caption' => 'Caption 1'];
+            // Подготовка массива медиа
+            $media = [];
+            foreach ($photos as $index => $photoUrl) {
+                $media[] = [
+                    'type' => 'photo',
+                    'media' => $photoUrl,
+                    'caption' => $message,
+                    'text' => $message,
+                    'parse_mode' => 'HTML'
+                ];
             }
-        }*/
 
-        foreach ($photos as $p) {
-            $images[] = ['path' => $p, 'caption' => 'Caption 1'];
+            $data = [
+                'chat_id' => $chatId,
+                'media' => json_encode($media)
+            ];
+        } else {
+            $url = "https://api.telegram.org/bot{$botToken}/sendMessage";
+
+            $data = [
+                'chat_id' => $chatId,
+                'text' => $message,
+                'parse_mode' => 'HTML',
+                'disable_web_page_preview' => true
+            ];
         }
 
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://api.telegram.org/bot{$botToken}/sendMediaGroup");
-        curl_setopt($ch, CURLOPT_POST, 1);
 
-        $postFields = ['chat_id' => $chatId];
-        $files = [];
+        $options = [
+            'http' => [
+                'header' => "Content-Type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data)
+            ]
+        ];
 
-        foreach ($images as $index => $image) {
-            //$postFields["media[$index]"] = new CURLFile(realpath($image['path']));
-            $postFields["media[$index]"] = new CURLFile($image['path']);
-            $postFields["caption[$index]"] = $image['caption'];
-        }
+        $context = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
 
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        curl_close($ch);
-
-        $response = json_decode($result, true);
+        return $result;
     }
 
 
