@@ -1,13 +1,20 @@
-.note-menu ul {
-    padding-left: 1em;
-}
-.note-menu {
-    border-bottom: 1px solid #ccc;
-}
+/*.note-menu ul {*/
+/*    padding-left: 1em;*/
+/*}*/
+/*.note-menu {*/
+/*    border-bottom: 1px solid #ccc;*/
+/*}*/
 
 .date {
     display: flex;
     justify-content: right;
     color: #ccc;
     font-size: 0.9em;
+}
+
+.note-sticky-menu {
+    position: sticky;
+    top: 10px;
+    float: right;
+    z-index: 2;
 }

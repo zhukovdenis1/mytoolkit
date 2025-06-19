@@ -109,6 +109,11 @@ export const NoteSearchPage: React.FC<NoteSearchPageProps> = ({ action = '' }) =
 
         const response = await api.safeRequest("notes.search", params);
         if (response.success) {
+            response.data.notes.forEach((note: { parent_id: number | null; title: string }) => {
+                if (note.parent_id !== null) {
+                    note.title = '— ' + note.title;
+                }
+            });
             setData(response.data.notes);
             setPagination((prev) => ({
                 ...prev,

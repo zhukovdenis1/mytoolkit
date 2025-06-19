@@ -7,7 +7,7 @@
 @section('content')
     <h1>{{ $article['h1'] }}</h1>
 
-    {!! isset($article['content'][1]) && $isIndexPage ? $article['content'][1] : '' !!}
+    {!! isset($article['content']['intro']) && $isIndexPage ? $article['content']['intro'] : '' !!}
 
     <form method="GET" action="">
         <span class="form-item"><input type="hidden" name="page" value="1" /></span>
@@ -42,7 +42,7 @@
             {{ $coupons->withQueryString()->links() }}
         @endif
 
-        {!! isset($article['content'][0]) && $isIndexPage ? $article['content'][0] : '' !!}
+        {!! isset($article['content']['main']) && $isIndexPage ? $article['content']['main'] : '' !!}
     @endif
 @endsection
 

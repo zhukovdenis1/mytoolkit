@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import { useParams } from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import { api, route } from "api";
 import {Spin, Editor, Button, Space, message} from "ui";
 import dayjs from "dayjs";
@@ -80,8 +80,10 @@ export const NoteViewPage: React.FC = () => {
 
     return (
         <Spin spinning={loading}>
-            <div style={{float: "right"}}>
+            <div className="note-sticky-menu">
                 <Button title="Mode" type="dashed" onClick={switchEditorMode}>{editorMode == 'view' ? (<EyeOutlined />) : (<EditOutlined />)}</Button>
+                &nbsp;
+                <Link to={route('notes.edit', { note_id: noteId ?? 0 })}><EditOutlined /></Link>
             </div>
             <h1>{data?.title}</h1>
 

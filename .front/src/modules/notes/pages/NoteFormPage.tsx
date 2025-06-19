@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button, Space, TreeSelect, message, SearchInput } from "ui";
-import { api } from "api";
+import {api, route} from "api";
 import { convertTreeData } from "@/utils/ui";
 import { Editor } from "ui";
 import {SubNoteList} from "../components/SubNoteList";
+import {EyeOutlined} from "@ui/icons.tsx";
+
 
 interface NoteFormPageProps {
     modal?: {
@@ -98,6 +100,7 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
 
     return (
         <>
+            <a style={{marginBottom: "10px"}} href={route('notes.view', { note_id: noteId ?? 0 })}><EyeOutlined /></a>
             <Form form={form} onFinish={handleSave}>
                 <Form.Item name="exit" hidden>
                     <Input type="hidden" />

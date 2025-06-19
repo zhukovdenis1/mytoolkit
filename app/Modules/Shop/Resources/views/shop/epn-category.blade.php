@@ -9,7 +9,7 @@
     <x-shop::product-list :products="$products" />
     @if(!$searchString && $article)
         <div class="shop-article">
-            {!! $article['content'][0] ?? '' !!}
+            {!! $article['content']['main'] ?? '' !!}
         </div>
     @endif
 @endsection
