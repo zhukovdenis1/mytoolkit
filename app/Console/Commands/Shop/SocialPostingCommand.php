@@ -183,7 +183,7 @@ class SocialPostingCommand extends Command
 
         //$message = $product['title_ae'] . PHP_EOL . 'Цена: ' . $product->price . PHP_EOL . $productUrl . $hashtag;
         $vkMessage = $product['title_ae'] . PHP_EOL . 'Цена: ' . $product->price . ' руб' . PHP_EOL . $hashtag . PHP_EOL . '↓↓↓ подробнее по ссылке ниже ↓↓↓';
-        $tgMessage = '<b>' . $product['title_ae'] . '</b>' . PHP_EOL . PHP_EOL
+        $tgMessage = '<b>' . htmlspecialchars($product['title_ae']) . '</b>' . PHP_EOL . PHP_EOL
             . 'Цена: <i>' . $product['price'] . ' руб.</i>' . PHP_EOL . PHP_EOL
             . '<a href="' . $productUrl . '">Подробнее</a>';
 
@@ -232,8 +232,8 @@ class SocialPostingCommand extends Command
 
         $vkMessage = $coupon->title . PHP_EOL . $coupon->description. PHP_EOL . $hashtag . PHP_EOL . '↓↓↓ подробнее по ссылке ниже ↓↓↓';
 
-        $tgMessage = "<b>{$coupon->title}</b>"
-            . PHP_EOL. PHP_EOL . $coupon->description
+        $tgMessage = "<b>" . htmlspecialchars($coupon->title) . "</b>"
+            . PHP_EOL. PHP_EOL . htmlspecialchars($coupon->description)
             . PHP_EOL . '<a href="' . $url . '">Подробнее</a>          <a href="https://deshevyi.ru/coupons">Все купоны</a>';
 
         $pAttachment = $url;

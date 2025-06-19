@@ -14,10 +14,10 @@ class AppSchedule
         //$schedule->command('shop:coupons')->dailyAt('01:00');
         //$schedule->exec('php parser/parser.php')->everyMinute();
         $schedule->exec('php parser/parser.php')->everyThirtyMinutes();
-        $schedule->exec('shop:parseVkGroups')->everyTwoHours();
-        $schedule->exec('shop:post')->dailyAt('07:00');
-        $schedule->exec('shop:post')->dailyAt('13:00');
-        $schedule->exec('shop:post')->dailyAt('17:00');
+        $schedule->command('shop:parseVkGroups')->everyTwoHours();
+        $schedule->command('shop:post')->dailyAt('07:00');
+        $schedule->command('shop:post')->dailyAt('13:00');
+        $schedule->command('shop:post')->dailyAt('17:00');
         //$schedule->command('stats:clean --days=30')->daily();
     }
 }
