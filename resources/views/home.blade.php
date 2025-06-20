@@ -1,14 +1,8 @@
 @extends('layouts.mtk')
 
 @section('content')
-    {!! $note->text !!}
+    {!! $public !!}
     @if ($user_id == 1001)
-        <hr>
-        <ul>
-            <li>
-                <a href="/utils">Скрипты</a>
-            </li>
-        </ul>
+        {!! $private !!}
     @endif
-
 @endsection

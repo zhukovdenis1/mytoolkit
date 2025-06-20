@@ -28,11 +28,12 @@ class MtkController extends BaseController
             abort(404);
         }
 
-        $text = $this->editorHelper->jsonToHtml($note->text);
-        $note->text = $text;
+        $publicPart = json_decode($note->text ?? '', true);
+        $privatePart = [array_pop($publicPart)];
 
         return view('home', [
-            'note' => $note,
+            'public' => $this->editorHelper->arrayToHtml($publicPart),
+            'private' => $this->editorHelper->arrayToHtml($privatePart),
             'user_id' => request()->user()?->id
         ]);
     }
