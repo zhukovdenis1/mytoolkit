@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Space, TreeSelect, message, SearchInput } from "ui";
+import { Form, Input, Button, Checkbox, Space, TreeSelect, message, SearchInput } from "ui";
 import {api, route} from "api";
 import { convertTreeData } from "@/utils/ui";
 import { Editor } from "ui";
@@ -42,8 +42,10 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
             if (isEditPage) {
                 noteResponse = await api.safeRequest(`notes.show`, { note_id: noteId });
                 if (noteResponse.success) {
-                    form.setFieldsValue(noteResponse.data.note);
-                    editor.setValue(noteResponse.data.note.text);
+                    let noteData = noteResponse.data.note;
+                    noteData.published = !!noteData.published_at;
+                    form.setFieldsValue(noteData);
+                    editor.setValue(noteData.text);
                 }
             } else {
                 form.setFieldsValue(modal.data);
@@ -107,6 +109,9 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
                 </Form.Item>
                 <Form.Item name="title" label="Title" rules={[{ required: true, message: "Please input title!" }]}>
                     <Input disabled={modal.loading} />
+                </Form.Item>
+                <Form.Item name="published" valuePropName="checked">
+                    <Checkbox disabled={modal.loading}>Published</Checkbox>
                 </Form.Item>
                 <Form.Item name="parent_id" label="Parent">
                     <SearchInput route="notes.dropdown" placeholder="Please select" />

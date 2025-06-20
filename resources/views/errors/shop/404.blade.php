@@ -1,4 +1,4 @@
-@extends('layouts.mtk')
+@extends('layouts.shop')
 
 @section('title', 'Страница не найдена')
 

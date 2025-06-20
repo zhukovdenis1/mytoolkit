@@ -1,9 +1,18 @@
 <?php
 
+use App\Modules\Mtk\Http\Controllers\Shared\MtkController;
+use App\Modules\Note\Http\Controllers\Shared\NoteController;
+use App\Modules\Util\Http\Controllers\Shared\UtilController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 use App\Modules\Console\Http\Controllers\User\ConsoleController;
 use App\Modules\FileStorage\Http\Controllers\User\FileStorageController;
+
+Route::get('', [MtkController::class, 'index'])->name('home');
+Route::get('a-{noteId}', [NoteController::class, 'detail'])/*->name('note.detail')*/;
+Route::any('cp', [MtkController::class, 'copyPaste']);
+Route::any('myip', [MtkController::class, 'myIp']);
+
 
 Route::any('/console/{category}/{command}', [ConsoleController::class, 'runCommand'])
     ->withoutMiddleware(VerifyCsrfToken::class);
@@ -14,8 +23,8 @@ Route::middleware([\App\Http\Middleware\WebAuthMiddleware::class])->group(functi
     Route::get('/uploads/storage/{user_id}/{module_name}/{module_id}/{file}_{file_name}.{file_ext}', [FileStorageController::class, 'get']);
     //Route::delete('/uploads/storage/{user_id}/{module_name}/{module_id}/{file}_{file_name}.{file_ext}', [FileStorageController::class, 'delete'])
     //    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+    Route::any('utils/{utilName?}', [UtilController::class, 'index'])->name('util');
 });
-
 
 Route::get('/{any}', function () {
     return view('main');

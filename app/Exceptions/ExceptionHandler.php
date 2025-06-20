@@ -23,15 +23,32 @@ class ExceptionHandler
     protected int $jsonFlags = JSON_UNESCAPED_UNICODE;
     protected string $logPrefix = '';
 
+    protected string $siteName = 'main';
+
     private readonly CrawlerDetect $crawlerDetect;
 
-    public function __construct()
+    public function __construct(string $siteName = 'main')
     {
+        $this->siteName = $siteName;
         $this->crawlerDetect = new CrawlerDetect();
         $this->logPrefix = $this->crawlerDetect->isCrawler($_SERVER['HTTP_USER_AGENT'] ?? null)
             ? 'bot_'
             : '';
 
+    }
+
+    protected function registerErrorViewPaths(): void
+    {
+        $dir = $this->siteName == 'shop' ? '/shop' : '';
+        // Устанавливаем путь к views в зависимости от сайта
+        $paths = collect(config('view.paths'))
+            ->map(function ($path) use ($dir) {
+                return "{$path}/errors{$dir}";
+            })
+            ->push(resource_path("views/errors{$dir}"))
+            ->all();
+
+        config(['view.paths' => $paths]);
     }
 
 

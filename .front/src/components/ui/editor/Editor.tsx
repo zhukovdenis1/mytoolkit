@@ -235,8 +235,9 @@ const EditorComponent: React.FC<EditorProps> = ({
     };
 
     editor.delete = async (key) => {
+
         const item = structure[key];
-        let success = false;
+        let success = true;
         if ((item.type == 'image' || item.type == 'video' ) && item.data.fileId) {
             success = false;
             const data = {file_id: item.data.fileId, ...config.fileRoutes.delete.data, type: item.type, path: item.data.src}
@@ -245,8 +246,6 @@ const EditorComponent: React.FC<EditorProps> = ({
             if (response.success || response.status == 404) {
                 success = true;
             }
-
-
         }
 
         if (success) {

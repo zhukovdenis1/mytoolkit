@@ -9,6 +9,7 @@ use App\Models\BaseModel;
 use App\Modules\Note\Models\Note;
 use App\Modules\Note\Models\NoteCategory;
 use App\Services\BaseService;
+use Carbon\Carbon;
 use Faker\Provider\Base;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -27,6 +28,13 @@ class NoteService extends BaseService
 
     public function update(BaseModel $model, array $attributes): BaseModel
     {
+        $published = $attributes['published'];
+        unset($attributes['published']);
+        if (is_null($model->published_at) && $published) {
+            $attributes['published_at'] = Carbon::now();
+        } elseif (!$published) {
+            $attributes['published_at'] = null;
+        }
         $model->update($attributes);
 
         $categoriesChanged = false;

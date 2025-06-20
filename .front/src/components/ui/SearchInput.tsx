@@ -32,8 +32,9 @@ export const SearchInput: React.FC<SearchInputProps> = ({ route, placeholder, va
         setLoading(true);
 
         const response = await api.safeRequest(route, {id: id});
-        if (response.success && response.data.length > 0) {
-            const item = response.data[0]; // Берём первый элемент массива
+
+        if (response.success) {
+            const item = response.data.data[0]; // Берём первый элемент массива
             setOptions([{ value: item.id.toString(), label: item.name }]);
             setSelectedValue(item.id.toString());
         }

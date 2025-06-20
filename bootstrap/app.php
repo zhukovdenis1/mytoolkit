@@ -34,7 +34,7 @@ if ($domain === 'deshevyi.loc' || $domain === 'deshevyi.ru') {
             $middleware->append(RequestStatsMiddleware::class);
             //$middleware->append(\App\Http\Middleware\RegisterVisit::class); - перенесено в routes
         })
-        ->withExceptions(new ExceptionHandler())
+        ->withExceptions(new ExceptionHandler('shop'))
         ->create();
 } else {
     return Application::configure(basePath: dirname(__DIR__))

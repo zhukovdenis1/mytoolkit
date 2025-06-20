@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property array|null $text Текст заметки (массив в JSON, может быть null)
  * @property Carbon $created_at Время создания записи (дата и время)
  * @property Carbon $updated_at Время обновления записи (дата и время)
+ * @property Carbon $published_at Время публикации (дата и время)
  *
  * @property-read User $user Пользователь, создавший заметку
  * @property-read Note|null $parent Родительская заметка
@@ -33,11 +34,13 @@ class Note extends BaseModel
         'text',
         'user_id',
         'parent_id',
+        'published_at',
     ];
 
     protected $dates = [
         'created_at',
         'updated_at',
+        'published_at',
     ];
 
     protected $hidden = [
@@ -51,6 +54,7 @@ class Note extends BaseModel
         'text' => 'string',//array
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'published_at' => 'datetime',
     ];
 
 //    public function getTextAttribute($value)

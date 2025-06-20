@@ -25,7 +25,6 @@ class WebAuthMiddleware
             ->where('refresh_token', $refreshToken)
             ->first();
 
-
         if (!$token || !$token->user) {
             //return response()->json(['error' => 'Invalid refresh token'], 401);
             abort(401, 'Unauthorized');
