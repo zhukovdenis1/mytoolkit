@@ -1,6 +1,7 @@
 <?php
 
 use App\Modules\Main\Http\Controllers\Shared\MainController;
+use App\Modules\Music\Http\Controllers\Shared\SongController;
 use App\Modules\Note\Http\Controllers\Shared\NoteController;
 use App\Modules\Util\Http\Controllers\Shared\UtilController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -12,7 +13,9 @@ Route::middleware([\App\Http\Middleware\WebAuthMiddleware::class])->group(functi
     Route::get('', [MainController::class, 'index'])->name('home');
     Route::get('a-{noteId}', [NoteController::class, 'detail'])/*->name('note.detail')*/;
     Route::any('cp', [MainController::class, 'copyPaste']);
-    Route::any('myip', [MainController::class, 'myIp']);
+    Route::get('myip', [MainController::class, 'myIp']);
+    Route::get('music', [SongController::class, 'index']);
+    Route::get('music/s-{song}', [SongController::class, 'detail'])->name('music.detail');
 });
 
 Route::any('/console/{category}/{command}', [ConsoleController::class, 'runCommand'])

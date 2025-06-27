@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Space } from 'antd';
 import { ArrowLeftOutlined, ArrowRightOutlined, ReloadOutlined, HomeOutlined/*, UserOutlined*/ } from '@ant-design/icons';
-// import {route} from 'api';
+import {route} from 'api';
 
 export const BrowseToolBar: React.FC = () => {
     const navigate = useNavigate();
@@ -31,7 +31,7 @@ export const BrowseToolBar: React.FC = () => {
 
     // Обработчик для кнопки "Домой"
     const handleGoHome = () => {
-        navigate('/');
+        navigate(route('user'));
     };
 
     // const handleGoUser = () => {

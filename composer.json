@@ -20,6 +20,7 @@
         "ext-dom": "*"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.15",
         "fakerphp/faker": "^1.23",
         "knuckleswtf/scribe": "^4.38",
         "laravel-lang/lang": "^15.9",

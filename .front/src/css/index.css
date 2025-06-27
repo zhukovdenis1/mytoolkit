@@ -26,7 +26,7 @@ body::-webkit-scrollbar-thumb {
 .wrapper {
     color: #000;
     background-color: #fff;
-    padding: 0 10px 70px 0;
+    padding: 0 0px 70px 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -42,6 +42,7 @@ body::-webkit-scrollbar-thumb {
 
 main {
     min-height: 100%;
+    margin: 0 10px;
     /*display: flex;
     flex-direction: row;
     flex: 1;*/
