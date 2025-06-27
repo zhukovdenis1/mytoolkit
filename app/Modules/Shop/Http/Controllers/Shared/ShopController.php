@@ -216,7 +216,7 @@ class ShopController extends Controller
             }*/
         }
 
-        $attachment = json_decode($product->vk_attachment, true) ?: [];
+        $attachment = json_decode($product->vk_attachment ?? '', true) ?: [];
 
         $vkAttachment = '';
         foreach ($attachment as $a)
