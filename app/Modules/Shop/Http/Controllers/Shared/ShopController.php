@@ -61,7 +61,7 @@ class ShopController extends Controller
 
 
         return view('Shop::shop.home', [
-            'monthName' => mb_ucfirst($this->dateTimeHelper->getMonthName(date('m'), 'nominative')),
+            'monthName' => mb_ucfirst($this->dateTimeHelper->getMonthName(intval(date('m')), 'nominative')),
             'epnCategories' => $this->service->getEpnMenu(),
             'popular' => $popular,
             'products' => $products,
@@ -151,7 +151,7 @@ class ShopController extends Controller
             return redirect()->route('epnCategory', ['categoryId' => $category['id'], 'categoryHru' => $category['uri']], 301);
         }
 
-        $products = $this->service->filter($page, 0, $search, $categoryId);
+        $products = $this->service->filter($page, 0, $search, (int) $categoryId);
 
         return view('Shop::shop.epn-category', [
             'products' => $products,
@@ -216,7 +216,7 @@ class ShopController extends Controller
             }*/
         }
 
-        $attachment = json_decode($product->vk_attachment, 1) ?: [];
+        $attachment = json_decode($product->vk_attachment, true) ?: [];
 
         $vkAttachment = '';
         foreach ($attachment as $a)
