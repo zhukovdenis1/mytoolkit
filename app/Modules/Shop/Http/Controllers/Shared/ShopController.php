@@ -59,7 +59,6 @@ class ShopController extends Controller
             $articles = $this->service->getMainPageArticles();
         }
 
-
         return view('Shop::shop.home', [
             'monthName' => mb_ucfirst($this->dateTimeHelper->getMonthName(intval(date('m')), 'nominative')),
             'epnCategories' => $this->service->getEpnMenu(),

@@ -55,7 +55,7 @@
     @if(!$searchString)
         <div class="home-article">
             <h1>{{ $article['h1'] }}</h1>
-            {!! $article['content'][0] ?? '' !!}
+            {!! $article['content']["main"] ?? '' !!}
         </div>
     @endif
 @endsection
