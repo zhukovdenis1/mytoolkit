@@ -102,7 +102,7 @@ class ShopController extends Controller
         $epnCategory = $validated['epn_category_id'] ?? 0;
         $search = $validated['search'] ?? '';
 
-        $products = $this->service->filter((int) $page, $category, $search, (int) $epnCategory);
+        $products = $this->service->filter((int) $page, (int) $category, $search, (int) $epnCategory);
 
         return view('Shop::shop.more', ['products' => $products]);
     }
