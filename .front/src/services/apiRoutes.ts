@@ -23,6 +23,8 @@ const apiRoutes: Record<string, [string, string]> = {
 
     "files.delete": ["files/:file_id", "delete"],
 
+    "main.links": ["main/links", "get"],
+
     "admin.shop.articles.list": ["admin/shop/articles", "get"],
     "admin.shop.articles.show": ["admin/shop/articles/:article_id", "get"],
     "admin.shop.articles.add": ["admin/shop/articles", "post"],

@@ -13,8 +13,16 @@ export const NoteTreePage: React.FC = () => {
     const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
     const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
     const [loading, setLoading] = useState(true);
+    const [links, setLinks] = useState(true);
     const [reloadTrigger, setReloadTrigger] = useState(0);
     const navigate = useNavigate();
+
+    const fetchLinks = async () => {
+        const response = await api.safeRequest("main.links");
+        if (response.success) {
+            setLinks(response.data.data.html)
+        }
+    };
 
     const fetchCategories = async () => {
         const response = await api.safeRequest("notes.categories.tree");
@@ -31,6 +39,7 @@ export const NoteTreePage: React.FC = () => {
     useEffect(() => {
         setLoading(true);
         fetchCategories();
+        fetchLinks();
     }, [reloadTrigger]);
 
     const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,25 +85,27 @@ export const NoteTreePage: React.FC = () => {
     };
 
     return (
-
-        <Space direction="vertical" style={{width: "100%"}}>
-            <SearchInput
-                route="notes.dropdown"
-                placeholder="Search note"
-                onChange={(value) => { value && navigate(route('notes.view', {note_id: value}))}}
-                style={{width: "100%"}}
-            />
-            <Spin spinning={loading}>
-                <Input placeholder="Search category" value={search} onChange={onSearch} style={{ marginBottom: 8 }} />
-                <Tree
-                    showLine
-                    switcherIcon={<DownOutlined />}
-                    expandedKeys={expandedKeys}
-                    onExpand={(keys: React.Key[]) => setExpandedKeys(keys)}
-                    treeData={treeData}
+        <>
+            <div dangerouslySetInnerHTML={{ __html: links }} />
+            <Space direction="vertical" style={{width: "100%"}}>
+                <SearchInput
+                    route="notes.dropdown"
+                    placeholder="Search note"
+                    onChange={(value) => { value && navigate(route('notes.view', {note_id: value}))}}
+                    style={{width: "100%"}}
                 />
-            </Spin>
-        </Space>
+                <Spin spinning={loading}>
+                    <Input placeholder="Search category" value={search} onChange={onSearch} style={{ marginBottom: 8 }} />
+                    <Tree
+                        showLine
+                        switcherIcon={<DownOutlined />}
+                        expandedKeys={expandedKeys}
+                        onExpand={(keys: React.Key[]) => setExpandedKeys(keys)}
+                        treeData={treeData}
+                    />
+                </Spin>
+            </Space>
+        </>
     );
 };
 

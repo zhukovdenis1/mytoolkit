@@ -2,6 +2,7 @@
 
 use App\Modules\Auth\Http\Controllers\Shared\AuthController;
 use App\Modules\FileStorage\Http\Controllers\User\FileStorageController;
+use App\Modules\Main\Http\Controllers\User\MainController;
 use App\Modules\Note\Http\Controllers\User\NoteCategoryController;
 use App\Modules\Note\Http\Controllers\User\NoteController;
 //use App\Modules\Product\Http\Controllers\User\ProductController;
@@ -49,6 +50,10 @@ Route::middleware([JwtMiddleware::class])->group(function () {
         Route::put('{note}/edit-content', [NoteController::class, 'updateContent']);
         Route::put('{note}', [NoteController::class, 'update']);
         Route::delete('{note}', [NoteController::class, 'destroy']);
+    });
+
+    Route::prefix('main')->group(function () {
+        Route::get('/links', [MainController::class, 'links']);
     });
 
     Route::prefix('patients')->group(function () {

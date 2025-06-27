@@ -31,7 +31,7 @@ export interface IRoute {
 
 export const routes: IRoute[] = [
     {
-        path: "/",
+        path: "/my/",
         element: (
             <RequireAuth>
                 <BreadcrumbsProvider>
@@ -42,7 +42,7 @@ export const routes: IRoute[] = [
         title: "Home",
         children: [
             {
-                name: "home",
+                name: "user",
                 index: true,
                 element: <NoteTreePage />,
             },

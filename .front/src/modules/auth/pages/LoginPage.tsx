@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthProvider.tsx";
 import { Form, Input, Button } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
+import {route} from "api";
 
 export const LoginPage: React.FC = () => {
     const authContext = useContext(AuthContext);
@@ -13,7 +14,7 @@ export const LoginPage: React.FC = () => {
         setLoading(true);
         if (authContext) {
             try {
-                await authContext.signin(values, () => navigate("/"));
+                await authContext.signin(values, () => navigate(route('user')));
             } catch (error) {
                 console.error("Login failed:", error);
             } finally {

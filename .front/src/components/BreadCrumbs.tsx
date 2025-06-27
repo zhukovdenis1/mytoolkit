@@ -80,6 +80,7 @@ export const Breadcrumbs: React.FC = () => {
 
     return (
         <nav className="brcr">
+            {/*<a href="/">Home</a> &gt;*/}
             {breadcrumbs.map((crumb, index) => (
                 <span key={`${crumb.path}-${index}`}>
                     <Link to={crumb.path}>{crumb.title}</Link>

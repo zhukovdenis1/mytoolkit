@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Mtk\Http\Controllers\Shared\MtkController;
+use App\Modules\Main\Http\Controllers\Shared\MainController;
 use App\Modules\Note\Http\Controllers\Shared\NoteController;
 use App\Modules\Util\Http\Controllers\Shared\UtilController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -9,10 +9,10 @@ use App\Modules\Console\Http\Controllers\User\ConsoleController;
 use App\Modules\FileStorage\Http\Controllers\User\FileStorageController;
 
 Route::middleware([\App\Http\Middleware\WebAuthMiddleware::class])->group(function () {
-    Route::get('', [MtkController::class, 'index'])->name('home');
+    Route::get('', [MainController::class, 'index'])->name('home');
     Route::get('a-{noteId}', [NoteController::class, 'detail'])/*->name('note.detail')*/;
-    Route::any('cp', [MtkController::class, 'copyPaste']);
-    Route::any('myip', [MtkController::class, 'myIp']);
+    Route::any('cp', [MainController::class, 'copyPaste']);
+    Route::any('myip', [MainController::class, 'myIp']);
 });
 
 Route::any('/console/{category}/{command}', [ConsoleController::class, 'runCommand'])

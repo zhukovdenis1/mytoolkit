@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Space } from 'antd';
-import { ArrowLeftOutlined, ArrowRightOutlined, ReloadOutlined, HomeOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ArrowRightOutlined, ReloadOutlined, HomeOutlined/*, UserOutlined*/ } from '@ant-design/icons';
+// import {route} from 'api';
 
 export const BrowseToolBar: React.FC = () => {
     const navigate = useNavigate();
@@ -33,6 +34,10 @@ export const BrowseToolBar: React.FC = () => {
         navigate('/');
     };
 
+    // const handleGoUser = () => {
+    //     navigate(route('user'));
+    // };
+
     return (
         <Space>
             <Button
@@ -61,6 +66,12 @@ export const BrowseToolBar: React.FC = () => {
                 icon={<HomeOutlined />}
                 onClick={handleGoHome}
             />
+
+            {/*<Button*/}
+            {/*    title="User"*/}
+            {/*    icon={<UserOutlined />}*/}
+            {/*    onClick={handleGoUser}*/}
+            {/*/>*/}
 
         </Space>
     );

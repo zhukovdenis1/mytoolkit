@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../AuthProvider";
 import {Loading} from "@/components/Loading";
+import {route} from "api";
 
 export const RequireAuth: React.FC<{ children: React.ReactElement }> = ({ children }) => {
     const auth = useContext(AuthContext);
@@ -12,7 +13,7 @@ export const RequireAuth: React.FC<{ children: React.ReactElement }> = ({ childr
     }
 
     if (!auth || auth.user === null) {
-        return <Navigate to="/login" state={{ from: location }} replace />;
+        return <Navigate to={route('login')} state={{ from: location }} replace />;
     }
 
     return children;

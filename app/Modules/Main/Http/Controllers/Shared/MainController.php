@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Mtk\Http\Controllers\Shared;
+namespace App\Modules\Main\Http\Controllers\Shared;
 
 
 use App\Helpers\EditorHelper;
@@ -12,7 +12,7 @@ use App\Modules\Note\Services\NoteService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class MtkController extends BaseController
+class MainController extends BaseController
 {
     public function __construct(private readonly EditorHelper $editorHelper)
     {
@@ -26,6 +26,12 @@ class MtkController extends BaseController
 
         if (!$note) {
             abort(404);
+        }
+
+        $userId = request()->user()?->id;
+
+        if ($userId) {
+            return redirect('/my');
         }
 
         $publicPart = json_decode($note->text ?? '', true);

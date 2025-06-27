@@ -19,7 +19,7 @@
         <div class="center-wrap">
             <header>
                 <a href="/">Главная</a>
-                <a href="/login">Login</a>
+                <x-auth-link />
             </header>
             <main>
                 @yield('content')
