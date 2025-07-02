@@ -7,6 +7,7 @@ const apiRoutes: Record<string, [string, string]> = {
     "notes.search": ["notes", "get"],
     "notes.dropdown": ["notes/get-dropdown", "get"],
     "notes.tree": ["notes/tree", "get"],
+    "notes.parents": ["notes/parents", "get"],
     "notes.show": ["notes/:note_id", "get"],
     "notes.add": ['notes', "post"],
     "notes.edit": ['notes/:note_id', "put"],

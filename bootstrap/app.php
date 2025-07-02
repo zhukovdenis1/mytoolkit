@@ -14,9 +14,11 @@ use Illuminate\Foundation\Configuration\Middleware;
 
 
 $domain = $_SERVER['HTTP_HOST'] ?? '';
+$isShop = $domain === 'deshevyi.loc' || $domain === 'deshevyi.ru';
 
-if ($domain === 'deshevyi.loc' || $domain === 'deshevyi.ru') {
-    return Application::configure(basePath: dirname(__DIR__))
+if ($isShop) {
+
+    $app = Application::configure(basePath: dirname(__DIR__))
         ->withRouting(
             web: __DIR__ . '/../routes/web_shop.php',
             api: __DIR__.'/../routes/api_shop.php',
@@ -36,8 +38,11 @@ if ($domain === 'deshevyi.loc' || $domain === 'deshevyi.ru') {
         })
         ->withExceptions(new ExceptionHandler('shop'))
         ->create();
+
+        $app->macro('appId', fn() => 'shop');
+        return $app;
 } else {
-    return Application::configure(basePath: dirname(__DIR__))
+    $app = Application::configure(basePath: dirname(__DIR__))
         ->withRouting(
             web: __DIR__.'/../routes/web.php',
             api: __DIR__.'/../routes/api.php',
@@ -46,6 +51,7 @@ if ($domain === 'deshevyi.loc' || $domain === 'deshevyi.ru') {
         )
         ->withMiddleware(function (Middleware $middleware) {
             //$middleware->append(JwtMiddleware::class);
+            $middleware->append(\App\Http\Middleware\AutoBreadcrumbsMiddleware::class);
             $middleware->append(\App\Http\Middleware\MyIp::class);
             //$middleware->append(DebugMode::class);
             $middleware->append(JsonUnescapeUnicode::class);
@@ -59,7 +65,12 @@ if ($domain === 'deshevyi.loc' || $domain === 'deshevyi.ru') {
             AppSchedule::handle($schedule);
         })
         ->create();
+
+        $app->macro('appId', fn() => 'mtk');
+
+        return $app;
 }
+
 
 /*
 use Illuminate\Foundation\Application;

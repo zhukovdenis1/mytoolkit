@@ -5,12 +5,16 @@
 @section('description', $singer->name . '-' . $song->title)
 
 @section('content')
+    <div class="songsScroll" id="songsScroll">&downdownarrows;</div>
     <div id="song">
         <h1>{{$singer->name}} - {{$song->title}}</h1>
-        <pre class="chords" data-key="{{$keys}}" data-speed="{{$song->speed ?: '1'}}">
-            {{$song->text}}
-        </pre>
+        <pre class="chords" data-key="{{$keys}}" data-speed="{{$song->speed ?: '1'}}">{{$song->text}}</pre>
     </div>
+    @if($song->hidden_text)
+        <div id="more">
+            {{$song->hidden_text}}
+        </div>
+    @endif
 @endsection
 
 @section('js')

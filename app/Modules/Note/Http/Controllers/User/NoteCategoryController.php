@@ -15,7 +15,7 @@ use App\Modules\Note\Http\Requests\User\Category\UpdateNoteCategoryRequest;
 use App\Modules\Note\Http\Resources\User\NoteCategoryResource;
 use App\Modules\Note\Http\Resources\User\NoteCategoryResourceCollection;
 use App\Modules\Note\Models\NoteCategory;
-use App\Modules\Note\Services\NoteCategoryService;
+use App\Modules\Note\Services\User\NoteCategoryService;
 use Illuminate\Auth\Access\AuthorizationException;
 
 class NoteCategoryController extends BaseController

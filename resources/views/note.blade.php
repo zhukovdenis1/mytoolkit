@@ -6,5 +6,12 @@
 
 @section('content')
     <h1>{{$note->title}}</h1>
+    <div class="note-menu">
+        <ul>
+            @foreach ($children as $item)
+                @include('partials.note-tree-item', ['item' => $item])
+            @endforeach
+        </ul>
+    </div>
     {!! $note->text !!}
 @endsection

@@ -38,8 +38,14 @@ export const NoteViewPage: React.FC = () => {
                 const noteData = noteResponse.data.note;
                 setData(noteData);
                 editor.setValue(noteData.text);
+            }
+            const parentsResponse = await api.safeRequest(`notes.parents`, { note_id: noteId });
+            if (parentsResponse.success) {
+                const parents = parentsResponse.data.data;
                 brcr.removeLast();
-                brcr.add(noteData.title, route('notes.view', { note_id: noteId })); // Теперь noteId точно string
+                parents.forEach((item: { id: number; name: string }) => {
+                    brcr.add(item.name, route('notes.view', { note_id: item.id }));
+                });
             }
             setLoading(false);
         };

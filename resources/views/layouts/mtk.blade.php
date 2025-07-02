@@ -23,11 +23,13 @@
                 <x-auth-link />
             </header>
             <main>
+                @if(!Route::is('home')) {{ Breadcrumbs::render('default') }} @else <!--ol class="brcr"></ol--> @endif
                 @yield('content')
             </main>
+            <footer></footer>
         </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="/js/jquery-3.7.1.min.js"></script>
     @yield('js')
 </body>
 </html>

@@ -4,14 +4,16 @@ use App\Modules\Main\Http\Controllers\Shared\MainController;
 use App\Modules\Music\Http\Controllers\Shared\SongController;
 use App\Modules\Note\Http\Controllers\Shared\NoteController;
 use App\Modules\Util\Http\Controllers\Shared\UtilController;
+use Diglactic\Breadcrumbs\Breadcrumbs;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 use App\Modules\Console\Http\Controllers\User\ConsoleController;
 use App\Modules\FileStorage\Http\Controllers\User\FileStorageController;
 
 Route::middleware([\App\Http\Middleware\WebAuthMiddleware::class])->group(function () {
+    Breadcrumbs::for('auto.breadcrumbs', function (BreadcrumbTrail $trail) {}); // Активируем автоматические breadcrumbs
     Route::get('', [MainController::class, 'index'])->name('home');
-    Route::get('a-{noteId}', [NoteController::class, 'detail'])/*->name('note.detail')*/;
+    Route::get('a-{noteId}', [NoteController::class, 'detail'])->name('note.detail');
     Route::any('cp', [MainController::class, 'copyPaste']);
     Route::get('myip', [MainController::class, 'myIp']);
     Route::get('music', [SongController::class, 'index']);

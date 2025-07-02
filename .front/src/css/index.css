@@ -26,7 +26,7 @@ body::-webkit-scrollbar-thumb {
 .wrapper {
     color: #000;
     background-color: #fff;
-    padding: 0 0px 70px 0;
+    padding: 0 0 70px 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -136,3 +136,34 @@ ul.list li .buttons {
     margin: 10px 0;
     }
 
+
+/*=== breadcrumbs ===*/
+ol.brcr {
+    font-size: 0.9em;
+    margin: 0px 0 25px 0;
+}
+
+.brcr li {
+    display: inline;
+}
+.brcr li a {
+    padding: 0 10px 0 0;
+    text-decoration: none;
+}
+.brcr li a:after {
+    content: '→';
+    color: #000;
+    padding-left: 10px;
+}
+
+.brcr {
+    margin:0 0 20px 0;
+    padding: 20px 0 0 0;
+}
+.brcr a {
+    color: #888;
+}
+.brcr a:hover {
+    color: #f60;
+}
+/*=== end breadcrumbs ===*/

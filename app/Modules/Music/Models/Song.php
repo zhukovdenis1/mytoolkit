@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float $speed Скорость (число с плавающей точкой)
  * @property string $title Название песни (строка)
  * @property string $text Текст песни (строка)
+ * @property string $hidden_text скрытый текст (строка)
  * @property Carbon|null $published_at Время публикации (дата и время, может быть null)
  * @property Carbon $created_at Время создания записи (дата и время)
  * @property Carbon $updated_at Время обновления записи (дата и время)
@@ -38,6 +39,7 @@ class Song extends BaseModel
         'speed',
         'title',
         'text',
+        'hidden_text',
         'published_at',
     ];
 

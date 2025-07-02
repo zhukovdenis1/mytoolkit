@@ -5,7 +5,6 @@ namespace Tests\Unit\Services;
 use App\Modules\Note\DTOs\User\CreateNoteRequestDTO;
 use App\Modules\Note\Models\Note;
 use App\Modules\Note\Models\NoteCategory;
-use App\Modules\Note\Services\NoteService;
 use PHPUnit\Framework\TestCase;
 
 class NoteServiceTest extends TestCase
@@ -40,7 +39,7 @@ class NoteServiceTest extends TestCase
         );
 
         // Сервис с моком модели
-        $noteService = new NoteService();
+        $noteService = new \App\Modules\Note\Services\User\NoteService();
 
         // Вызов метода createNote
         $response = $noteService->createNote($dto);

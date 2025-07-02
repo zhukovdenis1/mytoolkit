@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Modules\Shop\Models\ShopCategory;
 use App\Modules\Shop\Models\ShopCoupon;
 use App\Modules\Shop\Models\ShopProduct;
@@ -13,22 +15,22 @@ Breadcrumbs::for('home', function (BreadcrumbTrail $trail): void {
 });
 
 Breadcrumbs::for('cart', function (BreadcrumbTrail $trail): void {
-    $trail->push('Главная', route('home'));
+    $trail->parent('home');
     $trail->push('Корзина', route('cart'));
 });
 
 Breadcrumbs::for('wishlist', function (BreadcrumbTrail $trail): void {
-    $trail->push('Главная', route('home'));
+    $trail->parent('home');
     $trail->push('Избранное', route('wishlist'));
 });
 
 Breadcrumbs::for('oldDetail', function (BreadcrumbTrail $trail): void {
-    $trail->push('Главная', route('home'));
+    $trail->parent('home');
     $trail->push('Страница товара', route('home'));
 });
 
 Breadcrumbs::for('coupons', function (BreadcrumbTrail $trail): void {
-    $trail->push('Главная', route('home'));
+    $trail->parent('home');
     $trail->push('Купоны', route('coupons'));
 });
 
@@ -36,13 +38,12 @@ Breadcrumbs::for('coupon.detail', function (BreadcrumbTrail $trail, ShopCoupon|s
     if (is_string($coupon)) {
         return;
     }
-    $trail->push('Главная', route('home'));
-    $trail->push('Купоны', route('coupons'));
+    $trail->parent('coupons');
     $trail->push($coupon->title, route('home'));
 });
 
 Breadcrumbs::for('articles', function (BreadcrumbTrail $trail): void {
-    $trail->push('Главная', route('home'));
+    $trail->parent('home');
     $trail->push('Инфо', route('articles'));
 });
 
@@ -53,8 +54,7 @@ Breadcrumbs::for('article.detail', function (BreadcrumbTrail $trail, ShopArticle
     $helper = app(ShopArticleHelper::class);
     $name = $article->name ?? '';
     $name = $helper->replace($name);
-    $trail->push('Главная', route('home'));
-    $trail->push('Инфо', route('articles'));
+    $trail->parent('articles');
     $trail->push($name, route('home'));
 
 });

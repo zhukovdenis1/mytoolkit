@@ -45,6 +45,7 @@ Route::middleware([JwtMiddleware::class])->group(function () {
         Route::get('/', [NoteController::class, 'index'])->name('notes.search');
         Route::get('/get-dropdown', [NoteController::class, 'getDropDown']);
         Route::get('/tree', [NoteController::class, 'tree']);
+        Route::get('/parents', [NoteController::class, 'parents']);
         Route::post('/', [NoteController::class, 'store'])->name('notes.store');
         Route::get('{note}', [NoteController::class, 'show'])->where('note', '[0-9]+');
         Route::put('{note}/edit-content', [NoteController::class, 'updateContent']);

@@ -2,21 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Note\Services;
+namespace App\Modules\Note\Services\User;
 
 use App\Exceptions\ErrorException;
 use App\Models\BaseModel;
 use App\Modules\Note\Models\Note;
 use App\Modules\Note\Models\NoteCategory;
+use App\Modules\Note\Services\NoteServiceTrait;
 use App\Services\BaseService;
 use Carbon\Carbon;
-use Faker\Provider\Base;
 use Illuminate\Database\Eloquent\Builder;
 
 class NoteService extends BaseService
 {
+    use NoteServiceTrait;
     public function create(array $validatedData): Note
     {
+        $validatedData = $this->prepareForSave($validatedData);
         $note =  Note::create($validatedData);
 
         $note->categories()->sync($validatedData['categories']);
@@ -26,15 +28,9 @@ class NoteService extends BaseService
         return $note;
     }
 
-    public function update(BaseModel $model, array $attributes): BaseModel
+    public function update(Note|BaseModel $model, array $attributes): Note
     {
-        $published = $attributes['published'];
-        unset($attributes['published']);
-        if (is_null($model->published_at) && $published) {
-            $attributes['published_at'] = Carbon::now();
-        } elseif (!$published) {
-            $attributes['published_at'] = null;
-        }
+        $attributes = $this->prepareForSave($attributes, $model);
         $model->update($attributes);
 
         $categoriesChanged = false;
@@ -50,6 +46,19 @@ class NoteService extends BaseService
         //$note->refresh();
 
         return $model;
+    }
+
+    private function prepareForSave(array $attributes, ?Note $model = null): array
+    {
+        $published = $attributes['published'] ?? false;
+        unset($attributes['published']);
+        if (is_null($model?->published_at) && $published) {
+            $attributes['published_at'] = Carbon::now();
+        } elseif (!$published) {
+            $attributes['published_at'] = null;
+        }
+
+        return $attributes;
     }
 
     public function updateContent(array $validatedData, Note $note): Note
@@ -83,7 +92,7 @@ class NoteService extends BaseService
         return $notes->get()->toArray();
     }
 
-    public function tree(array $validatedData): array
+/*    public function tree(array $validatedData): array
     {
         $userId = $validatedData['user_id'] ?? 0;
         $parentId = isset($validatedData['parent_id']) ? intval($validatedData['parent_id']) : null;
@@ -131,6 +140,29 @@ class NoteService extends BaseService
 
         return $tree;
     }
+
+    public function parents(array $validatedData): array
+    {
+        $userId = (int) $validatedData['user_id'] ?? 0;
+        $noteId = (int) $validatedData['note_id'] ?? 0;
+
+        $data = [];
+        $currentChildId = [$noteId];
+
+        while (!empty($currentChildId)) {
+            $note = Note::where('user_id', $userId)
+                ->where('id', $currentChildId)
+                ->select('id', 'title as name', 'parent_id')
+                ->first()
+                ->toArray();
+
+            $data = array_merge($data, [$note]);
+
+            $currentChildId = $note['parent_id'];
+        }
+
+        return $data;
+    }*/
 
     public function findNotesPaginated(array $validatedData): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {

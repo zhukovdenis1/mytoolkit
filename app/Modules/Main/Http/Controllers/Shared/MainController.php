@@ -8,7 +8,6 @@ namespace App\Modules\Main\Http\Controllers\Shared;
 use App\Helpers\EditorHelper;
 use App\Http\Controllers\BaseController;
 use App\Modules\Note\Models\Note;
-use App\Modules\Note\Services\NoteService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 

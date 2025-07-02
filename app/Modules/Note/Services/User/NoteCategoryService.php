@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Note\Services;
+namespace App\Modules\Note\Services\User;
 use App\Modules\Note\Models\NoteCategory;
 use App\Services\BaseService;
 

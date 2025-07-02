@@ -8,12 +8,14 @@ namespace App\Modules\Note\Http\Controllers\Shared;
 use App\Helpers\EditorHelper;
 use App\Http\Controllers\BaseController;
 use App\Modules\Note\Models\Note;
-use App\Modules\Note\Services\NoteService;
+use App\Modules\Note\Services\Shared\NoteService;
 
 class NoteController extends BaseController
 {
-    public function __construct(private readonly EditorHelper $editorHelper)
-    {
+    public function __construct(
+        private readonly EditorHelper $editorHelper,
+        private readonly NoteService $noteService,
+    ) {
     }
 
     public function detail(string $noteId)
@@ -30,8 +32,11 @@ class NoteController extends BaseController
         $text = $this->editorHelper->jsonToHtml($note->text);
         $note->text = $text;
 
+        $children = $this->noteService->tree((int) $noteId);
+
         return view('note', [
-            'note' => $note
+            'note' => $note,
+            'children' => $children
         ]);
     }
 }

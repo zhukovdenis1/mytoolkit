@@ -11,6 +11,7 @@ use App\Modules\FileStorage\Http\Requests\StoreFileRequest;
 use App\Modules\FileStorage\Services\FileStorageService;
 use App\Modules\Note\Http\Requests\User\AddCategoriesToNoteRequest;
 use App\Modules\Note\Http\Requests\User\DropDownNoteRequest;
+use App\Modules\Note\Http\Requests\User\ParentNoteRequest;
 use App\Modules\Note\Http\Requests\User\SearchNoteRequest;
 use App\Modules\Note\Http\Requests\User\StoreNoteRequest;
 use App\Modules\Note\Http\Requests\User\TreeNoteRequest;
@@ -19,7 +20,7 @@ use App\Modules\Note\Http\Requests\User\UpdateNoteRequest;
 use App\Modules\Note\Http\Resources\User\NoteResource;
 use App\Modules\Note\Http\Resources\User\NoteResourceCollection;
 use App\Modules\Note\Models\Note;
-use App\Modules\Note\Services\NoteService;
+use App\Modules\Note\Services\User\NoteService;
 use Illuminate\Auth\Access\AuthorizationException;
 
 class NoteController extends BaseController
@@ -47,7 +48,18 @@ class NoteController extends BaseController
     {
         return new AnonymousResource(
             $this->noteService->tree(
-                $request->withUserId()->validated()
+                //$request->withUserId()->validated()
+                (int) $request->validated()['parent_id'],
+            )
+        );
+    }
+
+    public function parents(ParentNoteRequest $request): AnonymousResource
+    {
+        return new AnonymousResource(
+            $this->noteService->parents(
+                //$request->withUserId()->validated()
+                (int) $request->validated()['note_id']
             )
         );
     }

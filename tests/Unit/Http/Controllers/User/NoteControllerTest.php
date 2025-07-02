@@ -6,9 +6,8 @@ use App\Modules\Note\DTOs\User\CreateNoteResponseDTO;
 use App\Modules\Note\Http\Controllers\User\NoteController;
 use App\Modules\Note\Http\Requests\User\StoreNoteRequest;
 use App\Modules\Note\Http\Resources\User\NoteResource;
-use App\Modules\Note\Services\NoteService;
+use App\Modules\Note\Services\User\NoteService;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Auth;
 use PHPUnit\Framework\TestCase;
 
 class NoteControllerTest extends TestCase
