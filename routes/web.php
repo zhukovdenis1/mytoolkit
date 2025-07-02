@@ -16,7 +16,7 @@ Route::middleware([\App\Http\Middleware\WebAuthMiddleware::class])->group(functi
     Route::get('a-{noteId}', [NoteController::class, 'detail'])->name('note.detail');
     Route::any('cp', [MainController::class, 'copyPaste']);
     Route::get('myip', [MainController::class, 'myIp']);
-    Route::get('music', [SongController::class, 'index']);
+    Route::get('music', [SongController::class, 'index'])->name('music');
     Route::get('music/s-{song}', [SongController::class, 'detail'])->name('music.detail');
 });
 

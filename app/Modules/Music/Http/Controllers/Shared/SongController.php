@@ -21,34 +21,61 @@ use Illuminate\Support\Facades\Mail;
 
 class SongController extends Controller
 {
-    public function index(Request $request)
+    public function indexOld(Request $request)
     {
-        $songs = Song::with('singer')
+        $songs = Song::with(['singer' => function($query) {
+            $query->orderBy('name', 'asc');
+            }])
             ->whereNotNull('published_at')
             ->orderBy('title', 'asc')
-            ->get();
+            ->get()
+            ->groupBy('singer.name')
+            ->sortKeys(); // Сортировка групп по имени исполнителя
 
-        // Группируем результат по исполнителям
-        $grouped = $songs->groupBy('singer.name');
-
-        $result = $grouped->map(function ($songs, $singerName) {
+        $result = $songs->map(function ($songs, $singerName) {
             return [
                 'name' => $singerName,
-                'songs' => $songs->map(function ($song) {
+                'songs' => $songs->sortBy('title')->map(function ($song) {
                     return $song->only(['id', 'title', 'keys', 'key_orig', 'speed', 'text']);
-                })->toArray()
+                })->values()->toArray()
             ];
         })->values()->toArray();
 
-        return view('music/index', [
-            'data' => $result,
-        ]);
+        return view('music/index', ['data' => $result]);
+    }
+
+    public function index(Request $request)
+    {
+
+        $songs = Song::from('songs as s')
+            ->select('s.id', 's.title', 'ss.name as singer_name')
+            ->join('song_singers as ss', 's.singer_id', '=', 'ss.id')
+            ->whereNotNull('s.published_at')
+            ->orderBy('ss.name', 'asc')
+            ->orderBy('s.title', 'asc')
+            ->get();
+
+        $result = $songs->groupBy('singer_name')
+            ->map(function ($songs, $singerName) {
+                return [
+                    'name' => $singerName,
+                    'songs' => $songs->map(function ($song) {
+                        return [
+                            'id' => $song->id,
+                            'title' => $song->title
+                        ];
+                    })->toArray()
+                ];
+            })
+            ->values() // Сбрасываем ключи для последовательного массива
+            ->toArray();
+
+        return view('music/index', ['data' => $result]);
     }
 
     public function detail(Song $song)
     {
         $song->load('singer');
-
 
         $keys = $song->keys
             ? implode(' ', explode(',', $song->keys))

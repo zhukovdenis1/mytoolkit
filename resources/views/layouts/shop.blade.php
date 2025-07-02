@@ -61,7 +61,8 @@
         </main>
         <footer>Подборка товаров с <a href="{{route('articles')}}">Алиэкспресс</a> &copy;{{ date('Y') }}</footer>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--cript src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script-->
+    <script src="/shop/js/jquery-3.7.1.min.js"></script>
     <script src="/shop/js/visit.js"></script>
     <script src="/shop/js/jquery.colorbox-min.js"></script>
 

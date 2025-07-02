@@ -40,6 +40,10 @@ Breadcrumbs::for('default', function (BreadcrumbTrail $trail): void
     }
 });
 
+Breadcrumbs::for('home', function (BreadcrumbTrail $trail): void {
+    $trail->push('Главная', route('home'));
+});
+
 Breadcrumbs::for('note.detail', function (BreadcrumbTrail $trail, string $noteId): void
 {
     $noteService = app(\App\Modules\Note\Services\Shared\NoteService::class);
@@ -49,4 +53,16 @@ Breadcrumbs::for('note.detail', function (BreadcrumbTrail $trail, string $noteId
     foreach ($children as $child) {
         $trail->push($child['name'], route('note.detail', ['noteId' => $child['id']]));
     }
+});
+
+Breadcrumbs::for('music', function (BreadcrumbTrail $trail): void
+{
+    $trail->parent('home');
+    $trail->push('Песни', route('music'));
+});
+
+Breadcrumbs::for('music.detail', function (BreadcrumbTrail $trail, \App\Modules\Music\Models\Song $song): void
+{
+    $trail->parent('music');
+    $trail->push($song->title, '#');
 });
