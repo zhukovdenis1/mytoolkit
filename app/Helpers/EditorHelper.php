@@ -85,6 +85,9 @@ class EditorHelper
                     'cons' => array_filter(array_map('trim', explode("\n", $d['data']['cons'] ?? ''))),
                     'idAe' => $d['data']['id_ae'] ?? ''
                 ])->render();
+            } elseif ($d['type'] == 'code') {
+                //$html .= '<div style="position: relative"><textarea class="_hl2" mode="' . $d['data']['language'] . '">'.$d['data']['text'] . '</textarea></div>' . PHP_EOL;
+                $html .= '<div style="position: relative"><textarea class="_hl" mode="' . $d['data']['language'] . '">'.$d['data']['text'] . '</textarea></div>' . PHP_EOL;
             }
         }
 

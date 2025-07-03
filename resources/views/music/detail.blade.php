@@ -62,7 +62,7 @@
     b.chord {
         color: #A5B3FAFF;
         background: #f6f6f6;
-        margin-top: 15px;
+        margin-top: 20px;
         display: inline-block;
     }
     b.chord:first-line {

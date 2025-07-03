@@ -19,7 +19,7 @@ trait NoteServiceTrait
             // Запрашиваем все узлы текущего уровня
             $notes = Note::select('id', 'title as name', 'parent_id', 'text')
                 ->whereIn('parent_id', $currentLevelIds)
-                ->orderBy('name', 'asc')
+                ->orderBy('id', 'asc')
                 ->get()
                 ->toArray();
 
@@ -67,11 +67,11 @@ trait NoteServiceTrait
             $note = Note::select('id', 'title as name', 'parent_id')
                 ->where('id', $currentChildId)
                 ->first()
-                ->toArray();
+                ?->toArray();
 
             $data = array_merge($data, [$note]);
 
-            $currentChildId = $note['parent_id'];
+            $currentChildId = $note['parent_id'] ?? null;
         }
 
         return array_reverse($data);

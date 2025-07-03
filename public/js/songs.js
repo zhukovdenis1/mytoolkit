@@ -210,14 +210,14 @@ $(document).ready(function () {
             page.stop();
             $("#songsScroll" ).empty().html('&downdownarrows;');
         });
-        
+
         var speedK = $('.chords').eq(0).attr('data-speed');
 
         var speedK = speedK ? speedK : 1;
         //var scrollSpeed =$('#scrollSpeed').attr('value');
         //scrollSpeed = scrollSpeed ? parseInt(scrollSpeed) : 150000;
         var scrollLenght = parseInt($("footer").offset().top - $(window).height());
-        var scrollSpeed = parseInt(scrollLenght*80/speedK);
+        var scrollSpeed = parseInt(scrollLenght*100/speedK);
         //alert(scrollLenght);
         page.animate({ scrollTop:  scrollLenght}, scrollSpeed, "linear"/*function(){
                 page.off("scroll mousedown wheel DOMMouseScroll mousewheel keyup touchmove");

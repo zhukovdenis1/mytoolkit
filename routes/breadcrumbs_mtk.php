@@ -48,6 +48,9 @@ Breadcrumbs::for('note.detail', function (BreadcrumbTrail $trail, string $noteId
 {
     $noteService = app(\App\Modules\Note\Services\Shared\NoteService::class);
     $children = $noteService->parents((int) $noteId) ?? [];
+    if (!$children[0]) {
+        return;
+    }
     //$trail->parent('auto.path');
     Breadcrumbs::setDefault($trail, 1);
     foreach ($children as $child) {
