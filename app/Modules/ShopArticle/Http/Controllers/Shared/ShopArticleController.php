@@ -36,7 +36,7 @@ class ShopArticleController extends Controller
         }
 
         return view('Shop::shop.article', [
-            'product' => str_contains($article->code, 'review')
+            'product' => $article->code && str_contains($article->code, 'review')
                 ? ShopProduct::select('id', 'id_ae', 'hru', 'video', 'characteristics', 'reviews')
                     ->where('id' , str_replace('review-', '', $article->code))
                     ->first()

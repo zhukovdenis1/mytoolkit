@@ -75,17 +75,24 @@ class ShopController extends Controller
     public function sitemap(Request $request)
     {
 
-        $query = ShopProduct::query()
+        $products = ShopProduct::query()
             ->select('id', 'hru','created_at')
             ->whereNull('deleted_at')
             ->whereNotIn('category_0', [16002,1309])
             ->orderBy('id', 'desc')
-            ->limit(5000);
+            ->limit(5000)
+            ->get();
 
-        $products = $query->get();
+        $articles = ShopArticle::query()
+            ->select('id', 'uri', 'created_at')
+            ->whereNull('deleted_at')
+            ->orderBy('id', 'desc')
+            ->limit(1000)
+            ->get();
 
         return view('Shop::shop.sitemap', [
-            'products' => $products
+            'products' => $products,
+            'articles' => $articles
         ]);
     }
     public function more(Request $request)
