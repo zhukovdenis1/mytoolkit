@@ -30,7 +30,9 @@ class ShopCouponService extends BaseService
         $sortColumn = $validatedData['_sort'] ?? 'id';
         $order = $validatedData['_order'] ?? 'desc';
 
-        $coupons->where('date_to', '>=', Carbon::now());
+        $coupons
+            ->where('date_to', '>=', Carbon::now())
+            ->whereNotNull('url');
 
 
         if ($search) {

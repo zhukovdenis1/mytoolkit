@@ -32,6 +32,9 @@
     </noindex-->
         <span class="buy-button2 _aeLink" data-id="{{$p->id}}" data-id_ae="{{$p->id_ae}}">Купить на AliExpress</span>
     <a href="{{ route('coupons') }}" target="_blank" class="coupon-button">Купоны&nbsp;на&nbsp;скидку</a>
+    @if ($review)
+        <a href="{{route('article.detail', ['article' => $review, 'articleHru' => $review->uri])}}">Обзор на товар</a>
+    @endif
 </div>
 
 <div class="detail-inner">
@@ -112,7 +115,12 @@
     @if ($p->reviews)
         <div class="clearing"></div>
         <div class="reviews" id="reviews">
-            <h2>Отзывы</h2>
+            <h2>
+                Отзывы
+                @if ($review)
+                    <a style="font-size: 0.7em" href="{{route('article.detail', ['article' => $review, 'articleHru' => $review->uri])}}">(есть обзор на товар)</a>
+                @endif
+            </h2>
             <ul class="reviews">
                 @foreach ($p->reviews as $r)
                     @if (isset($r['reviewer']))
@@ -258,18 +266,7 @@
                     '<p><a href="/wishlist" style="font-size: 1.2em">Перейти в избранное</a></p></div>'
             });
         });
-
-
-        $('._aeLink').click(function() {
-            let id = $(this).attr('data-id');
-            let idae = $(this).attr('data-id_ae');
-            let goUrl = '/go?id='+ id;
-
-            $.colorbox({html:'<div style="margin:0 10px;text-align: center"><noindex>' +
-                    "<h2 style='margin:0;'>Ссылка на товар на Aliexpress: </h2>" +
-                    '<p><a onclick="goVisit(\'' + goUrl + '\');" class="_go" rel="nofollow" target="_blank" href="' + goUrl + '" style="font-size: 1.2em">https://aliexpress.ru/' + idae + '.html</a></p></noindex></div>'
-            });
-        })
     </script>
+    <script type="text/javascript" src="/shop/js/buy_link.js"></script>
 @endsection
 

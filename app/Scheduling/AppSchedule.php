@@ -13,7 +13,8 @@ class AppSchedule
     {
         //$schedule->command('shop:coupons')->dailyAt('01:00');
         //$schedule->exec('php parser/parser.php')->everyMinute();
-        $schedule->exec('php parser/parser.php')->everyThirtyMinutes();
+        $schedule->exec('php parser/parser.php')->everyTenMinutes();
+        $schedule->command('shop:refreshImportantProducts')->hourly();
         $schedule->command('shop:parseVkGroups')->everyTwoHours();
         $schedule->command('shop:post')->dailyAt('07:00');
         $schedule->command('shop:post')->dailyAt('13:00');

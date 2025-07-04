@@ -1,0 +1,19 @@
+https://2260.ru/console/shop/epnHot
+https://2260.ru/console/shop/coupons
+
+https://2260.ru/my/shop/parsing/add
+
+https://epn.bz/ru/cabinet/#/top/ali/buy
+Отсортировать по комиссии > Выбрать первую категорию -> скоприоровать таблицу из инспектора
+
+Запустить локально
+parser/parser_pikabu.bat
+
+---------------------
+composer require telegram-bot/api
+
+composer require diglactic/laravel-breadcrumbs
+
+composer require jaybizzle/crawler-detect
+
+composer require barryvdh/laravel-debugbar --dev

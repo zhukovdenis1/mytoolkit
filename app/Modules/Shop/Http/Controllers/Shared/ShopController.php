@@ -10,6 +10,7 @@ use App\Modules\Shop\Models\ShopCategory;
 use App\Modules\Shop\Models\ShopProduct;
 use App\Modules\Shop\Services\ShopCouponService;
 use App\Modules\Shop\Services\ShopService;
+use App\Modules\ShopArticle\Models\ShopArticle;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -232,8 +233,17 @@ class ShopController extends Controller
 
         $this->service->incViews($request, (int)$product->id);
 
-
-        return view('Shop::shop.detail', ['p' => $product, 'images' => $img, 'plnk' => 'http://ya.ru', 'vkAttachment' => $vkAttachment, 'recommends' => []]);
+        return view('Shop::shop.detail', [
+                'p' => $product,
+                'images' => $img,
+                'vkAttachment' => $vkAttachment,
+                'recommends' => [],
+                'review' => ShopArticle::query()
+                    ->select('id', 'uri')
+                    ->where('code', 'review-' . $product->id)
+                    ->first()
+            ]
+        );
     }
 
     public function aedetail(Request $request, $id_ae = 0)

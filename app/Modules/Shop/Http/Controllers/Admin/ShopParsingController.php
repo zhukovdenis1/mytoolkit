@@ -47,7 +47,7 @@ class ShopParsingController extends BaseController
                 if ($offer['available']) {
                     $queue[] = [
                         'source' => 'epn_top',
-                        'important' => $important ? 1 : 0,
+                        'important' => $important ? 10 : 0,
                         'id_ae' => (string)$offer['id'],
                         'created_at' => Carbon::now(),
                         'info' => json_encode([
@@ -68,7 +68,7 @@ class ShopParsingController extends BaseController
             if (is_numeric($strings[0])) {//просто id товаров
                 foreach ($strings as $id) {
                     $queue[] = [
-                        'important' => $important ? 1 : 0,
+                        'important' => $important ? 10 : 0,
                         'id_ae' => (string)$id,
                         'info' => json_encode([
                             'epnCategoryId' => $categoryId,
@@ -81,7 +81,7 @@ class ShopParsingController extends BaseController
                 foreach ($data as $row) {
                     $queue[] = [
                         'source' => 'epn_top',
-                        'important' => $important ? 1 : 0,
+                        'important' => $important ? 10 : 0,
                         'id_ae' => $row['id_ae'],
                         'info' => json_encode(array_merge(
                             [
