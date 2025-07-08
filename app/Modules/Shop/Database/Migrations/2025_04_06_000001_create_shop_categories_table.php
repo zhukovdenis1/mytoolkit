@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shop_category', function (Blueprint $table) {
+        Schema::create('shop_categories', function (Blueprint $table) {
             $table->id('inc')->autoIncrement();
             $table->integer('id_ae');
             $table->integer('id_epn')->nullable();
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shop_category');
+        Schema::dropIfExists('shop_categories');
     }
 };

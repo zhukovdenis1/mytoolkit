@@ -12,6 +12,7 @@ use App\Modules\Shop\Models\ShopCategory;
 use App\Modules\Shop\Models\ShopCoupon;
 use App\Modules\Shop\Models\ShopProduct;
 use App\Modules\Shop\Models\ShopProductParseQueue;
+use App\Modules\Shop\Models\ShopReview;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -50,7 +51,7 @@ class ShopParseController extends Controller
         return new AnonymousResource($data);
     }
 
-    public function setParsedProduct(SetParsedProductRequest $request)
+    public function setParsedProduct(SetParsedProductRequest $request): AnonymousResource
     {
         $newProduct = null;
         $errorMessage = '';
@@ -217,7 +218,7 @@ class ShopParseController extends Controller
         return new AnonymousResource($data);
     }
 
-    public function setParsedCoupon(Request $request)
+    public function setParsedCoupon(Request $request): AnonymousResource
     {
         $validated = $request->validate([
             'coupon_id' => ['required', 'integer'],
@@ -228,5 +229,78 @@ class ShopParseController extends Controller
         $coupon->save();
 
         return new AnonymousResource($coupon);
+    }
+
+    public function getProductForReviewsParse(Request $request): AnonymousResource
+    {
+        $data = ShopProduct::query()
+            ->whereNull('reviews_updated_at')
+            ->orderByDesc('epn_month_income')
+            ->first();
+
+        return new AnonymousResource($data);
+    }
+
+    public function setParsedReviewsTags(Request $request): AnonymousResource
+    {
+        $validated = $request->validate([
+            'product_id' => ['required', 'integer'],
+            'tags' => ['nullable', 'string'],
+        ]);
+        $product = ShopProduct::query()->findOrFail($validated['product_id']);
+        $extra = $product->extra_data;
+        $extra['reviews']['tags'] = $validated['tags'];
+        $product->extra_data = $extra;
+        $saved = $product->save();
+
+        return new AnonymousResource(['saved' => $saved]);
+    }
+
+    public function setParsedReviews(Request $request): AnonymousResource
+    {
+        $validated = $request->validate([
+            'product_id' => ['required', 'integer'],
+            'reviews' => ['nullable', 'string'],
+            'page' => ['required', 'integer'],
+            'limit' => ['required', 'integer'],
+        ]);
+        $product = ShopProduct::query()->findOrFail($validated['product_id']);
+        $extra = $product->extra_data;
+        $extra['reviews']['parse']['currentPage'] = (int) $validated['page'] + 1;
+        $product->extra_data = $extra;
+        $saved = $product->save();
+
+        $reviews = json_decode($validated['reviews'], true);
+
+        $inserted = 0;
+        $updated = 0;
+        $failed = 0;
+
+        foreach ($reviews as $reviewData) {
+            try {
+                // Проверяем существование записи по уникальному id_ae
+                $existingReview = ShopReview::where('id_ae', $reviewData['id_ae'])->first();
+
+                if ($existingReview) {
+                    // Обновляем существующую запись
+                    $result = $existingReview->update($reviewData);
+                    $result ? $updated++ : $failed++;
+                } else {
+                    // Создаем новую запись
+                    $result = ShopReview::create($reviewData);
+                    $result ? $inserted++ : $failed++;
+                }
+            } catch (\Exception $e) {
+                $failed++;
+                // Можно логировать ошибку:
+                // \Log::error('Review upsert failed: ' . $e->getMessage(), $reviewData);
+            }
+        }
+
+        return new AnonymousResource([
+            'inserted' => $inserted,
+            'updated' => $updated,
+            'failed' => $failed,
+        ]);
     }
 }

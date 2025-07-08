@@ -22,7 +22,7 @@ return [
     'debug_parse_url' => 'https://aliexpress.ru/item/1005001305461626.html',//если debug_source = url
     //'url' => 'https://mytoolkit.loc',
     'url' => 'https://deshevyi.ru',//'url' => 'https://mtk.deshevyi.ru',//урл для вызова скриптов
-    'url_shop' => 'https://deshevyi.ru',
+    'url_shop' => 'https://deshevyi.loc',
     'get_uri' => '/api/shop/get-product-for-parse',
     'set_uri' => '/api/shop/set-parsed-product',
     //'url_extra' => "https://aliexpress.ru/widget?uuid=$uReviews&&uuid=$uDesc&_bx-v=2.5.28",
@@ -35,6 +35,11 @@ return [
         'set_uri'  => '/api/shop/set-parsed-coupon',
         'pikabu_url' => 'https://promokod.pikabu.ru',
         'pikabu_debug_file' => 'debug_pikabu.txt',
+    ],
+    'reviews' => [
+        'get_uri'  => '/api/shop/get-product-for-reviews-parse',
+        'set_uri'  => '/api/shop/set-parsed-reviews',
+        'set_tags_uri'  => '/api/shop/set-parsed-reviews-tags',
     ]
 ];
 

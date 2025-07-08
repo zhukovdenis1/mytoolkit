@@ -48,7 +48,12 @@ class ShopProduct extends BaseModel
         'info',
         'not_found_at',
         'posted_at',
-        'updated_at'
+        'updated_at',
+        'deleted_at',
+        'reviews_updated_at',
+        'reviews_amount',
+        'articles_created_at',
+        'extra_data'
     ];
 
     protected $dates = [
@@ -56,7 +61,8 @@ class ShopProduct extends BaseModel
         'updated_at',
         'deleted_at',
         'not_found_at',
-        'posted_at'
+        'posted_at',
+        'reviews_updated_at',
     ];
 
     protected $casts = [
@@ -64,6 +70,7 @@ class ShopProduct extends BaseModel
         'reviews' => 'array',
         'video' => 'array',
         'info' => 'array',
+        'extra_data' => 'array',
     ];
 
 //    public static function filter($page = 1, $category = 0, $search = '')

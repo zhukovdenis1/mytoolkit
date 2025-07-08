@@ -45,7 +45,7 @@ export const ShopArticlesListPage: React.FC = () => {
             key: "name",
             sorter: true,
             render: (_, record) => (
-                <a href={`https://deshevyi.loc/a/${record.id}`} target="_blank">{record.name}</a>
+                <a href={`/a-${record.id}`} target="_blank">{record.name}</a>
             ),
         },
         {

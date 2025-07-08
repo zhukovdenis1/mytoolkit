@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('shop_product', function (Blueprint $table) {
+        Schema::create('shop_products', function (Blueprint $table) {
             $table->id()->autoIncrement();
             $table->string('id_ae',32);
             $table->string('id_vk_post',32)->nullable();
@@ -56,6 +56,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shop_product');
+        Schema::dropIfExists('shop_products');
     }
 };

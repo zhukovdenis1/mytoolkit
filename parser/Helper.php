@@ -79,7 +79,13 @@ class Helper
 
         if ($postParams)
         {
-            $postString = http_build_query($postParams);
+            if (is_array($postParams)) {
+                $postString = http_build_query($postParams);
+            } else {
+                curl_setopt ($ch, CURLOPT_POST, true);
+                $postString = $postParams;
+            }
+
             curl_setopt ($ch, CURLOPT_POSTFIELDS, $postString);
         }
 
