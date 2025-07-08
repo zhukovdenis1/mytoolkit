@@ -14,6 +14,7 @@ class AppSchedule
         //$schedule->command('shop:coupons')->dailyAt('01:00');
         //$schedule->exec('php parser/parser.php')->everyMinute();
         $schedule->exec('php parser/parser.php')->everyTenMinutes();
+        $schedule->exec('php parser/parser_reviews.php')->everyTwoMinutes();
         $schedule->command('shop:refreshImportantProducts')->hourly();
         $schedule->command('shop:parseVkGroups')->everyTwoHours();
         $schedule->command('shop:post')->dailyAt('07:00');

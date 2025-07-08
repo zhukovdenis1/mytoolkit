@@ -38,7 +38,8 @@ class RefreshImportantProductsCommand extends Command
 
         $product = ShopProduct::query()
             //->where('epn_month_income' > 3000)
-            ->where('updated_at', '<', Carbon::now()->subWeek(2))
+            //->where('updated_at', '<', Carbon::now()->subWeek(2))
+            ->where('updated_at', '<', Carbon::now()->subDay(1))
             ->orderBy('epn_month_income', 'desc')
             ->first();
 
