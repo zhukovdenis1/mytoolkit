@@ -47,6 +47,7 @@ try {
         $data = json_decode($json, true);
 
         $tags = empty($data['data']['tags']) ? null : $data['data']['tags'];
+
         $response = Helper::request($config['url_shop'] . $config['reviews']['set_tags_uri'],
             ['product_id' => $productId, 'tags' => $tags]
         );

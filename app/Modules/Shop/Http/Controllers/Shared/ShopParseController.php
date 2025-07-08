@@ -140,6 +140,17 @@ class ShopParseController extends Controller
                 ? mb_substr($this->stringHelper->buildUri($data['title_ae']), 0, 100)
                 : null;
 
+            $oldProduct = ShopProduct::where('id_ae', $data['id_ae'])->first();
+            if ($oldProduct) {
+                if ($oldProduct['price'] < $data['price']) {
+                    $data['price'] = $oldProduct['price'];
+                }
+
+                if ($oldProduct['price_from'] < $data['price_from']) {
+                    $data['price_from'] = $oldProduct['price_from'];
+                }
+            }
+
             $newProduct = ShopProduct::updateOrCreate(
                 [
                     'id_ae' => $data['id_ae']
@@ -249,7 +260,7 @@ class ShopParseController extends Controller
         ]);
         $product = ShopProduct::query()->findOrFail($validated['product_id']);
         $extra = $product->extra_data;
-        $extra['reviews']['tags'] = $validated['tags'];
+        $extra['reviews']['tags'] = $validated['tags'] ?? null;
         $extra['reviews']['parse']['currentPage'] = 1;//чтобы дальше парсились не теги, а отзывы
         $product->extra_data = $extra;
         $saved = $product->save();
@@ -292,6 +303,12 @@ class ShopParseController extends Controller
                 $failed++;
                 // Можно логировать ошибку:
                 // \Log::error('Review upsert failed: ' . $e->getMessage(), $reviewData);
+                $logger = Log::build([
+                    'driver' => 'single',
+                    'path' => storage_path('logs/parser-reviews-errors.log'),
+                ]);
+
+                $logger->error('Review upsert failed: ' . $e->getMessage(), $reviewData);
             }
         }
 

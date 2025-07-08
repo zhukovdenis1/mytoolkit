@@ -19,7 +19,7 @@ return [
     'debug_file' => 'debug_product.txt',
     'debug_extra_file' => 'debug_extra.txt',
     'debug_extra2_file' => 'debug_extra2.txt',
-    'debug_parse_url' => 'https://aliexpress.ru/item/1005001305461626.html',//если debug_source = url
+    'debug_parse_url' => 'https://aliexpress.ru/item/1005008081521104.html',//если debug_source = url
     //'url' => 'https://mytoolkit.loc',
     'url' => 'https://deshevyi.ru',//'url' => 'https://mtk.deshevyi.ru',//урл для вызова скриптов
     'url_shop' => 'https://deshevyi.ru',

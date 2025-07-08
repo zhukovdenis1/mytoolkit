@@ -199,23 +199,47 @@ class Helper
         $propsList = null;
         $i=0;
         while (!$propsList && $i<20) {
-            $propsList = $json["widgets"][$i]["state"]["data"]["groups"]["0"]["properties"] ?? null;
+            //$propsList = $json["widgets"][$i]["state"]["data"]["groups"]["0"]["properties"] ?? null;
+            $propsList = $json["widgets"][$i]["state"]["data"]["groups"] ?? null;
             $i++;
         }
 
         $props = '';
-        if (is_array($propsList) && count($propsList))
-        {
+
+        if (is_array($propsList) && count($propsList)) {
             $props = '<ul class="product-property-list">';
-            foreach ($propsList as $p)
-            {
-                $props .= '<li class="property-item">';
-                $props .= '<span class="propery-title">' . (isset($p['title']) ? $p['title'] : $p['name'])  . ':</span>';
-                $props .= '<span class="propery-des">' . $p['value'] . '</span>';
-                $props .= '</li>';
+
+            foreach ($propsList as $pGroup) {
+                if (!empty($pGroup['title'])) {
+                    $props .= '<li class="property-group">' . $pGroup['title'] . '</li>';
+                }
+                if (is_array($pGroup['properties']) && count($pGroup['properties']))
+                {
+                    $propsArr = $pGroup['properties'];
+                    foreach ($propsArr as $p)
+                    {
+                        $props .= '<li class="property-item">';
+                        $props .= '<span class="propery-title">' . (isset($p['title']) ? $p['title'] : $p['name'])  . ':</span>';//тут title нет, только name
+                        $props .= '<span class="propery-des">' . $p['value'] . '</span>';
+                        $props .= '</li>';
+                    }
+                }
+
             }
             $props .= '</ul>';
         }
+//            if (is_array($propsList) && count($propsList))
+//            {
+//                $props = '<ul class="product-property-list">';
+//                foreach ($propsList as $p)
+//                {
+//                    $props .= '<li class="property-item">';
+//                    $props .= '<span class="propery-title">' . (isset($p['title']) ? $p['title'] : $p['name'])  . ':</span>';
+//                    $props .= '<span class="propery-des">' . $p['value'] . '</span>';
+//                    $props .= '</li>';
+//                }
+//                $props .= '</ul>';
+//            }
 
         $data['characteristics'] = $props;
 
