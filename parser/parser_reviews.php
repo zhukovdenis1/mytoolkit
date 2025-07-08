@@ -6,7 +6,7 @@ require_once 'Helper.php';
 
 $config = include dirname(__FILE__).'/config.php';
 $output = PHP_EOL;
-$dbFile = dirname(__FILE__).'/db/parser.json';
+$dbFile = dirname(__FILE__).'/db/parser_reviews.json';
 $logFile = dirname(__FILE__).'/../storage/logs/parser-reviews-'.date('Y-m').'.log';
 
 $db = file_get_contents($dbFile);
@@ -19,6 +19,8 @@ $delay = 30*($dbCaptchaCounter+1);
 if ((strtotime($dbLastRequestDateTime) + $delay) > time()) {
     die('*');
 }
+
+$message = '';
 
 try {
     $json = Helper::request($config['url_shop'] . $config['reviews']['get_uri']);
@@ -37,7 +39,7 @@ try {
         throw new Exception('Product not found');
     }
 
-    if (empty($data['extra_data']['reviews']['tags'])) {
+    if (empty($data['extra_data']['reviews']['parse']['currentPage'])) {
         $json = Helper::getAeContent('https://aliexpress.ru/aer-jsonapi/review/v1/desktop/product-ml-tags', '{"productKey": {"id": "' . $idAe . '", "sourceId": 0}}');
 
         $data = json_decode($json, true);
@@ -50,7 +52,7 @@ try {
         $output .= date('H:i:s ') . ' ok: ' . ' ; id_ae='. $idAe . '; result(tags)' . $response;
 
     } else {
-        $pageNum = empty($data['extra_data']['reviews']['parse']['currentPage']) ? 1 : (int) $data['extra_data']['reviews']['currentParsePage'] + 1;
+        $pageNum = (int) $data['extra_data']['reviews']['currentPage'] + 1;
         $pageSize = empty($data['extra_data']['reviews']['parse']['pageSize']) ? 10 : (int) $data['extra_data']['reviews']['parse']['pageSize'];
 
         $json = Helper::getAeContent('https://aliexpress.ru/aer-jsonapi/review/v5/desktop/product-reviews?_bx-v=2.5.31', '{"productKey":{"id":"' . $idAe . '","sourceId":0},"pagination":{"pageNum": ' . $pageNum . ',"pageSize":' . $pageSize . '},"sort":1,"filters":[]}');
@@ -83,21 +85,21 @@ try {
                 'date' => formatReviewDate($review['root']['date'] ?? null),
                 'grade' => $review['root']['grade'] ?? null,
                 'text' => $review['root']['text'] ?? '',
-                'reviewer' => empty($review['reviewer']) ? null : json_encode([
+                'reviewer' => empty($review['reviewer']) ? null : [
                     'name' => $review['reviewer']['name'],
                     'avatar' => $review['reviewer']['avatar'],
                     'countryFlag' => $review['reviewer']['countryFlag'],
-                ], JSON_UNESCAPED_UNICODE),
-                'images' => $images ? json_encode($images, JSON_UNESCAPED_UNICODE) : null,
+                ],
+                'images' => $images ? $images : null,
                 'likesAmount' => $review['interaction']['likesAmount'] ?? 0,
                 'sort' => ($pageNum-1)*$pageSize + $i,
-                'additional' => empty($review['additional']) ? null : json_encode([
+                'additional' => empty($review['additional']) ? null : [
                     'id' => $review['additional']['id'],
                     'date' => formatReviewDate($review['additional']['date'] ?? null),
                     'grade' => $review['additional']['grade'],
                     'text' => $review['additional']['text'],
-                ], JSON_UNESCAPED_UNICODE),
-                'raw' => json_encode($review, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT),
+                ],
+                'raw' => $review,
             ];
         }
 
@@ -115,8 +117,18 @@ try {
     $output .= date('H:i:s ') . ' er: ' . $message ;
 }
 
+if ($message == 'Reviews request error') {
+    $dbCaptchaCounter++;
+} else {
+    $dbCaptchaCounter && $dbCaptchaCounter--;
+}
 
 echo $output;
+
+file_put_contents($dbFile, json_encode([
+    'captchaCount' => $dbCaptchaCounter,
+    'lastRequest' => date('Y-m-d H:i:s')
+]));
 
 
 function formatReviewDate(?string $dateString): ?string
