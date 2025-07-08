@@ -245,7 +245,7 @@ class ShopParseController extends Controller
     {
         $validated = $request->validate([
             'product_id' => ['required', 'integer'],
-            'tags' => ['nullable', 'string'],
+            'tags' => ['nullable', 'array'],
         ]);
         $product = ShopProduct::query()->findOrFail($validated['product_id']);
         $extra = $product->extra_data;
@@ -260,7 +260,7 @@ class ShopParseController extends Controller
     {
         $validated = $request->validate([
             'product_id' => ['required', 'integer'],
-            'reviews' => ['nullable', 'string'],
+            'reviews' => ['nullable', 'array'],
             'page' => ['required', 'integer'],
             'limit' => ['required', 'integer'],
         ]);

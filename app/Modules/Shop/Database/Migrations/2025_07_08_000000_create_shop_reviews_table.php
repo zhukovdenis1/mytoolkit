@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('shop_reviews', function (Blueprint $table) {
             $table->id('id')->autoIncrement();
-            $table->string('id_ae');
+            $table->string('id_ae', 32);
             $table->unsignedBigInteger('product_id');
             $table->timestamp('date')->nullable();
             $table->tinyInteger('grade')->nullable()->unsigned();
