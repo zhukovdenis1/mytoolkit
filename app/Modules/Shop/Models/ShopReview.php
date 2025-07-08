@@ -52,7 +52,7 @@ class ShopReview extends BaseModel
     protected $casts = [
         'id' => 'integer',
         'product_id' => 'integer',
-        'date' => 'datetime',
+        'date' => 'date',
         'grade' => 'integer',
         'reviewer' => 'array',
         'images' => 'array',

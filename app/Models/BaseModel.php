@@ -12,4 +12,9 @@ class BaseModel extends Model
 //    {
 //        return DTO::fromArray(array_merge($this->toArray(), $extraData));
 //    }
+
+    protected function asJson($value)
+    {
+        return json_encode($value, JSON_UNESCAPED_UNICODE);
+    }
 }

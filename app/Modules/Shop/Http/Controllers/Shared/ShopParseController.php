@@ -264,13 +264,10 @@ class ShopParseController extends Controller
             'page' => ['required', 'integer'],
             'limit' => ['required', 'integer'],
         ]);
-        $product = ShopProduct::query()->findOrFail($validated['product_id']);
-        $extra = $product->extra_data;
-        $extra['reviews']['parse']['currentPage'] = (int) $validated['page'] + 1;
-        $product->extra_data = $extra;
-        $saved = $product->save();
 
-        $reviews = json_decode($validated['reviews'], true);
+        $product = ShopProduct::query()->findOrFail($validated['product_id']);
+
+        $reviews = $validated['reviews'] ?? [];
 
         $inserted = 0;
         $updated = 0;
@@ -296,6 +293,18 @@ class ShopParseController extends Controller
                 // \Log::error('Review upsert failed: ' . $e->getMessage(), $reviewData);
             }
         }
+
+
+        $extra = $product->extra_data;
+        $extra['reviews']['parse']['currentPage'] = (int) $validated['page'] + 1;
+
+        if (empty($reviews) || intval($validated['page']) >= 200) {
+            $product->reviews_updated_at = Carbon::now();
+            $product->reviews_amount = ShopReview::where('product_id', $product->id)->count();
+            $extra['reviews']['parse']['currentPage'] = 0;
+        }
+        $product->extra_data = $extra;
+        $saved = $product->save();
 
         return new AnonymousResource([
             'inserted' => $inserted,

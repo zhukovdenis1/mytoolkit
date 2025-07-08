@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id')->autoIncrement();
             $table->string('id_ae', 32);
             $table->unsignedBigInteger('product_id');
-            $table->timestamp('date')->nullable();
+            $table->date('date')->nullable();
             $table->tinyInteger('grade')->nullable()->unsigned();
             $table->text('text');
             $table->json('reviewer')->nullable();
