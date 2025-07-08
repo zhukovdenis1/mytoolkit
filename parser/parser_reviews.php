@@ -13,7 +13,7 @@ $db = file_get_contents($dbFile);
 $dbJson = json_decode($db, true);
 
 $dbCaptchaCounter = $dbJson['captchaCount'] ?? 0;
-$dbLastRequestDateTime = $dbJson['lastRequest'] ?? 0;
+$dbLastRequestDateTime = $dbJson['lastRequest'] ?? '0';
 $delay = 30*($dbCaptchaCounter+1);
 
 if ((strtotime($dbLastRequestDateTime) + $delay) > time()) {
@@ -39,7 +39,9 @@ try {
         throw new Exception('Product not found');
     }
 
-    if (empty($data['extra_data']['reviews']['parse']['currentPage'])) {
+    $currentPage = $data['extra_data']['reviews']['parse']['currentPage'] ?? 0;
+
+    if (!$currentPage) {
         $json = Helper::getAeContent('https://aliexpress.ru/aer-jsonapi/review/v1/desktop/product-ml-tags', '{"productKey": {"id": "' . $idAe . '", "sourceId": 0}}');
 
         $data = json_decode($json, true);
@@ -52,7 +54,7 @@ try {
         $output .= date('H:i:s ') . ' ok: ' . ' ; id_ae='. $idAe . '; result(tags)' . $response;
 
     } else {
-        $pageNum = (int) $data['extra_data']['reviews']['currentPage'] + 1;
+        $pageNum = (int) $currentPage;
         $pageSize = empty($data['extra_data']['reviews']['parse']['pageSize']) ? 10 : (int) $data['extra_data']['reviews']['parse']['pageSize'];
 
         $json = Helper::getAeContent('https://aliexpress.ru/aer-jsonapi/review/v5/desktop/product-reviews?_bx-v=2.5.31', '{"productKey":{"id":"' . $idAe . '","sourceId":0},"pagination":{"pageNum": ' . $pageNum . ',"pageSize":' . $pageSize . '},"sort":1,"filters":[]}');

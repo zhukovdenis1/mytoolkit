@@ -250,6 +250,7 @@ class ShopParseController extends Controller
         $product = ShopProduct::query()->findOrFail($validated['product_id']);
         $extra = $product->extra_data;
         $extra['reviews']['tags'] = $validated['tags'];
+        $extra['reviews']['parse']['currentPage'] = 1;//чтобы дальше парсились не теги, а отзывы
         $product->extra_data = $extra;
         $saved = $product->save();
 
