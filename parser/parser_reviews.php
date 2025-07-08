@@ -24,8 +24,14 @@ try {
     $json = Helper::request($config['url_shop'] . $config['reviews']['get_uri']);
     $data = json_decode($json, true);
 
-    $idAe = $data['data']['id_ae'] ?? null;
-    $productId = $data['data']['id'] ?? null;
+    if (empty($data['data'])) {
+        throw new Exception('Product not found');
+    }
+
+    $data = $data['data'];
+
+    $idAe = $data['id_ae'] ?? null;
+    $productId = $data['id'] ?? null;
 
     if (!$idAe) {
         throw new Exception('Product not found');
@@ -36,8 +42,8 @@ try {
 
         $data = json_decode($json, true);
 
-        $tags = empty($data['data']['tags']) ? null : json_encode($data['data']['tags'], JSON_UNESCAPED_UNICODE) ;
-        $response = Helper::request($config['shop_url'] . $config['reviews']['set_tags_uri'],
+        $tags = empty($data['data']['tags']) ? null : $data['data']['tags'];
+        $response = Helper::request($config['url_shop'] . $config['reviews']['set_tags_uri'],
             ['product_id' => $productId, 'tags' => $tags]
         );
 
@@ -95,11 +101,11 @@ try {
             ];
         }
 
-        $response = Helper::request($config['shop_url'] . $config['reviews']['set_uri'],
+        $response = Helper::request($config['url_shop'] . $config['reviews']['set_uri'],
             ['product_id' => $productId, 'reviews' => $result, 'page' => $pageNum, 'limit' => $pageSize]
         );
 
-        $output .= date('H:i:s ') . ' ok: ' . ' ; id_ae='. $idAe . '; result' . $response;
+        $output .= date('H:i:s ') . ' ok: ' . ' ; id_ae='. $idAe . '; result: ' . $response;
     }
 
 

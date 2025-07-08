@@ -22,7 +22,7 @@ return [
     'debug_parse_url' => 'https://aliexpress.ru/item/1005001305461626.html',//если debug_source = url
     //'url' => 'https://mytoolkit.loc',
     'url' => 'https://deshevyi.ru',//'url' => 'https://mtk.deshevyi.ru',//урл для вызова скриптов
-    'url_shop' => 'https://deshevyi.loc',
+    'url_shop' => 'https://deshevyi.ru',
     'get_uri' => '/api/shop/get-product-for-parse',
     'set_uri' => '/api/shop/set-parsed-product',
     //'url_extra' => "https://aliexpress.ru/widget?uuid=$uReviews&&uuid=$uDesc&_bx-v=2.5.28",
