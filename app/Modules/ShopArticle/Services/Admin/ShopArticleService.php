@@ -23,6 +23,9 @@ class ShopArticleService extends BaseService
         if (is_string($validatedData['text'])) {
             $validatedData['text'] = json_decode($validatedData['text'], true);
         }
+        $validatedData['published_at'] = $validatedData['published_at']
+            ? Carbon::parse($validatedData['published_at'])
+            : null;
         $article =  ShopArticle::create($validatedData);
         $this->addProductsToParseQueue($validatedData['text'] ?? '', $article->id);
         return $article;
@@ -34,6 +37,9 @@ class ShopArticleService extends BaseService
         if (is_string($attributes['text'])) {
             $attributes['text'] = json_decode($attributes['text'], true);
         }
+        $attributes['published_at'] = $attributes['published_at']
+            ? Carbon::parse($attributes['published_at'])
+            : null;
         return parent::update($model, $attributes);
     }
 

@@ -27,6 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $note заметка (может быть null)
  * @property Carbon $created_at Время создания записи (дата и время)
  * @property Carbon $updated_at Время обновления записи (дата и время)
+ * @property Carbon $published_at Время публикации записи (дата и время)
  *
  */
 class ShopArticle extends BaseModel
@@ -47,12 +48,14 @@ class ShopArticle extends BaseModel
         'separation',
         'text',
         'note',
+        'published_at'
     ];
 
     protected $dates = [
         'created_at',
         'updated_at',
-        'deleted_at'
+        'deleted_at',
+        'published_at'
     ];
 
     protected $casts = [

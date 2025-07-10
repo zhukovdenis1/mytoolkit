@@ -86,6 +86,8 @@ class ShopController extends Controller
         $articles = ShopArticle::query()
             ->select('id', 'uri', 'created_at')
             ->whereNull('deleted_at')
+            ->where('site_id', app()->siteId())
+            ->where('published_at', '<', Carbon::now())
             ->orderBy('id', 'desc')
             ->limit(1000)
             ->get();
@@ -247,7 +249,9 @@ class ShopController extends Controller
                 'recommends' => [],
                 'review' => ShopArticle::query()
                     ->select('id', 'uri')
-                    ->where('code', 'review-' . $product->id)
+                    ->where('product_id', $product->id)
+                    ->where('site_id', 2)
+                    ->where('published_at', '<', Carbon::now())
                     ->first()
             ]
         );

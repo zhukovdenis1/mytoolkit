@@ -43,9 +43,9 @@ class GenArticlesCommand extends Command
      */
     public function handle()
     {
-        $numArticles = 2;
-        $wordsAmount = 2000;
-        $reviewsLimit = 100;
+        $numArticles = 8;
+        $wordsAmount = 4000;
+        $reviewsLimit = 200;
 
         $output = '';
 
@@ -118,12 +118,12 @@ class GenArticlesCommand extends Command
             return 0; // Возвращаем 0, если команда выполнена успешно
         }
 
-        $i = 1;
+        $siteId = 1;
         foreach ($contentData as $c) {
-            $i++;
+            $siteId++;
             ShopArticle::create(
                 [
-                    'site_id' => $i,
+                    'site_id' => $siteId,
                     'product_id' => $product->id,
                     'name' => $product->title_ae,
                     'h1' => $c['h1'] ?? null,
@@ -151,6 +151,7 @@ class GenArticlesCommand extends Command
                         ]
                     ],
                     'note' => 'deepseek',
+                    'published_at' => $this->genPublishDate($siteId)
                 ]
             );
         }
@@ -161,6 +162,34 @@ class GenArticlesCommand extends Command
 
         $this->info($output);
         return 0; // Возвращаем 0, если команда выполнена успешно
+    }
+
+    /**
+     *
+     * @param int $siteId - от 2 до 9
+     * @return Carbon
+     */
+    private function genPublishDate(int $siteId): ?Carbon
+    {
+        if ($siteId == 2) {
+            return Carbon::now();
+        }
+
+        if ($siteId == 8 || $siteId == 9) {
+            return null;
+        }
+
+        // Для siteId 3-9 генерируем случайную дату в пределах +2 месяцев
+        $now = Carbon::now();
+        $endDate = $now->copy()->addMonths(2);
+
+        // Разница в секундах между текущей датой и конечной датой
+        $diffInSeconds = $now->diffInSeconds($endDate);
+
+        // Генерируем случайное количество секунд в этом диапазоне
+        $randomSeconds = rand(0, (int) $diffInSeconds);
+
+        return $now->addSeconds($randomSeconds);
     }
 
 

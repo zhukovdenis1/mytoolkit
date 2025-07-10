@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Shop\Models\ShopProduct;
 use App\Modules\ShopArticle\Models\ShopArticle;
 use App\Modules\ShopArticle\Services\Shared\ShopArticleService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ShopArticleController extends Controller
@@ -23,7 +24,7 @@ class ShopArticleController extends Controller
             'page'        => ['nullable', 'integer', 'min:1', 'max:100'],
         ]);
 
-        $articles = $this->service->findPaginated($validated);
+        $articles = $this->service->findPaginated($validated, app()->siteId());
         return view('Shop::shop.articles', [
             'articles' => $articles,
         ]);
@@ -33,6 +34,10 @@ class ShopArticleController extends Controller
     {
         if ($articleHru != $article->uri) {
             return redirect()->route('article.detail', ['article' => $article, 'articleHru' => $article->uri], 301);
+        }
+
+        if ($article->site_id !== app()->siteId() || $article->published_at > Carbon::now()) {
+            abort(404);
         }
 
         return view('Shop::shop.article', [

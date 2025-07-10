@@ -15,7 +15,8 @@ export {
     TreeSelect,
     Upload,
     Dropdown,
-    Menu
+    Menu,
+    DatePicker
 } from "antd";
 
 export { Spin };

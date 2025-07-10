@@ -17,9 +17,10 @@ class AppSchedule
         $schedule->exec('php parser/parser_reviews.php')->everyTwoMinutes();
         $schedule->command('shop:refreshImportantProducts')->hourly();
         $schedule->command('shop:parseVkGroups')->everyTwoHours();
-        $schedule->command('shop:post')->dailyAt('07:00');
-        $schedule->command('shop:post')->dailyAt('13:00');
-        $schedule->command('shop:post')->dailyAt('17:00');
+        $schedule->command('shop:post')->dailyAt('04:00');
+        $schedule->command('shop:post')->dailyAt('10:00');
+        $schedule->command('shop:post')->dailyAt('14:00');
+        $schedule->command('shop:genArticles')->dailyAt('20:00');
         //$schedule->command('stats:clean --days=30')->daily();
     }
 }

@@ -7,6 +7,7 @@ use App\Helpers\EditorHelper;
 use App\Helpers\ShopArticleHelper;
 use App\Modules\ShopArticle\Models\ShopArticle;
 use App\Services\BaseService;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -16,9 +17,13 @@ class ShopArticleService extends BaseService
         private readonly ShopArticleHelper $articleHelper,
         private readonly EditorHelper $editorHelper
     ){}
-    public function findPaginated(array $validatedData): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    public function findPaginated(array $validatedData, int $siteId = 0): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        $articles = ShopArticle::query()->withoutTrashed()->whereNull('code');
+        $articles = ShopArticle::query()
+            ->withoutTrashed()
+            ->whereNull('code')
+            ->where('published_at', '<', Carbon::now())
+            ->where('site_id', $siteId);
 
 
         $search = empty($validatedData['search']) ? '' : $validatedData['search'];
@@ -55,7 +60,9 @@ class ShopArticleService extends BaseService
     public function prepareForDisplay(ShopArticle $article): ShopArticle
     {
         $article->title = $this->articleHelper->replace($article->title);
-        $article->text = $this->editorHelper->jsonToHtml($article->text, $article->title ?? '');
+        $article->text = is_string($article->text)
+            ? $this->editorHelper->jsonToHtml($article->text, $article->title ?? '')
+            : $this->editorHelper->arrayToHtml($article->text, $article->title ?? '');
         $article->text = $this->articleHelper->replace($article->text);
         $article->h1 = $this->articleHelper->replace($article->h1);
         $article->keywords = $this->articleHelper->replace($article->keywords);

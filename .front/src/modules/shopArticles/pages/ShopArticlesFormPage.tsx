@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {Button, Editor, Form, Input, message, Space} from "ui";
+import {Button, Editor, Form, Input, message, Space, DatePicker} from "ui";
+import moment from 'moment';
 import {api} from "@/services/api.tsx";
 import {route} from "api";
 import {useNavigate, useParams} from "react-router-dom";
@@ -24,6 +25,11 @@ export const ShopArticlesFormPage: React.FC = ({}) => {
                 response = await api.safeRequestWithAlert(`admin.shop.articles.show`, { article_id: articleId });
                 if (response.success) {
                     form.setFieldsValue(response.data.article);
+                    form.setFieldsValue({
+                        published_at: response.data.article?.published_at
+                            ? moment(response.data.article?.published_at)
+                            : null
+                    });
                     editor.setValue(response.data.article.text);
                     setLoading(false);
                 }
@@ -107,6 +113,24 @@ export const ShopArticlesFormPage: React.FC = ({}) => {
 
                 <Form.Item name="note" label="Note">
                     <Input.TextArea disabled={loading} />
+                </Form.Item>
+                <Form.Item name="product_id" label="ID product">
+                    <Input disabled={loading}/>
+                </Form.Item>
+                <Form.Item name="site_id" label="ID site">
+                    <Input disabled={loading}/>
+                </Form.Item>
+                <Form.Item
+                    name="published_at"
+                    label="Published date"
+                    initialValue={moment()} // текущая дата по умолчанию
+                >
+                    <DatePicker
+                        showTime
+                        format="DD.MM.YYYY HH:mm:ss"
+                        disabled={loading}
+                        style={{ width: '100%' }}
+                    />
                 </Form.Item>
                 <Form.Item>
                     <Space>

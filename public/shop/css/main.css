@@ -760,7 +760,8 @@ ul.prod-list li:hover a {
 
 .product-property-list{padding:10px 0}
 .product-property-list li{position:relative;width:50%;float:left;line-height:16px;padding:5px 0;list-style:none;margin-left:0}
-.product-property-list li .propery-title{float:left;display:block;color:#999;margin-right:10px;fon}
+.product-property-list li .propery-title{float:left;display:block;color:#999;margin-right:10px;}
+.product-property-list li.property-group{font-size: 0.9em;margin: 20px 0 10px 0;width: 100%;font-weight: bold}
 .product-property-list li .propery-des{display: block;overflow:hidden;text-overflow:ellipsis;margin-left: 10px;font-size: 0.9em}
 
 ul.reviews {

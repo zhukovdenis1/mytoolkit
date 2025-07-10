@@ -33,7 +33,7 @@ class ShopReview extends BaseModel
 
     protected $table = 'shop_reviews';
 
-    protected $connection = 'mysql_shop';
+    //protected $connection = 'mysql_shop';
 
     protected $fillable = [
         'id_ae',
@@ -47,6 +47,7 @@ class ShopReview extends BaseModel
         'sort',
         'additional',
         'raw',
+
     ];
 
     protected $casts = [
