@@ -43,7 +43,7 @@ class GenArticlesCommand extends Command
      */
     public function handle()
     {
-        $numArticles = 8;
+        $numArticles = 9;
         $wordsAmount = 4000;
         $reviewsLimit = 200;
 
@@ -131,7 +131,7 @@ class GenArticlesCommand extends Command
                     'keywords' => $c['keywords'] ?? null,
                     'description' => $c['description'] ?? null,
                     'uri' => $this->stringHelper->buildUri($c['h1'] ?: $product->title_ae),
-                    'code' => 'review-' . $product->id,
+                    //'code' => 'review-' . $product->id,
                     'text' => [
                         [
                             'type' => 'product',
@@ -175,11 +175,11 @@ class GenArticlesCommand extends Command
             return Carbon::now();
         }
 
-        if ($siteId == 8 || $siteId == 9) {
+        if ($siteId == 9 || $siteId == 10) {
             return null;
         }
 
-        // Для siteId 3-9 генерируем случайную дату в пределах +2 месяцев
+        // Для siteId 3-8 генерируем случайную дату в пределах +2 месяцев
         $now = Carbon::now();
         $endDate = $now->copy()->addMonths(2);
 

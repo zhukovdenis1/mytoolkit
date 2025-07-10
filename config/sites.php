@@ -41,13 +41,18 @@ return [
         'group' => 'shop'
     ],
     [
-        'hosts' => ['dzen1'],
+        'hosts' => ['shop8'],
         'id' => 8,
         'group' => 'shop'
     ],
     [
-        'hosts' => ['dzen2'],
+        'hosts' => ['dzen1'],
         'id' => 9,
+        'group' => 'shop'
+    ],
+    [
+        'hosts' => ['dzen2'],
+        'id' => 10,
         'group' => 'shop'
     ],
 
