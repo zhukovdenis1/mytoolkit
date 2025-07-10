@@ -26,6 +26,7 @@ const apiRoutes: Record<string, [string, string]> = {
 
     "main.links": ["main/links", "get"],
 
+    "admin.shop.siteList": ["admin/shop/site-list", "get"],
     "admin.shop.articles.list": ["admin/shop/articles", "get"],
     "admin.shop.articles.show": ["admin/shop/articles/:article_id", "get"],
     "admin.shop.articles.add": ["admin/shop/articles", "post"],

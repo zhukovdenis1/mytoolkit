@@ -20,6 +20,9 @@ class ShopArticleService extends BaseService
     public function create(array $validatedData): ShopArticle
     {
         $validatedData['uri'] = $this->generateUri($validatedData);
+        if (is_string($validatedData['text'])) {
+            $validatedData['text'] = json_decode($validatedData['text'], true);
+        }
         $article =  ShopArticle::create($validatedData);
         $this->addProductsToParseQueue($validatedData['text'] ?? '', $article->id);
         return $article;
@@ -28,6 +31,9 @@ class ShopArticleService extends BaseService
     public function update(BaseModel $model, array $attributes): BaseModel
     {
         $this->addProductsToParseQueue($attributes['text'] ?? '', $model->id);
+        if (is_string($attributes['text'])) {
+            $attributes['text'] = json_decode($attributes['text'], true);
+        }
         return parent::update($model, $attributes);
     }
 
@@ -79,6 +85,8 @@ class ShopArticleService extends BaseService
         //$notes = Note::where('user_id', $validatedData['user_id']);
 
         $search = $validatedData['search'] ?? null;
+        $productId = $validatedData['product_id'] ?? null;
+        $siteId = $validatedData['site_id'] ?? null;
         $page = empty($validatedData['_page']) ? 1 : intval($validatedData['_page']);
         $limit = empty($validatedData['_limit']) ? 10 : intval($validatedData['_limit']);
         $sortColumn = $validatedData['_sort'] ?? 'id';
@@ -90,6 +98,14 @@ class ShopArticleService extends BaseService
                 $query->where('title', 'like', '%' . $search . '%')
                     ->orWhere('text', 'like', '%' . $search . '%');
             });
+        }
+
+        if ($productId) {
+            $articles->where('product_id', $productId);
+        }
+
+        if ($siteId) {
+            $articles->where('site_id', $siteId);
         }
 
         $articles->orderBy($sortColumn, $order);

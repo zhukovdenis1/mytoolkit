@@ -15,7 +15,7 @@ class ShopProduct extends BaseModel
 
     protected $table = 'shop_products';
 
-    protected $connection = 'mysql_shop';
+    //protected $connection = 'mysql_shop';
 
     protected $fillable = [
         'id',

@@ -4,14 +4,11 @@ declare(strict_types = 1);
 
 namespace App\Console\Commands\Shop;
 
-use App\Helpers\StringHelper;
-use App\Modules\Shop\Models\ShopCoupon;
+
 use App\Modules\Shop\Models\ShopProduct;
 use App\Modules\Shop\Models\ShopProductParseQueue;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use App\Modules\Shop\Services\EpnApiClient;
-use Illuminate\Support\Facades\DB;
 
 class RefreshImportantProductsCommand extends Command
 {
@@ -38,8 +35,7 @@ class RefreshImportantProductsCommand extends Command
 
         $product = ShopProduct::query()
             //->where('epn_month_income' > 3000)
-            //->where('updated_at', '<', Carbon::now()->subWeek(2))
-            ->where('updated_at', '<', Carbon::now()->subDay(1))
+            ->where('updated_at', '<', Carbon::now()->subWeek(2))
             ->orderBy('epn_month_income', 'desc')
             ->first();
 
@@ -58,6 +54,7 @@ class RefreshImportantProductsCommand extends Command
         } else {
             $queue->update([
                 'important' => 1,
+                'blocked_until' => null,
                 'parsed_at' => null
             ]);
         }

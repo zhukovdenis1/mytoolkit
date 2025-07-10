@@ -157,6 +157,20 @@ return [
             'level' => 'error',
             'days' => 7,
         ],
+        'deepseek_requests' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/deepseek/requests.log'),
+            'level' => 'debug', // ловит debug, info, notice, warning, error, critical, alert, emergency
+            'days' => 360,
+        ],
+
+        // Логирование ТОЛЬКО ошибок (error и выше)
+        'deepseek_errors' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/deepseek/errors.log'),
+            'level' => 'error', // ловит только error, critical, alert, emergency
+            'days' => 30, // храним дольше, чем обычные логи
+        ],
     ],
 
 ];

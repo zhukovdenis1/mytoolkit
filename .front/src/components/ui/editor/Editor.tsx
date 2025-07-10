@@ -314,6 +314,10 @@ const EditorComponent: React.FC<EditorProps> = ({
     };
 
     editor.setValue = (newValue) => {
+        if (typeof newValue == 'object') {//object or string
+            newValue = JSON.stringify(newValue)
+        }
+
         const oldValue = editor.getValue();
         setValue(newValue);
         const newStructure = buildStructure(newValue);

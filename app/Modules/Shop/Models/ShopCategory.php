@@ -18,7 +18,7 @@ class ShopCategory extends BaseModel
 
     protected $table = 'shop_categories';
 
-    protected $connection = 'mysql_shop';
+    //protected $connection = 'mysql_shop';
 
     protected $primaryKey = 'id_ae';
 

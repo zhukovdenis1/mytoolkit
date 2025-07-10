@@ -151,6 +151,10 @@ class ShopParseController extends Controller
                 }
             }
 
+            if (!empty($data['reviews']) && is_string($data['reviews'])) {
+                $data['reviews'] = json_decode($data['reviews'], true);
+            }
+
             $newProduct = ShopProduct::updateOrCreate(
                 [
                     'id_ae' => $data['id_ae']

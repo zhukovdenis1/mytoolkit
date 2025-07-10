@@ -7,6 +7,7 @@ use App\Modules\Note\Http\Controllers\User\NoteCategoryController;
 use App\Modules\Note\Http\Controllers\User\NoteController;
 //use App\Modules\Product\Http\Controllers\User\ProductController;
 use App\Modules\Patient\Http\Controllers\PatientController;
+use App\Modules\Shop\Http\Controllers\Admin\ShopController;
 use App\Modules\Shop\Http\Controllers\Admin\ShopParsingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\JwtMiddleware;
@@ -66,6 +67,7 @@ Route::middleware([JwtMiddleware::class])->group(function () {
 Route::middleware([JwtAdminMiddleware::class])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::prefix('shop')->group(function () {
+            Route::get('/site-list', [ShopController::class, 'getSiteList']);
             Route::prefix('articles')->group(function () {
                 Route::get('/', [ShopArticleController::class, 'index']);
                 Route::post('/', [ShopArticleController::class, 'store']);

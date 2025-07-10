@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id Автоинкрементный ID (целое число)
+ * @property int $site_id
+ * @property int $product_id
  * @property string $title Заголовок заметки (строка)
  * @property string $keywords
  * @property string $description
@@ -33,6 +35,8 @@ class ShopArticle extends BaseModel
     use SoftDeletes;
 
     protected $fillable = [
+        'site_id',
+        'product_id',
         'title',
         'keywords',
         'description',

@@ -8,7 +8,6 @@ use App\Http\Middleware\RequestStatsMiddleware;
 use App\Scheduling\AppSchedule;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
-use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 //use App\Http\Middleware\DebugMode;
 
@@ -16,8 +15,19 @@ use Illuminate\Foundation\Configuration\Middleware;
 $domain = $_SERVER['HTTP_HOST'] ?? '';
 $isShop = $domain === 'deshevyi.loc' || $domain === 'deshevyi.ru';
 
-if ($isShop) {
+$siteConfig = include dirname(__FILE__) . '/../config/sites.php';
 
+$siteData = (function($siteConfig) {
+    $domain = $_SERVER['HTTP_HOST'] ?? '';
+    foreach ($siteConfig as $value) {
+        if (in_array($domain, $value['hosts'])) {
+            return $value;
+        }
+    }
+})($siteConfig);
+
+
+if ($siteData && $siteData['group'] == 'shop') {
     $app = Application::configure(basePath: dirname(__DIR__))
         ->withRouting(
             web: __DIR__ . '/../routes/web_shop.php',
@@ -39,8 +49,7 @@ if ($isShop) {
         ->withExceptions(new ExceptionHandler('shop'))
         ->create();
 
-        $app->macro('appId', fn() => 'shop');
-        return $app;
+        //$app->macro('appId', fn() => 'shop');
 } else {
     $app = Application::configure(basePath: dirname(__DIR__))
         ->withRouting(
@@ -66,10 +75,20 @@ if ($isShop) {
         })
         ->create();
 
-        $app->macro('appId', fn() => 'mtk');
+       // $app->macro('appId', fn() => 'mtk');
 
-        return $app;
+
 }
+
+if(!$app->runningInConsole() && empty($siteData)) {
+    die('Unknown site url');
+}
+
+$app->macro('siteGroup', fn() => $siteData['group'] ?? 'mtk');
+$app->macro('siteId', fn() => $siteData['id'] ?? 1);
+
+return $app;
+
 
 
 /*

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Table, Input, Button, Form, Space, message, Confirmable, ButtonLink } from "ui";
+import { Table, Input, Select, Button, Form, Space, message, Confirmable, ButtonLink } from "ui";
 import type { TablePaginationConfig, ColumnsType } from "@ui/types";
 import { EditOutlined, DeleteOutlined } from '@ui/icons';
 import { api, route } from "api";
 
 interface Params {
     search?: string;
+    site_id?: string;
+    product_id?: string;
     _page?: number;
     _limit?: number;
     _sort?: string;
@@ -16,6 +18,7 @@ interface Params {
 export const ShopArticlesListPage: React.FC = () => {
 
     const [data, setData] = useState([]);
+    const [siteList, setSiteList] = useState<{ id: number; name: string }[]>([]);
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState<TablePaginationConfig>({
         current: 1,
@@ -80,6 +83,7 @@ export const ShopArticlesListPage: React.FC = () => {
             total: Number(params._total) || 0,
         }));
         fetchData(params);
+
     }, [location.search]);
 
     const fetchData = async (params: Params = {}) => {
@@ -94,6 +98,11 @@ export const ShopArticlesListPage: React.FC = () => {
                 pageSize: response.data.meta.per_page,
                 total: response.data.meta.total,
             }));
+        }
+
+        const siteListResponse = await api.safeRequestWithAlert("admin.shop.siteList", {"group": "shop"});
+        if (siteListResponse.success) {
+            setSiteList(siteListResponse.data.data);
         }
 
         setLoading(false);
@@ -122,6 +131,8 @@ export const ShopArticlesListPage: React.FC = () => {
         //console.log(`${toPage}=${fromPage}`)
         const queryParams: Params = {
             search: values.search || "",
+            site_id: values.site_id || "",
+            product_id: values.product_id || "",
             _page: (toPage == fromPage) ? 1 : toPage,//сбрасыаем на 1, если преход не по страницам, а => меняются условия поиска
             _limit: pagination.pageSize,
             _sort: sorter.field || "",
@@ -137,6 +148,15 @@ export const ShopArticlesListPage: React.FC = () => {
             <Form form={form} layout="inline" onFinish={handleSearch} className="line">
                 <Form.Item name="search">
                     <Input placeholder="Search..." autoComplete="off" />
+                </Form.Item>
+                <Form.Item name="product_id">
+                    <Input placeholder="Product ID..." autoComplete="off" />
+                </Form.Item>
+                <Form.Item name="site_id">
+                    <Select
+                        placeholder="Select site"
+                        options={siteList.map(item => ({ value: item.id, label: item.name }))}
+                    />
                 </Form.Item>
                 <Form.Item>
                     <Space>
