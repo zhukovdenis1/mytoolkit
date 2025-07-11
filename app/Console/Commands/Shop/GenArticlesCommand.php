@@ -44,7 +44,7 @@ class GenArticlesCommand extends Command
     public function handle()
     {
         $numArticles = 2;
-        $symbolsAmount = 4000;
+        $symbolsAmount = 8000;
         $reviewsLimit = 100;
 
         $output = '';
