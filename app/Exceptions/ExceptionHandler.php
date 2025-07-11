@@ -34,26 +34,40 @@ class ExceptionHandler
         $this->logPrefix = $this->crawlerDetect->isCrawler($_SERVER['HTTP_USER_AGENT'] ?? null)
             ? 'bot_'
             : '';
+        //$this->registerErrorViewPaths();
 
     }
 
-    protected function registerErrorViewPaths(): void
+    public function registerErrorViewPaths(): void
     {
-        $dir = $this->siteName == 'shop' ? '/shop' : '';
-        // Устанавливаем путь к views в зависимости от сайта
-        $paths = collect(config('view.paths'))
-            ->map(function ($path) use ($dir) {
-                return "{$path}/errors{$dir}";
-            })
-            ->push(resource_path("views/errors{$dir}"))
-            ->all();
+         $dir = $this->siteName == 'shop' ? '/shop' : '';
+//
+//        // Устанавливаем путь к views в зависимости от сайта
+//        $paths = collect(config('view.paths'))
+//            ->map(function ($path) use ($dir) {
+//                return "{$path}/errors{$dir}";
+//            })
+//            ->push(resource_path("views/errors{$dir}"))
+//            ->all();
+//
+//        config(['view.paths' => $paths]);
+
+
+        $paths = array_merge(
+            config('view.paths', []),
+            [resource_path("views/errors{$dir}")]
+        );
 
         config(['view.paths' => $paths]);
+
+
+
     }
 
 
     public function __invoke(BaseExceptions $exceptions): BaseExceptions
     {
+        //$this->registerErrorViewPaths();
         $this->registerHandlers($exceptions);
         return $exceptions;
     }
@@ -89,7 +103,6 @@ class ExceptionHandler
                 ]);
             //}
 
-
             if ($isApiRequest) {
                 return $this->buildJsonResponse(
                     message: 'Internal Server Error',
@@ -99,6 +112,7 @@ class ExceptionHandler
             }
 
             // Для web-запросов позволим Laravel обрабатывать ошибки стандартным способом
+
             return null;
         });
     }
@@ -253,4 +267,5 @@ class ExceptionHandler
 
         return response()->json($response, $code, options: $this->jsonFlags);
     }
+
 }

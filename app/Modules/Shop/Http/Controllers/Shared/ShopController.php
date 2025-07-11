@@ -33,6 +33,7 @@ class ShopController extends Controller
             'id' => ['nullable', 'integer'],
             'coupon_id' => ['nullable', 'integer', 'min:1'],
             'search' => ['nullable', 'string', 'min:1', 'max:1000'],
+            'page_name' => ['nullable', 'string', 'min:1', 'max:1000'],
         ]);
 
         $url = $this->service->getGoRedirectUrl($validated, $request);

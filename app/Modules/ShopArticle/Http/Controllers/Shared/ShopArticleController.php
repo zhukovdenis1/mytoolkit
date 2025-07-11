@@ -32,12 +32,16 @@ class ShopArticleController extends Controller
 
     public function detail(ShopArticle $article, string $articleHru='')
     {
-        if ($articleHru != $article->uri) {
-            return redirect()->route('article.detail', ['article' => $article, 'articleHru' => $article->uri], 301);
+        if ($article->site_id !== app()->siteId()) {
+            abort(404);
         }
 
-        if ($article->site_id !== app()->siteId() || $article->published_at > Carbon::now()) {
+        if ($article->published_at > Carbon::now()) {
             abort(404);
+        }
+
+        if ($articleHru != $article->uri) {
+            return redirect()->route('article.detail', ['article' => $article, 'articleHru' => $article->uri], 301);
         }
 
         return view('Shop::shop.article', [

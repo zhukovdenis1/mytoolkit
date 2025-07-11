@@ -13,17 +13,18 @@ use Illuminate\Foundation\Configuration\Middleware;
 
 
 $domain = $_SERVER['HTTP_HOST'] ?? '';
-$isShop = $domain === 'deshevyi.loc' || $domain === 'deshevyi.ru';
+//$isShop = $domain === 'deshevyi.loc' || $domain === 'deshevyi.ru';
 
 $siteConfig = include dirname(__FILE__) . '/../config/sites.php';
 
-$siteData = (function($siteConfig) {
+$siteData = (function($siteConfig): ?array {
     $domain = $_SERVER['HTTP_HOST'] ?? '';
     foreach ($siteConfig as $value) {
         if (in_array($domain, $value['hosts'])) {
             return $value;
         }
     }
+    return null;
 })($siteConfig);
 
 
@@ -86,6 +87,7 @@ if(!$app->runningInConsole() && empty($siteData)) {
 
 $app->macro('siteGroup', fn() => $siteData['group'] ?? 'mtk');
 $app->macro('siteId', fn() => $siteData['id'] ?? 1);
+
 
 return $app;
 

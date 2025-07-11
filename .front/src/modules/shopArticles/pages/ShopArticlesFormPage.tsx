@@ -72,12 +72,12 @@ export const ShopArticlesFormPage: React.FC = ({}) => {
         <>
             <Form form={form} onFinish={handleSave}>
                 <Form.Item name="exit" hidden>
-                    <Input type="hidden" />
+                    <Input type="hidden"/>
                 </Form.Item>
-                <Form.Item name="name" label="Name" rules={[{ required: true, message: "Please input name!" }]}>
+                <Form.Item name="name" label="Name" rules={[{required: true, message: "Please input name!"}]}>
                     <Input disabled={loading}/>
                 </Form.Item>
-                <Form.Item name="h1" label="H1" rules={[{ required: true, message: "Please input h1 !" }]}>
+                <Form.Item name="h1" label="H1" rules={[{required: true, message: "Please input h1 !"}]}>
                     <Input disabled={loading}/>
                 </Form.Item>
                 <Form.Item name="title" label="Title">
@@ -96,23 +96,23 @@ export const ShopArticlesFormPage: React.FC = ({}) => {
                     <Input disabled={loading}/>
                 </Form.Item>
                 {isEditPage && <Editor
-                        editor={editor}
-                        disabled={loading}
-                        mode="edit"
-                        config = {{
-                            fileRoutes: {
-                                save: {route: 'admin.articles.files.add', data: {article_id: articleId}},
-                                delete: {route: 'files.delete'}
-                            },
-                            image: {
-                                storageId: 1
-                            }
-                        }}
-                    />
+                    editor={editor}
+                    disabled={loading}
+                    mode="edit"
+                    config={{
+                        fileRoutes: {
+                            save: {route: 'admin.articles.files.add', data: {article_id: articleId}},
+                            delete: {route: 'files.delete'}
+                        },
+                        image: {
+                            storageId: 1
+                        }
+                    }}
+                />
                 }
 
                 <Form.Item name="note" label="Note">
-                    <Input.TextArea disabled={loading} />
+                    <Input.TextArea disabled={loading}/>
                 </Form.Item>
                 <Form.Item name="product_id" label="ID product">
                     <Input disabled={loading}/>
@@ -129,16 +129,53 @@ export const ShopArticlesFormPage: React.FC = ({}) => {
                         showTime
                         format="DD.MM.YYYY HH:mm:ss"
                         disabled={loading}
-                        style={{ width: '100%' }}
+                        style={{width: '100%'}}
                     />
                 </Form.Item>
                 <Form.Item>
                     <Space>
-                        <Button disabled={loading} type="default" htmlType="submit" onClick={() => form.setFieldValue("exit", 0)}>Save</Button>
-                        <Button disabled={loading} type="primary" htmlType="submit" onClick={() => form.setFieldValue("exit", 1)}>Save & Exit</Button>
+                        <Button disabled={loading} type="default" htmlType="submit"
+                                onClick={() => form.setFieldValue("exit", 0)}>Save</Button>
+                        <Button disabled={loading} type="primary" htmlType="submit"
+                                onClick={() => form.setFieldValue("exit", 1)}>Save & Exit</Button>
                     </Space>
                 </Form.Item>
             </Form>
+
+            <p>
+                <a
+                    href={`https://deshevyi.ru/a-${articleId}`}
+                    target="_blank"
+                >
+                    Ссылка на статью
+                </a>
+            </p>
+            <p>
+                Ссылка на товар:{" "}
+                <a
+                    href={`https://deshevyi.ru/p-${form.getFieldValue('product_id') || ''}/`}
+                    target="_blank"
+                >
+                    https://deshevyi.ru/p-{form.getFieldValue('product_id') || ''}/
+                </a>
+            </p>
+            <p>
+                <a
+                    href={`https://deshevyi.ru/go?id=${form.getFieldValue('product_id') || ''}`}
+                    target="_blank"
+                >
+                    Ссылка на товар aliexpress
+                </a>
+            </p>
+            <p>
+                <a
+                    href={`https://deshevyi.ru/go?id=${form.getFieldValue('product_id') || ''}&page_name=reviews`}
+                    target="_blank"
+                >
+                    Ссылка на отзывы aliexpress
+                </a>
+            </p>
+
         </>
     );
 

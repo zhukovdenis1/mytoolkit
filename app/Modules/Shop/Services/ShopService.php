@@ -54,6 +54,7 @@ class ShopService extends BaseService
         $aliProductId = $validated['aid'] ?? 0;
         $productId = $validated['id'] ?? 0;
         $search = $validated['search'] ?? '';
+        $pageName = $validated['page_name'] ?? null;
         //$title = $validated['title'] ?? '';
         $couponId = intval($validated['coupon_id'] ?? 0);
 
@@ -83,7 +84,11 @@ class ShopService extends BaseService
                     $redirectUrl = 'https://aliexpress.ru/wholesale?SearchText=' . urlencode($searchText);
                 }
             } elseif ($product) {
-                $redirectUrl = 'https://aliexpress.ru/item/' . $product->id_ae . '.html';
+                if ($pageName == 'reviews') {
+                    $redirectUrl = 'https://aliexpress.ru/item/' . $product->id_ae . '/reviews';
+                } else {
+                    $redirectUrl = 'https://aliexpress.ru/item/' . $product->id_ae . '.html';
+                }
             } elseif ($aliProductId) {
                 $redirectUrl = 'https://aliexpress.ru/item/' . $aliProductId . '.html';
             }
