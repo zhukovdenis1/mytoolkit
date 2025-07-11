@@ -43,9 +43,9 @@ class GenArticlesCommand extends Command
      */
     public function handle()
     {
-        $numArticles = 9;
-        $wordsAmount = 4000;
-        $reviewsLimit = 200;
+        $numArticles = 2;
+        $symbolsAmount = 4000;
+        $reviewsLimit = 100;
 
         $output = '';
 
@@ -70,8 +70,37 @@ class GenArticlesCommand extends Command
             ->limit($reviewsLimit)
             ->get();
 
+        $articles = ShopArticle::query()
+            ->select(['site_id'])
+            ->where('product_id', $product->id)
+            ->where('code', 'like', 'review-%')
+            ->limit($reviewsLimit)
+            ->get()
+            ->toArray();
 
-       $message = $this->getMessage($product, $reviews, $wordsAmount, $numArticles);
+        //var_dump(config('sites'));die;
+
+        $nextSitesIds = (function(array $existsIdList, int $numArticles) {
+            $sites = config('sites');
+            $allIdList = [];
+            foreach ($sites as $s) {
+                if ($s['group'] == 'shop') {
+                    $allIdList[] = $s['id'];
+                }
+            }
+            $rest = array_diff($allIdList, $existsIdList);
+            return array_slice($rest, 0, $numArticles);;
+        })(array_column($articles, 'site_id'), $numArticles);
+
+        $numArticles = count($nextSitesIds);
+
+        if ($numArticles == 0) {
+            $product->update(['articles_created_at' => Carbon::now()]);
+            $this->info('All articles created for product_id=' . $product->id);
+            return 0;
+        }
+
+       $message = $this->getMessage($product, $reviews, $symbolsAmount, $numArticles);
 
         //$dsResponse = [];
        $dsResponse = $this->deepSeekHelper->chat($message);
@@ -118,9 +147,10 @@ class GenArticlesCommand extends Command
             return 0; // Возвращаем 0, если команда выполнена успешно
         }
 
-        $siteId = 1;
+        $i = 0;
         foreach ($contentData as $c) {
-            $siteId++;
+            $siteId = $nextSitesIds[$i];
+            $i++;
             ShopArticle::create(
                 [
                     'site_id' => $siteId,
@@ -131,7 +161,7 @@ class GenArticlesCommand extends Command
                     'keywords' => $c['keywords'] ?? null,
                     'description' => $c['description'] ?? null,
                     'uri' => $this->stringHelper->buildUri($c['h1'] ?: $product->title_ae),
-                    //'code' => 'review-' . $product->id,
+                    'code' => 'review-' . $product->id,
                     'text' => [
                         [
                             'type' => 'product',
@@ -156,7 +186,7 @@ class GenArticlesCommand extends Command
             );
         }
 
-        $product->update(['articles_created_at' => Carbon::now()]);
+
 
         $output .= 'id = ' . $product->id . '; count =' . count($contentData) . ' ; title_ae=' . $product->title_ae;
 
@@ -193,7 +223,7 @@ class GenArticlesCommand extends Command
     }
 
 
-    private function getMessage(ShopProduct $product, Collection $reviews, int $wordsAmount, int $numArticles): string
+    private function getMessage(ShopProduct $product, Collection $reviews, int $symbolsAmount, int $numArticles): string
     {
         $tagsText = '';
         if (isset($product->extra_data['reviews']['tags'])) {
@@ -226,7 +256,7 @@ class GenArticlesCommand extends Command
 Оптимизируй текст под низкочастотные запросы, чтобы обзор был в топе выдачи поисковиков по ним.
 Оформи в виде статьи с заголовком, введением и тд. (не даелай ссылки в виде цифр, когда отзывы цитируешь)
 Отдельно сформируй мета теги: title, description,keywords и h1 для страницы (ниже приведена структура, вставь их в соответствующие поля)
-Старайся сделать текст уникальным для поисковиков. Тебе нужно будет составить ' . $numArticles . ' статей на одну тему, но каждая из них должна быть уникальна для поисковиков
+Старайся сделать текст уникальным для поисковиков. Тебе нужно будет составить ' . $numArticles . ' статьи(ю)(ей) на одну тему, но каждая из них должна быть уникальна для поисковиков. (Раньше вероятно уже были подбный запрос от меня на статью на даннюу тему, поэтому, если можно, тоже учитывай это и не генерируй дубликат т.е. не бери из кеша рузультат)
 Также выдели кратко основные плюсы и минусы. 5-10 плюсов ($props) и 1-4 минуса ($cons) в параметрах props и cons стурутуры ответа
 Цель статьи - продать товар, поэтому больше акцентируй внимание на достоинствах и поменьше выделяй недостатки и как-то смягчай их.
 
@@ -254,7 +284,7 @@ $product_id - id товара, одно для всех: ' . $product->id . '
 Все остальные параметры индивидуальны для каждой статьи.
 $h1 - h1 для страницы
 $title, $description, $keyworks - мета теги в head.
-$text - текст (html) самой статьи, не менее ' . $wordsAmount . 'слов
+$text - текст (html) самой статьи. Размер статьи должен быть не менее ' . $symbolsAmount . ' знаков. (Внимание. Это очень важно чтобы размер был не менее  ' . $symbolsAmount . ' знаков)
 $props - преимущества товара (просто текст, разделенный переводом строки)
 $cons - недостатки товара (просто текст, разделенный переводом строки)
 
