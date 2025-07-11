@@ -30,7 +30,7 @@ class ShopArticleController extends Controller
         ]);
     }
 
-    public function detail(ShopArticle $article, string $articleHru='')
+    public function detail(ShopArticle $article, string $articleHru='', Request $request)
     {
         if ($article->site_id !== app()->siteId()) {
             abort(404);

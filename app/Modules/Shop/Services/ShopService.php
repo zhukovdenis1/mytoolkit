@@ -246,7 +246,7 @@ class ShopService extends BaseService
         $offset = $limit * ($page - 1);
 
         $query = ShopProduct::query()
-            ->select('id', 'title', 'title_ae', 'photo', 'rating', 'price', 'price_from', 'price_to', 'hru')
+            ->select('id', 'title', 'title_ae', 'photo', 'rating', 'price', 'price_from', 'price_to', 'hru', 'category_0')
             //->whereNull('deleted_at') soft delete автоматически это делает
             //->whereNull('not_found_at')
             //->whereNotIn('category_0', [16002,1309])
@@ -289,7 +289,7 @@ class ShopService extends BaseService
     public function getPopular(): Collection
     {
         $query = ShopProduct::query()
-            ->select('id', 'title', 'title_ae', 'photo', 'rating', 'price', 'price_from', 'price_to', 'hru')
+            ->select('id', 'title', 'title_ae', 'photo', 'rating', 'price', 'price_from', 'price_to', 'hru', 'category_0')
             //->whereNull('not_found_at')
             ->orderBy('epn_month_income', 'desc')
             ->limit(24);

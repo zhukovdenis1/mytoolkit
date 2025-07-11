@@ -195,6 +195,10 @@ class ShopController extends Controller
 //
 //        $product = ShopProduct::query()->findOrFail($productId);
 
+        if (in_array($product->category_0, [16002,1309])) {
+            abort(404);
+        }
+
         if (is_string($product->reviews)) {
             $product['reviews'] = json_decode($product->reviews);
         }

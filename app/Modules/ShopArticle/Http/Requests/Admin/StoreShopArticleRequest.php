@@ -24,7 +24,7 @@ class StoreShopArticleRequest extends BaseFormRequest
             'separation' => 'nullable|string|max:255',
             'site_id' => 'nullable|integer',
             'product_id' => 'nullable|integer',
-            'published_at' => 'nullable|date_format:Y-m-d,Y-m-d H:i:s,d.m.Y,d.m.Y H:i:s',
+            'published_at' => 'nullable|date_format:Y-m-d\TH:i:s.v\Z,Y-m-d,Y-m-d H:i:s,d.m.Y,d.m.Y H:i:s',
         ];
     }
 }
