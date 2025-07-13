@@ -25,9 +25,6 @@ class AppSchedule
         $schedule->command('shop:genArticles')->dailyAt('18:00');
         $schedule->command('shop:genArticles')->dailyAt('18:30');
         $schedule->command('shop:genArticles')->dailyAt('19:00');
-        $schedule->command('shop:genArticles')->dailyAt('19:30');
-        $schedule->command('shop:genArticles')->dailyAt('20:00');
-        $schedule->command('shop:genArticles')->dailyAt('20:30');
         //$schedule->command('stats:clean --days=30')->daily();
     }
 }
