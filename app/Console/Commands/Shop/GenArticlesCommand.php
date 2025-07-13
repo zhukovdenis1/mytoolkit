@@ -43,6 +43,9 @@ class GenArticlesCommand extends Command
      */
     public function handle()
     {
+        $logMessage = '[' . now()->toDateTimeString() . '] Command shop:genArticles executed' . PHP_EOL;
+        file_put_contents(storage_path('logs/genArticlesRequest.log'), $logMessage, FILE_APPEND);
+
         $numArticles = 2;
         $symbolsAmount = 10000;
         $reviewsLimit = 100;
@@ -111,9 +114,22 @@ class GenArticlesCommand extends Command
 
         //var_dump($content);
         $contentData = [];
-        $content = str_replace('```json', '', $content);
-        $content = str_replace('```', '', $content);
-        $content = trim($content);
+
+//        $content = str_replace('```json', '', $content);
+//        $content = str_replace('```', '', $content);
+//        $content = trim($content);
+
+        $content = (function($content) {
+            $startPos = strpos($content, '```json');
+            if ($startPos === false) return $content;
+
+            $startPos += strlen('```json'); // Пропускаем сам маркер
+            $endPos = strpos($content, '```', $startPos);
+
+            return ($endPos !== false)
+                ? trim(substr($content, $startPos, $endPos - $startPos))
+                : substr($content, $startPos);
+        })($content);
 
         try {
             if (empty($content)) {
