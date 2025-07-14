@@ -22,9 +22,9 @@ class AppSchedule
         $schedule->command('shop:post')->dailyAt('14:00');
         $schedule->command('shop:genArticles')->dailyAt('17:00');
         $schedule->command('shop:genArticles')->dailyAt('17:30');
-        $schedule->command('shop:genArticles')->dailyAt('18:00');
-        $schedule->command('shop:genArticles')->dailyAt('18:30');
-        $schedule->command('shop:genArticles')->dailyAt('19:00');
+//        $schedule->command('shop:genArticles')->dailyAt('18:00');
+//        $schedule->command('shop:genArticles')->dailyAt('18:30');
+//        $schedule->command('shop:genArticles')->dailyAt('19:00');
         //$schedule->command('stats:clean --days=30')->daily();
     }
 }

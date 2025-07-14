@@ -1,7 +1,7 @@
 @extends('layouts.shop')
 
 @section('title', $article->title ?? $article->h1)
-@section('keywords', $article->keyworkds)
+@section('keywords', $article->keywords)
 @section('description', $article->description)
 
 @section('content')

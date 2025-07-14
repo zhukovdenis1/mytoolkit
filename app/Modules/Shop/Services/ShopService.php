@@ -296,4 +296,9 @@ class ShopService extends BaseService
 
         return $query->get();
     }
+
+    public function prepareArticleForDisplay(ShopArticle $article): ShopArticle
+    {
+        return $this->articleService->prepareForDisplay($article);
+    }
 }

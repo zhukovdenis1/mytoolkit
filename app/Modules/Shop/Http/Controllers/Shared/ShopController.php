@@ -88,6 +88,7 @@ class ShopController extends Controller
             ->select('id', 'uri', 'created_at')
             ->whereNull('deleted_at')
             ->where('site_id', app()->siteId())
+            ->whereNull('code')
             ->where('published_at', '<', Carbon::now())
             ->orderBy('id', 'desc')
             ->limit(1000)
@@ -247,17 +248,22 @@ class ShopController extends Controller
 
         $this->service->incViews($request, (int)$product->id);
 
+        $article = ShopArticle::query()
+            //->select('id', 'uri')
+            ->select('*')
+            ->where('product_id', $product->id)
+            ->where('site_id', 2)
+            ->where('published_at', '<', Carbon::now())
+            ->first();
+
+
         return view('Shop::shop.detail', [
                 'p' => $product,
                 'images' => $img,
                 'vkAttachment' => $vkAttachment,
                 'recommends' => [],
-                'review' => ShopArticle::query()
-                    ->select('id', 'uri')
-                    ->where('product_id', $product->id)
-                    ->where('site_id', 2)
-                    ->where('published_at', '<', Carbon::now())
-                    ->first()
+                'review' => $article,
+                'reviewArticle' => $article ? $this->service->prepareArticleForDisplay($article) : null,
             ]
         );
     }

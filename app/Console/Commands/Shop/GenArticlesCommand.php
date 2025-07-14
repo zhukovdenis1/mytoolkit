@@ -46,7 +46,7 @@ class GenArticlesCommand extends Command
         $logMessage = '[' . now()->toDateTimeString() . '] Command shop:genArticles executed' . PHP_EOL;
         file_put_contents(storage_path('logs/genArticlesRequest.log'), $logMessage, FILE_APPEND);
 
-        $numArticles = 6;
+        $numArticles = 8;
         $symbolsAmount = 8000;
         $reviewsLimit = 150;
 

@@ -1,10 +1,26 @@
 @extends('layouts.shop')
 
 @section('title')
-    <x-shop::product_title :product="$p" />— купить онлайн
+    @if ($reviewArticle)
+        {{$reviewArticle->title ?? $reviewArticle->h1}}
+    @else
+        <x-shop::product_title :product="$p" />— купить онлайн
+    @endif
 @endsection
-@section('keywords', $p->title_ae . ',' . ' Недорогой интернет-магазин DealExtreme, Dealextreme на русском, ' . $p->title_source)
-@section('description', $p->title_ae . '. Купить недорого. '. $p->title_source)
+@section('keywords')
+    @if ($reviewArticle)
+        {{$reviewArticle->keywords}}
+    @else
+        {{$p->title_ae . ',' . ' Недорогой интернет-магазин' . $p->title_source}}
+    @endif
+@endsection
+@section('description')
+    @if ($reviewArticle)
+        {{$reviewArticle->description}}
+    @else
+        {{$p->title_ae . '. Купить недорого. '. $p->title_source}}
+    @endif
+@endsection
 
 @section('content')
 <div class="detail">
@@ -32,16 +48,20 @@
     </noindex-->
         <span class="buy-button2 _aeLink" data-id="{{$p->id}}" data-id_ae="{{$p->id_ae}}">Купить на AliExpress</span>
     <a href="{{ route('coupons') }}" target="_blank" class="coupon-button">Купоны&nbsp;на&nbsp;скидку</a>
-    @if ($review)
-        <a href="{{route('article.detail', ['article' => $review, 'articleHru' => $review->uri])}}">Обзор на товар</a>
+    @if ($reviewArticle)
+            <a href="#review">Обзор на товар</a>
     @endif
 </div>
 
 <div class="detail-inner">
 
     <div id="vkGroup" class="vk-group-widget"></div>
+    @if ($reviewArticle)
+        <h1>{{$reviewArticle->h1}}</h1>
+    @else
+        <h1>{{$p->title ?: $p->title_ae}}</h1>
+    @endif
 
-    <h1>{{$p->title ?: $p->title_ae}}</h1>
 
     <div class="img-wrap">
         @if ($images)
@@ -102,6 +122,14 @@
         </div>
     @endif
 
+
+    @if ($reviewArticle)
+        <div id="review">
+            <h2>Обзор на товар</h2>
+            {!! $reviewArticle->text !!}
+        </div>
+    @endif
+
     <div class="clearing"></div>
 
     @if ($p->characteristics)
@@ -142,7 +170,11 @@
 
                             </div>
                             @isset($r['root']['text'])
-                                <span class="text">{{ $r['root']['text'] }}</span>
+                                @if ($reviewArticle)
+                                    <span class="text">{{ Str::limit($r['root']['text'], 1000) }}</span>
+                                @else
+                                    <span class="text">{{ $r['root']['text'] }}</span>
+                                @endif
                             @endisset
 
                             <div class="img-list">
@@ -172,7 +204,12 @@
 
                             </div>
                             @isset($r['text'])
-                                <span class="text">{{ $r['text'] }}</span>
+                                @if ($reviewArticle)
+                                    <span class="text">{{ Str::limit($r['text'], 200) }} ...</span>
+                                @else
+                                    <span class="text">{{ $r['text'] }}</span>
+                                @endif
+
                             @endisset
 
                             <div class="img-list">

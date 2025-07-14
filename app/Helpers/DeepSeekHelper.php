@@ -16,7 +16,8 @@ class DeepSeekHelper
 
     public function chat($message/*, $model = 'deepseek-chat'*/): array
     {
-        $model = 'deepseek-chat';
+        //$model = 'deepseek-chat';
+        $model = 'deepseek-reasoner';
         $data = [
             'model' => $model,
             'messages' => [['role' => 'user', 'content' => $message]],

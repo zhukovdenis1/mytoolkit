@@ -30,7 +30,7 @@ class ShopArticleController extends Controller
         ]);
     }
 
-    public function detail(ShopArticle $article, string $articleHru='', Request $request)
+    public function detail(ShopArticle $article, string $articleHru='')
     {
         if ($article->site_id !== app()->siteId()) {
             abort(404);
@@ -40,14 +40,27 @@ class ShopArticleController extends Controller
             abort(404);
         }
 
+        if ($article->code && $article->product_id) {//редирект для обзоров т.к. они уже проиндексировались. Потом можно убрать это
+            return redirect()->route('detail', ['product' => $article->product_id], 301);
+        }
+
+        if ($article->code) {
+            abort(404);
+        }
+
         if ($articleHru != $article->uri) {
             return redirect()->route('article.detail', ['article' => $article, 'articleHru' => $article->uri], 301);
         }
 
         return view('Shop::shop.article', [
-            'product' => $article->code && str_contains($article->code, 'review')
+//            'product' => $article->code && str_contains($article->code, 'review')
+//                ? ShopProduct::select('id', 'id_ae', 'hru', 'video', 'characteristics', 'reviews')
+//                    ->where('id' , str_replace('review-', '', $article->code))
+//                    ->first()
+//                : null,
+            'product' => $article->product_id
                 ? ShopProduct::select('id', 'id_ae', 'hru', 'video', 'characteristics', 'reviews')
-                    ->where('id' , str_replace('review-', '', $article->code))
+                    ->where('id' , $article->product_id)
                     ->first()
                 : null,
             'article' => $this->service->prepareForDisplay($article),
