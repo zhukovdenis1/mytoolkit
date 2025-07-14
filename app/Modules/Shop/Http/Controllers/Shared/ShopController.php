@@ -252,6 +252,7 @@ class ShopController extends Controller
             //->select('id', 'uri')
             ->select('*')
             ->where('product_id', $product->id)
+            ->where('code', 'like', 'review-%')
             ->where('site_id', 2)
             ->where('published_at', '<', Carbon::now())
             ->first();
@@ -262,7 +263,7 @@ class ShopController extends Controller
                 'images' => $img,
                 'vkAttachment' => $vkAttachment,
                 'recommends' => [],
-                'review' => $article,
+                //'review' => $article,
                 'reviewArticle' => $article ? $this->service->prepareArticleForDisplay($article) : null,
             ]
         );

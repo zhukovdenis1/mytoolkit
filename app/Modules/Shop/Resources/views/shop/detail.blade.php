@@ -145,9 +145,6 @@
         <div class="reviews" id="reviews">
             <h2>
                 Отзывы
-                @if ($review)
-                    <a style="font-size: 0.7em" href="{{route('article.detail', ['article' => $review, 'articleHru' => $review->uri])}}">(есть обзор на товар)</a>
-                @endif
             </h2>
             <ul class="reviews">
                 @foreach ($p->reviews as $r)
