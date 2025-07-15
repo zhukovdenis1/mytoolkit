@@ -118,6 +118,33 @@ class ShopController extends Controller
         return view('Shop::shop.more', ['products' => $products]);
     }
 
+    public function productMore(Request $request)
+    {
+        $validated = $request->validate([
+            'page'        => ['nullable', 'integer', 'min:1', 'max:100'],
+            'product_id'  => ['required', 'integer'],
+            'item'        => ['required', 'string']
+        ]);
+
+        $page = $validated['page'] ?? 0;
+        $productId = $validated['product_id'] ?? 0;
+        $item = $validated['item'];
+
+        if ($item == 'reviews') {
+            $reviews = $this->service->reviews((int) $page, (int) $productId);
+            return view('Shop::shop.review-more', ['reviews' => $reviews]);
+        } elseif ($item == 'description') {
+            $product = ShopProduct::select('description')->findOrFail($productId);
+            return $product->description ?? '';
+        } elseif ($item == 'characteristics') {
+            $product = ShopProduct::select('characteristics')->findOrFail($productId);
+            return $product->characteristics ?? '';
+        } else {
+            abort(404);
+        }
+
+    }
+
     public function category(Request $request, ShopCategory $category, string $categoryHru='')
     {
         $validated = $request->validate([

@@ -9,6 +9,7 @@ use App\Helpers\StringHelper;
 use App\Logging\AppLogger;
 use App\Models\MyIp;
 use App\Modules\Shop\Models\ShopProduct;
+use App\Modules\Shop\Models\ShopReview;
 use App\Modules\Shop\Models\ShopVisit;
 use App\Modules\ShopArticle\Models\ShopArticle;
 use App\Modules\ShopArticle\Services\Shared\ShopArticleService;
@@ -282,6 +283,21 @@ class ShopService extends BaseService
             $query->where('epn_category_id', $epnCategory);
             $query->orderBy('epn_month_income', 'desc');
         }
+
+        return $query->get();
+    }
+
+    public function reviews(int $page = 1, int $productId = 0): Collection
+    {
+        $limit = 20;
+        $offset = $limit * ($page - 1);
+
+        $query = ShopReview::query()
+            ->select('*')
+            ->where('product_id', $productId)
+            ->orderBy('sort', 'asc')
+            ->offset($offset)
+            ->limit($limit);
 
         return $query->get();
     }

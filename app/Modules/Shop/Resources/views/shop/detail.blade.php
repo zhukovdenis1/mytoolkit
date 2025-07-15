@@ -136,94 +136,118 @@
     <div class="clearing"></div>
     <div class="props" id="props">
         <h2>Характеристики</h2>
-        {!! $p->characteristics !!}
+        @if ($reviewArticle)
+            <div class="loading" id="characteristicsLoading"></div>
+        @else
+            {!! $p->characteristics !!}
+        @endif
     </div>
     @endif
 
-    @if ($p->reviews)
+    @if ($reviewArticle)
         <div class="clearing"></div>
         <div class="reviews" id="reviews">
             <h2>
                 Отзывы
             </h2>
-            <ul class="reviews">
-                @foreach ($p->reviews as $r)
-                    @if (isset($r['reviewer']))
-                        <li>
-                            <div class="profile">
-                                <div class="profile-photo">
-                                    <img class="profile" src="{{ $r['reviewer']['avatar'] }}" />
-                                    @isset($r['reviewer']['countryFlag'])
-                                        <img class="country" src="{{ $r['reviewer']['countryFlag'] }}" />
-                                    @endisset
-                                </div>
-                                <div>
-                                    @if (isset($r['root']['grade']) && isset($r['reviewer']['name']) && isset($r['root']['date']))
-                                        <x-shop::rating :rating="$r['root']['grade']*10" />
-                                        <span class="user-name">{{ $r['reviewer']['name'] }}</span>
-                                        <span class="date">{{ $r['root']['date'] }}</span>
-                                    @endif
-                                </div>
-
-                            </div>
-                            @isset($r['root']['text'])
-                                @if ($reviewArticle)
-                                    <span class="text">{{ Str::limit($r['root']['text'], 1000) }}</span>
-                                @else
-                                    <span class="text">{{ $r['root']['text'] }}</span>
-                                @endif
-                            @endisset
-
-                            <div class="img-list">
-                                @isset($r['root']['images'])
-                                    @foreach ($r['root']['images'] as $img)
-                                        <a class="reviewImg" rel="review-img" target="_blank" href="{{ $img['url'] }}"><img class="img" src="{{ $img['url'] }}_100x100.jpg" /></a>
-                                    @endforeach
-                                @endisset
-                            </div>
-                        </li>
-                    @elseif ($r)
-                        <li>
-                            <div class="profile">
-                                <div class="profile-photo">
-                                    <img class="profile" src="{{ $r['user']['profileImageUrl'] ?? '' }}" />
-                                    @isset($r['user']['countryImageUrl'])
-                                        <img class="country" src="{{ $r['user']['countryImageUrl'] }}" />
-                                    @endisset
-                                </div>
-                                <div>
-                                    @if (isset($r['grade']) && isset($r['user']['name']) && isset($r['date']))
-                                        <x-shop::rating :rating="$r['grade']*10" />
-                                        <span class="user-name">{{ $r['user']['name'] }}</span>
-                                        <span class="date">{{ $r['date'] }}</span>
-                                    @endif
-                                </div>
-
-                            </div>
-                            @isset($r['text'])
-                                @if ($reviewArticle)
-                                    <span class="text">{{ Str::limit($r['text'], 200) }} ...</span>
-                                @else
-                                    <span class="text">{{ $r['text'] }}</span>
-                                @endif
-
-                            @endisset
-
-                            <div class="img-list">
-                                @isset($r['images'])
-                                    @foreach ($r['images'] as $img)
-                                        <a class="reviewImg" rel="review-img" target="_blank" href="{{ $img['url'] }}"><img class="img" src="{{ $img['url'] }}_100x100.jpg" /></a>
-                                    @endforeach
-                                @endisset
-                            </div>
-                        </li>
-                    @endif
-                @endforeach
+            <ul class="reviews" id="reviewList">
             </ul>
+        </div>
+        <div class="loading" id="reviewLoading"></div>
+    @else
+        @if ($p->reviews)
+            <div class="clearing"></div>
+            <div class="reviews" id="reviews">
+                <h2>
+                    Отзывы
+                </h2>
+                <ul class="reviews">
+                    @foreach ($p->reviews as $r)
+                        @if (isset($r['reviewer']))
+                            <li>
+                                <div class="profile">
+                                    <div class="profile-photo">
+                                        <img class="profile" src="{{ $r['reviewer']['avatar'] }}" />
+                                        @isset($r['reviewer']['countryFlag'])
+                                            <img class="country" src="{{ $r['reviewer']['countryFlag'] }}" />
+                                        @endisset
+                                    </div>
+                                    <div>
+                                        @if (isset($r['root']['grade']) && isset($r['reviewer']['name']) && isset($r['root']['date']))
+                                            <x-shop::rating :rating="$r['root']['grade']*10" />
+                                            <span class="user-name">{{ $r['reviewer']['name'] }}</span>
+                                            <span class="date">{{ $r['root']['date'] }}</span>
+                                        @endif
+                                    </div>
+
+                                </div>
+                                @isset($r['root']['text'])
+                                    @if ($reviewArticle)
+                                        <span class="text">{{ Str::limit($r['root']['text'], 1000) }}</span>
+                                    @else
+                                        <span class="text">{{ $r['root']['text'] }}</span>
+                                    @endif
+                                @endisset
+
+                                <div class="img-list">
+                                    @isset($r['root']['images'])
+                                        @foreach ($r['root']['images'] as $img)
+                                            <a class="reviewImg" rel="review-img" target="_blank" href="{{ $img['url'] }}"><img class="img" src="{{ $img['url'] }}_100x100.jpg" /></a>
+                                        @endforeach
+                                    @endisset
+                                </div>
+                            </li>
+                        @elseif ($r)
+                            <li>
+                                <div class="profile">
+                                    <div class="profile-photo">
+                                        <img class="profile" src="{{ $r['user']['profileImageUrl'] ?? '' }}" />
+                                        @isset($r['user']['countryImageUrl'])
+                                            <img class="country" src="{{ $r['user']['countryImageUrl'] }}" />
+                                        @endisset
+                                    </div>
+                                    <div>
+                                        @if (isset($r['grade']) && isset($r['user']['name']) && isset($r['date']))
+                                            <x-shop::rating :rating="$r['grade']*10" />
+                                            <span class="user-name">{{ $r['user']['name'] }}</span>
+                                            <span class="date">{{ $r['date'] }}</span>
+                                        @endif
+                                    </div>
+
+                                </div>
+                                @isset($r['text'])
+                                    @if ($reviewArticle)
+                                        <span class="text">{{ Str::limit($r['text'], 200) }} ...</span>
+                                    @else
+                                        <span class="text">{{ $r['text'] }}</span>
+                                    @endif
+
+                                @endisset
+
+                                <div class="img-list">
+                                    @isset($r['images'])
+                                        @foreach ($r['images'] as $img)
+                                            <a class="reviewImg" rel="review-img" target="_blank" href="{{ $img['url'] }}"><img class="img" src="{{ $img['url'] }}_100x100.jpg" /></a>
+                                        @endforeach
+                                    @endisset
+                                </div>
+                            </li>
+                        @endif
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+    @endif
+
+    @if ($p->description && $reviewArticle)
+        <div class="clearing"></div>
+        <div class="description" id="description">
+            <h2>Описание</h2>
+            <div class="loading" id="descriptionLoading"></div>
         </div>
     @endif
 
-    @if ($p->description)
+    @if ($p->description && !$reviewArticle)
     <div class="clearing"></div>
     <div class="description" id="description">
         <h2>Описание</h2>
@@ -231,8 +255,6 @@
     </div>
     @endif
 
-
-    <div class="clearing"></div>
 
     <div class="clearing"></div>
 
@@ -261,9 +283,22 @@
 @endsection
 
 @section('js')
+    @if ($reviewArticle)
+
+        <script src="{{ asset('/shop/js/product_more_loading.js') }}"></script>
+        <script type="text/javascript">
+            ProductMoreInfoLoader.init({
+                product_id: {{ $p->id }}
+            });
+        </script>
+    @endif
     <script type="text/javascript">
         $('a.prodImg').colorbox({rel:'gal', maxWidth:'100%', maxHeight: '100%'});
         $('a.reviewImg').colorbox({rel:'review-img', maxWidth:'100%', maxHeight: '100%'});
+        // $(document).on('click', 'a.reviewImg', function(e) {
+        //     e.preventDefault();
+        //     $.colorbox({rel:'review-img', maxWidth:'100%', maxHeight: '100%', href: $(this).attr('href')});
+        // });
         $('._cart').click(function() {
             let productId = $(this).attr('data-id');
             $.ajax({

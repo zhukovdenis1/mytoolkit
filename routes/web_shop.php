@@ -10,6 +10,7 @@ Route::middleware(['shop_visits'])->group(function () {
 
     Route::get('', [ShopController::class, 'index'])->name('home');
     Route::get('more', [ShopController::class, 'more'])->name('more');//->withoutMiddleware(['shop_visits']);
+    Route::get('product_more', [ShopController::class, 'productMore'])->name('reviewsMore');//->withoutMiddleware(['shop_visits']);
     Route::get('search', [ShopController::class, 'search'])->name('search');
     Route::get('sitemap.xml', [ShopController::class, 'sitemap'])->name('sitemap');
     Route::get('go', [ShopController::class, 'go'])->name('go');

@@ -814,7 +814,12 @@ ul.reviews {
             height: 100px;
             margin-right: 10px;
         }
-
+button.more-reviews {
+    cursor: pointer;
+    padding: 10px 16px;
+    margin-top: 20px;
+    font-size: 1.1em;
+}
 @media (min-width: 1500px) {
     .center-wrap {
         width: 1905px;
