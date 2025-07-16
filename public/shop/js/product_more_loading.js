@@ -132,6 +132,7 @@ let ProductMoreInfoLoader =
                         $('#reviewLoading').remove();
                         $this.activeReviewRequest = false;
                         $this.page++;
+                        $('a.reviewImg').colorbox({rel:'review-img', maxWidth:'100%', maxHeight: '100%'});
                     },
                     error: function() {
 

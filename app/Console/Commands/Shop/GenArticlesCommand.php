@@ -233,9 +233,9 @@ class GenArticlesCommand extends Command
             return null;
         }
 
-        // Для siteId 3-8 генерируем случайную дату в пределах +2 месяцев
+        // Для siteId 3-8 генерируем случайную дату в пределах +1 месяцев
         $now = Carbon::now();
-        $endDate = $now->copy()->addMonths(2);
+        $endDate = $now->copy()->addMonths(1);
 
         // Разница в секундах между текущей датой и конечной датой
         $diffInSeconds = $now->diffInSeconds($endDate);

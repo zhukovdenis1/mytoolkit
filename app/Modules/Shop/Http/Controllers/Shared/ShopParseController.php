@@ -320,7 +320,7 @@ class ShopParseController extends Controller
         $extra = $product->extra_data;
         $extra['reviews']['parse']['currentPage'] = (int) $validated['page'] + 1;
 
-        if (empty($reviews) || intval($validated['page']) >= 200) {
+        if (empty($reviews) || intval($validated['page']) >= 40) {
             $product->reviews_updated_at = Carbon::now();
             $product->reviews_amount = ShopReview::where('product_id', $product->id)->count();
             $extra['reviews']['parse']['currentPage'] = 0;
