@@ -9,6 +9,7 @@ interface Params {
     search?: string;
     site_id?: string;
     product_id?: string;
+    published?: number;
     _page?: number;
     _limit?: number;
     _sort?: string;
@@ -29,6 +30,7 @@ export const ShopArticlesListPage: React.FC = () => {
     const [sorter, setSorter] = useState<{ field?: string; order?: string }>({});
     const [form] = Form.useForm();
     const navigate = useNavigate();
+    const boolList = {0: 'no', 1: 'yes'};
 
     const handleTableChange = (pag: TablePaginationConfig, _: any, sorterObj: any) => {
         const newSorter = sorterObj.order
@@ -70,7 +72,14 @@ export const ShopArticlesListPage: React.FC = () => {
             width: 50,
             render: (_, record) => (
                 <Space>
-                    <Link to={route('shop.articles.edit', {"article_id": record.id})}><EditOutlined /></Link>
+                    <Link
+                        to={{
+                            pathname: route('shop.articles.edit', {"article_id": record.id}),
+                            search: location.search // сохраняем текущие параметры
+                        }}
+                    >
+                        <EditOutlined />
+                    </Link>
                     <Confirmable onConfirm={() => deleteArticle(record.id)}>
                         <Button
                             type="link"
@@ -145,6 +154,7 @@ export const ShopArticlesListPage: React.FC = () => {
             search: values.search || "",
             site_id: values.site_id || "",
             product_id: values.product_id || "",
+            published: values.published || "",
             _page: (toPage == fromPage) ? 1 : toPage,//сбрасыаем на 1, если преход не по страницам, а => меняются условия поиска
             _limit: pagination.pageSize,
             _sort: sorter.field || "",
@@ -168,6 +178,13 @@ export const ShopArticlesListPage: React.FC = () => {
                     <Select
                         placeholder="Select site"
                         options={siteList.map(item => ({ value: item.id, label: item.name }))}
+                    />
+                </Form.Item>
+                <Form.Item name="published">
+                    <Select
+                        placeholder="Pub"
+                        allowClear
+                        options={Object.entries(boolList).map(([value, label]) => ({ value, label }))}
                     />
                 </Form.Item>
                 <Form.Item>

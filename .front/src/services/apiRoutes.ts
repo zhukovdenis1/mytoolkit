@@ -29,6 +29,7 @@ const apiRoutes: Record<string, [string, string]> = {
     "admin.shop.siteList": ["admin/shop/site-list", "get"],
     "admin.shop.articles.list": ["admin/shop/articles", "get"],
     "admin.shop.articles.show": ["admin/shop/articles/:article_id", "get"],
+    "admin.shop.articles.pubInfo": ["admin/shop/articles/:article_id/pub-info", "get"],
     "admin.shop.articles.add": ["admin/shop/articles", "post"],
     "admin.shop.articles.edit": ["admin/shop/articles/:article_id", "put"],
     "admin.shop.articles.editContent": ["admin/shop/articles/:article_id/edit-content", "put"],

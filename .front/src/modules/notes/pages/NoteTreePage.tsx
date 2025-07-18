@@ -13,7 +13,7 @@ export const NoteTreePage: React.FC = () => {
     const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
     const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
     const [loading, setLoading] = useState(true);
-    const [links, setLinks] = useState(true);
+    const [links, setLinks] = useState('');
     const [reloadTrigger, setReloadTrigger] = useState(0);
     const navigate = useNavigate();
 

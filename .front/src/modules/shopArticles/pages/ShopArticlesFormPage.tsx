@@ -3,7 +3,7 @@ import {Button, Editor, Form, Input, message, Space, DatePicker} from "ui";
 import moment from 'moment';
 import {api} from "@/services/api.tsx";
 import {route} from "api";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams, useLocation} from "react-router-dom";
 
 export const ShopArticlesFormPage: React.FC = ({}) => {
 
@@ -13,6 +13,9 @@ export const ShopArticlesFormPage: React.FC = ({}) => {
     const { article_id: articleId } = useParams();
     const isEditPage = !!articleId;
     const [loading, setLoading] = useState(false);
+    const [publishInfo, setPublishInfo] = useState('');
+    const location = useLocation();
+
 
     /**
      *
@@ -33,6 +36,12 @@ export const ShopArticlesFormPage: React.FC = ({}) => {
                     editor.setValue(response.data.article.text);
                     setLoading(false);
                 }
+
+                let response2 = await api.safeRequestWithAlert(`admin.shop.articles.pubInfo`, { article_id: articleId });
+                if (response2.success) {
+                    setPublishInfo(response2.data.data)
+                }
+
             }
         };
 
@@ -60,7 +69,11 @@ export const ShopArticlesFormPage: React.FC = ({}) => {
             message.success("Article saved successfully!");
             if (values.exit) {
                 if (isEditPage) {
-                    navigate(route('shop.articles'));
+                    // Сохраняем оригинальные параметры при переходе назад
+                    navigate({
+                        pathname: route('shop.articles'),
+                        search: location.search
+                    });
                 } else {
                     navigate(route('shop.articles.edit', {'article_id': response.data.article.id}));
                 }
@@ -70,7 +83,8 @@ export const ShopArticlesFormPage: React.FC = ({}) => {
 
     return (
         <>
-            <Form form={form} onFinish={handleSave}>
+        <div dangerouslySetInnerHTML={{ __html: publishInfo }} />
+        <Form form={form} onFinish={handleSave}>
                 <Form.Item name="exit" hidden>
                     <Input type="hidden"/>
                 </Form.Item>
@@ -142,39 +156,39 @@ export const ShopArticlesFormPage: React.FC = ({}) => {
                 </Form.Item>
             </Form>
 
-            <p>
-                <a
-                    href={`https://deshevyi.ru/a-${articleId}`}
-                    target="_blank"
-                >
-                    Ссылка на статью
-                </a>
-            </p>
-            <p>
-                Ссылка на товар:{" "}
-                <a
-                    href={`https://deshevyi.ru/p-${form.getFieldValue('product_id') || ''}/`}
-                    target="_blank"
-                >
-                    https://deshevyi.ru/p-{form.getFieldValue('product_id') || ''}/
-                </a>
-            </p>
-            <p>
-                <a
-                    href={`https://deshevyi.ru/go?id=${form.getFieldValue('product_id') || ''}`}
-                    target="_blank"
-                >
-                    Ссылка на товар aliexpress
-                </a>
-            </p>
-            <p>
-                <a
-                    href={`https://deshevyi.ru/go?id=${form.getFieldValue('product_id') || ''}&page_name=reviews`}
-                    target="_blank"
-                >
-                    Ссылка на отзывы aliexpress
-                </a>
-            </p>
+            {/*<p>*/}
+            {/*    <a*/}
+            {/*        href={`https://deshevyi.ru/a-${articleId}`}*/}
+            {/*        target="_blank"*/}
+            {/*    >*/}
+            {/*        Ссылка на статью*/}
+            {/*    </a>*/}
+            {/*</p>*/}
+            {/*<p>*/}
+            {/*    Ссылка на товар:{" "}*/}
+            {/*    <a*/}
+            {/*        href={`https://deshevyi.ru/p-${form.getFieldValue('product_id') || ''}/`}*/}
+            {/*        target="_blank"*/}
+            {/*    >*/}
+            {/*        https://deshevyi.ru/p-{form.getFieldValue('product_id') || ''}/*/}
+            {/*    </a>*/}
+            {/*</p>*/}
+            {/*<p>*/}
+            {/*    <a*/}
+            {/*        href={`https://deshevyi.ru/go?id=${form.getFieldValue('product_id') || ''}`}*/}
+            {/*        target="_blank"*/}
+            {/*    >*/}
+            {/*        Ссылка на товар aliexpress*/}
+            {/*    </a>*/}
+            {/*</p>*/}
+            {/*<p>*/}
+            {/*    <a*/}
+            {/*        href={`https://deshevyi.ru/go?id=${form.getFieldValue('product_id') || ''}&page_name=reviews`}*/}
+            {/*        target="_blank"*/}
+            {/*    >*/}
+            {/*        Ссылка на отзывы aliexpress*/}
+            {/*    </a>*/}
+            {/*</p>*/}
 
         </>
     );
