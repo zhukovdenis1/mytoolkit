@@ -55,12 +55,12 @@ class VkHelper
         }
         elseif (!isset($params['access_token']))
         {
-            $params['access_token'] = 'ff8dfa42ff8dfa42ff8dfa423effd12a31fff8dff8dfa42a6c4e4334777a415d48653b8';//service key
+            $params['access_token'] = config('social.vk.key');//service key
         }
 
         $url = 'https://api.vk.com/method/' . $method;
         /*$params = array_merge($params, array(
-            'access_token' =>'6307d5b67b4366f1b012a0d616e18ecb3316d2304c0807780903396181a7d187ed56a63919d2e46e6a0cd'
+            'access_token' =>'6307d5b67b4366f1b012a0d616e18ecb331...'
         ));*/
 
         $ch = curl_init();

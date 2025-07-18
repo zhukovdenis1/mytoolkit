@@ -60,8 +60,8 @@ class SocialPostingCommand extends Command
      */
     public function handle()
     {
-        $accessToken = 'vk1.a.lhwj6YirK9ZqNmYqEyN4rmxYkF_8k6NN34wep0DZVK9N-nMuOzCtfTP1v2Wy0dhJc0_AlN0bZliHHbDofjfmcORXgZGbNV7t9YID_sDxJLHaiqiyrBMBy5VKJ4V0A9c9cL9ii4TyjhFjrhaP3T3qzmYjPrAWIwFRksi7EmtM0vFAevQJQj1HplPGhk263JaBlpgN8gSVA4cQaVF1Eolj7w';
-        $groupId = 56266642;
+        $accessToken = config('social.vk.post_group.token');
+        $groupId = config('social.vk.post_group.id');
 
         $output = '';
 
@@ -268,7 +268,7 @@ class SocialPostingCommand extends Command
         $params = array(
             'v' => VkHelper::VERSION,
             'owner_id' => '-' . $groupId,
-            'access_token' =>'vk1.a.lhwj6YirK9ZqNmYqEyN4rmxYkF_8k6NN34wep0DZVK9N-nMuOzCtfTP1v2Wy0dhJc0_AlN0bZliHHbDofjfmcORXgZGbNV7t9YID_sDxJLHaiqiyrBMBy5VKJ4V0A9c9cL9ii4TyjhFjrhaP3T3qzmYjPrAWIwFRksi7EmtM0vFAevQJQj1HplPGhk263JaBlpgN8gSVA4cQaVF1Eolj7w',
+            'access_token' => config('social.vk.post_group.token'),
             'message' => $message,
             //'attachment' => $href,
             'from_group' => 1,
@@ -304,8 +304,8 @@ class SocialPostingCommand extends Command
 
     private function postToTelegram(string $message, array $photos)
     {
-        $botToken = '7983496183:AAFVULz9fk7FgiF9t3kkzh1wdZyFov4W15E';
-        $chatId = '-1001177719353';
+        $botToken = config('social.telegram.post_chat.token');
+        $chatId = config('social.telegram.post_chat.id');
 
         if ($photos) {
             $url = "https://api.telegram.org/bot{$botToken}/sendMediaGroup";

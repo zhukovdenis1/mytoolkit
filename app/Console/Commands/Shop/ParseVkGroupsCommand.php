@@ -29,20 +29,6 @@ class ParseVkGroupsCommand extends Command
      */
     protected $description = 'Command description';
 
-
-//    public function handle()
-//    {
-//        $name = $this->ask('Как вас зовут?');
-//        $this->info("Привет, $name!");
-//
-//        if ($this->confirm('Хотите продолжить?')) {
-//            $this->info('Продолжаем...');
-//            // Дополнительная логика
-//        } else {
-//            $this->error('Действие отменено.');
-//        }
-//    }
-
     public function __construct(private readonly VkHelper $vkHelper) {
         parent::__construct();
     }
