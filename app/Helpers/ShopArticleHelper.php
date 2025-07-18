@@ -54,7 +54,12 @@ class ShopArticleHelper
     {
         $article = ShopArticle::query()->where('code', $code)->first();
         if (!$article) return null;
-        $textData = json_decode($article->text ?? '', true);
+
+        if (is_string($article->text)) {
+            $textData = json_decode($article->text ?? '', true);
+        } else {
+            $textData = $article->text;
+        }
 
         $contentParts = [];
         $content = $this->separateData($textData, $article->separation);

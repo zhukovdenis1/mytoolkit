@@ -10,6 +10,14 @@
             <priority>1</priority>
         </url>
     @endforeach
+        @foreach ($productsWithArticles as $p)
+            <url>
+                <loc>{{ route('detail', ['product' => $p, 'productHru' => $p->hru]) }}</loc>
+                <lastmod>{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $p->created_at)->format('Y-m-d') }}</lastmod>
+                <changefreq>monthly</changefreq>
+                <priority>1</priority>
+            </url>
+        @endforeach
     @foreach ($products as $p)
     <url>
         <loc>{{ route('detail', ['product' => $p, 'productHru' => $p->hru]) }}</loc>

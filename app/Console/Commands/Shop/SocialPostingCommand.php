@@ -185,11 +185,11 @@ class SocialPostingCommand extends Command
         $vkMessage = $product['title_ae'] . PHP_EOL . 'Цена: ' . $product->price . ' руб' . PHP_EOL . $hashtag . PHP_EOL . '↓↓↓ подробнее по ссылке ниже ↓↓↓';
         $tgMessage = '<b>' . htmlspecialchars($product['title_ae']) . '</b>' . PHP_EOL . PHP_EOL
             . 'Цена: <i>' . $product['price'] . ' руб.</i>' . PHP_EOL . PHP_EOL
-            . '<a href="' . $productUrl . '">Подробнее</a>';
+            . '<a href="' . $productUrl . '?tid=2">Подробнее</a>';
 
         //$result = postToGroup($groupId, $message, $photoAttachment . ',' . $productUrl);
 
-        $pAttachment = $productUrl;
+        $pAttachment = $productUrl.'?tid=1';
         foreach ($responses as $r) {
             $pAttachment .= ',photo' . $r['response'][0]['owner_id'] . '_'.$r['response'][0]['id'];
         }
@@ -234,9 +234,9 @@ class SocialPostingCommand extends Command
 
         $tgMessage = "<b>" . htmlspecialchars($coupon->title) . "</b>"
             . PHP_EOL. PHP_EOL . htmlspecialchars($coupon->description)
-            . PHP_EOL . '<a href="' . $url . '">Подробнее</a>          <a href="https://deshevyi.ru/coupons">Все купоны</a>';
+            . PHP_EOL . '<a href="' . $url . '?tid=2">Подробнее</a>          <a href="https://deshevyi.ru/coupons?tid=2">Все купоны</a>';
 
-        $pAttachment = $url;
+        $pAttachment = $url.'?tid=1';
 
         $result = $this->postToGroup($groupId, $vkMessage, $pAttachment );
 
@@ -268,7 +268,6 @@ class SocialPostingCommand extends Command
         $params = array(
             'v' => VkHelper::VERSION,
             'owner_id' => '-' . $groupId,
-            'from_group' => 1,
             'access_token' =>'vk1.a.lhwj6YirK9ZqNmYqEyN4rmxYkF_8k6NN34wep0DZVK9N-nMuOzCtfTP1v2Wy0dhJc0_AlN0bZliHHbDofjfmcORXgZGbNV7t9YID_sDxJLHaiqiyrBMBy5VKJ4V0A9c9cL9ii4TyjhFjrhaP3T3qzmYjPrAWIwFRksi7EmtM0vFAevQJQj1HplPGhk263JaBlpgN8gSVA4cQaVF1Eolj7w',
             'message' => $message,
             //'attachment' => $href,

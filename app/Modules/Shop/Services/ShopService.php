@@ -171,6 +171,7 @@ class ShopService extends BaseService
         $itemId = $session['lastRoute']['item_id'] ?? null;
         $isExternal = $referrer ? !Str::contains($referrer, config('app.shop_url')) : null;
         $visitNum = $session['visitNum'] ?? null;
+        $tid = $session['tid'] ?? null;
 
         if ($goref) {
             $goParams = (function() use ($goref) {
@@ -220,6 +221,7 @@ class ShopService extends BaseService
                 'ip_address' => $ip,
                 'uri' => $uri ? Str::limit($uri, 255) : null,
                 'referrer' => $referrer ? Str::limit($referrer, 255) : null,
+                'tid' => $tid,
                 'item_id' => $itemId,
                 'visit_num' => $visitNum,
                 'is_bot' => $session['isBot'] ?? null,
@@ -302,12 +304,21 @@ class ShopService extends BaseService
         return $query->get();
     }
 
-    public function getPopular(): Collection
+    public function getProductWithReviews(): Collection
     {
+//        $query = ShopProduct::query()
+//            ->select('id', 'title', 'title_ae', 'photo', 'rating', 'price', 'price_from', 'price_to', 'hru', 'category_0')
+//            //->whereNull('not_found_at')
+//            ->orderBy('epn_month_income', 'desc')
+//            ->limit(24);
+
         $query = ShopProduct::query()
-            ->select('id', 'title', 'title_ae', 'photo', 'rating', 'price', 'price_from', 'price_to', 'hru', 'category_0')
-            //->whereNull('not_found_at')
-            ->orderBy('epn_month_income', 'desc')
+            ->select('p.*')
+            ->from('shop_articles as a')
+            ->leftJoin('shop_products as p', 'a.product_id', '=', 'p.id')
+            ->where('a.site_id', app()->siteId())
+            ->where('a.published_at', '<=', Carbon::now())
+            ->orderByDesc('a.published_at')
             ->limit(24);
 
         return $query->get();

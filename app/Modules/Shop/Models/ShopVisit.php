@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string|null ip_address IP-адрес посетителя
  * @property string|null $user_agent User agent посетителя
  * @property string|null $referrer Реферер
+ * @property int|null $tid ID сайта с которого зашли
  * @property string|null $uri URI страницы
  * @property string|null $page_name Название страницы
  * @property int|null $item_id ID связанного товара/элемента
@@ -37,6 +38,7 @@ class ShopVisit extends BaseModel
         'ip_address',
         'user_agent',
         'referrer',
+        'tid',
         'uri',
         'page_name',
         'item_id',

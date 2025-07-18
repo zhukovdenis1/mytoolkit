@@ -9,6 +9,7 @@ use App\Scheduling\AppSchedule;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Middleware;
+
 //use App\Http\Middleware\DebugMode;
 
 
@@ -38,7 +39,7 @@ if ($siteData && $siteData['group'] == 'shop') {
         )
         ->withMiddleware(function (Middleware $middleware) {
             $middleware->alias([
-                'shop_visits' => \App\Http\Middleware\RegisterVisit::class,
+                'shop_visits' => \App\Http\Middleware\Shop\RegisterVisit::class,
             ]);
             //$middleware->append(JwtMiddleware::class);
             $middleware->append(FirewallMiddleware::class);

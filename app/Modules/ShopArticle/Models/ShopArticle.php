@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $description
  * @property string $name
  * @property string $h1
+ * @property string $uri
  * @property string $code
  * @property string $separation
  * @property array|null $text Текст заметки (массив в JSON, может быть null)

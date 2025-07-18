@@ -25,7 +25,6 @@ class ShopArticleService extends BaseService
             ->where('published_at', '<', Carbon::now())
             ->where('site_id', $siteId);
 
-
         $search = empty($validatedData['search']) ? '' : $validatedData['search'];
         $page = empty($validatedData['page']) ? 1 : intval($validatedData['page']);
 //        $limit = empty($validatedData['_limit']) ? 10 : intval($validatedData['_limit']);
@@ -36,7 +35,6 @@ class ShopArticleService extends BaseService
         $order = 'desc';
 
         //$articles->where('date_to', '>=', Carbon::now());
-
 
         if ($search) {
             $articles->where(function (Builder $query) use ($search) {

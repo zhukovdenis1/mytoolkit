@@ -7,6 +7,7 @@ namespace App\Modules\ShopArticle\Services\Admin;
 use App\Exceptions\ErrorException;
 use App\Helpers\Helper;
 use App\Helpers\StringHelper;
+use App\Modules\Shop\Models\ShopProduct;
 use App\Modules\ShopArticle\Models\ShopArticle;
 use App\Services\BaseService;
 use Carbon\Carbon;
@@ -86,17 +87,16 @@ class ShopArticleService extends BaseService
 
     public function findPaginated(array $validatedData): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
-        $articles = ShopArticle::query();
-
-        //$notes = Note::where('user_id', $validatedData['user_id']);
+        $articles = ShopArticle::select(['id', 'site_id', 'product_id', 'name']);
 
         $search = $validatedData['search'] ?? null;
         $productId = $validatedData['product_id'] ?? null;
         $siteId = $validatedData['site_id'] ?? null;
         $page = empty($validatedData['_page']) ? 1 : intval($validatedData['_page']);
-        $limit = empty($validatedData['_limit']) ? 10 : intval($validatedData['_limit']);
+        $limit = empty($validatedData['_limit']) ? 20 : intval($validatedData['_limit']);
         $sortColumn = $validatedData['_sort'] ?? 'id';
         $order = $validatedData['_order'] ?? 'desc';
+        $published = $validatedData['published'] ?? null;
 
 
         if ($search) {
@@ -114,6 +114,14 @@ class ShopArticleService extends BaseService
             $articles->where('site_id', $siteId);
         }
 
+        if (!is_null($published)) {
+            if ($published) {
+                $articles->whereNotNull('published_at');
+            } else {
+                $articles->whereNull('published_at');
+            }
+        }
+
         $articles->orderBy($sortColumn, $order);
 
         //Пагинация
@@ -128,5 +136,36 @@ class ShopArticleService extends BaseService
         return $this->stringHelper->buildUri($uri);
     }
 
+    public function pubInfo(ShopArticle $article): string
+    {
+        $text = '';
+        if ($article->site_id == 8 || $article->site_id == 9) {
+            $product = ShopProduct::query()->find($article->product_id);
+            if (!$product) {
+                return $text;
+            }
+            $tid = '';
+            if ($article->site_id == 8) {
+                $text .= '<p>open in <b>firefox</b></p>';
+                $tid = '?tid=3';
+            }
+            if ($article->site_id == 9) {
+                $text .= '<p>open in <b>google</b></p>';
+                $tid = '?tid=4';
+            }
+            $href = config('app.shop_scheme') . config('app.shop_url') . "/p-{$product->id}/{$product->hru}{$tid}";
+
+            $text .= '<p><a href="' . $href . '" target="_blank">Более подбробная информация: фото, видео, отзывы, характеристики... доступна по этой ссылке</a></p>';
+            $text .= "<p><a href='$href' target='_blank'>$href</a></p>";
+            $text .= '<p><a href="https://aliexpress.ru/item/' . $product->id_ae . '/reviews" target="_blank">Aliexpess</a></p>';
+            $text .= '<p>';
+            foreach ($product->photo as $p) {
+                $text .= '<a target="blank" href="' . $p . '"><img src="' . $p . '" height="120px" /></a> ';
+            }
+            $text .= '</p>';
+
+        }
+        return $text;
+    }
 
 }

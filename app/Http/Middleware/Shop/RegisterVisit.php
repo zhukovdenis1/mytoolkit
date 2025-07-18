@@ -2,18 +2,14 @@
 
 declare(strict_types = 1);
 
-namespace App\Http\Middleware;
+namespace App\Http\Middleware\Shop;
 
-use App\Modules\Shop\Models\ShopVisit;
-use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Jaybizzle\CrawlerDetect\CrawlerDetect;
 use SebastianBergmann\CodeUnit\Exception;
 use Symfony\Component\HttpFoundation\Response;
-use App\Models\MyIp;
 
 class RegisterVisit
 {
@@ -40,6 +36,11 @@ class RegisterVisit
                 $visitNum = $request->session()->get('visitNum', 0);
                 $visitNum++;
                 $request->session()->put('visitNum', $visitNum);
+                $tid = $request->tid ?? null;
+
+                if ((int)$tid) {
+                    $request->session()->put('tid', (int)$tid);
+                }
 
                 if (!session()->has('userAgent')) {
                     $request->session()->put('userAgent', $userAgent);

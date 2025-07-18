@@ -16,6 +16,7 @@ class SearchShopArticleRequest extends BaseSearchRequest
         return array_merge(parent::rules(), [
             'product_id' => 'nullable|integer',
             'site_id' => 'nullable|integer',
+            'published' => 'nullable|boolean',
         ]);
     }
 }

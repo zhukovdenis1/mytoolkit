@@ -4,6 +4,7 @@
     @else
         <ul class="prod-list" id="{{($more ?? true) ? 'prodList' : ''}}">
             @foreach($products as $product)
+                @if (!in_array($product->category_0, config('shop.sex_categories')))
                 <li>
                     <a class="prod-item" href="{{ route('detail', ['product' => $product, 'productHru'=>$product->hru]) }}">
                         <span class="img-wrap">
@@ -20,6 +21,7 @@
                         <span class="price"><x-shop::price :product="$product" /></span>
                     </a>
                 </li>
+                @endif
             @endforeach
         </ul>
         @if ($more ?? true)

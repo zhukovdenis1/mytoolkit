@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('shop_articles', function (Blueprint $table) {
-            $table->unsignedBigInteger('product_id')->nullable()->after('id');
-
-            $table->foreign('product_id')->references('id')->on('shop_products')->onDelete('restrict');
+        Schema::table('shop_visits', function (Blueprint $table) {
+            $table->unsignedTinyInteger('tid')->nullable()->after('referrer');
         });
 
 
@@ -25,8 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('shop_articles', function (Blueprint $table) {
-            $table->dropColumn('product_id');
+        Schema::table('shop_visits', function (Blueprint $table) {
+            $table->dropColumn('tid');
         });
     }
 };

@@ -7,6 +7,7 @@ namespace App\Modules\ShopArticle\Http\Controllers\Admin;
 use App\Exceptions\ErrorException;
 use App\Http\Controllers\BaseController;
 use App\Http\Resources\AnonymousResource;
+use App\Http\Resources\AnyResource;
 use App\Modules\FileStorage\Http\Requests\StoreFileRequest;
 use App\Modules\FileStorage\Services\FileStorageService;
 use App\Modules\ShopArticle\Http\Requests\Admin\SearchShopArticleRequest;
@@ -42,6 +43,11 @@ class ShopArticleController extends BaseController
     public function show(ShopArticle $article): ShopArticleResource
     {
         return new ShopArticleResource($article);
+    }
+
+    public function pubInfo(ShopArticle $article): AnyResource
+    {
+        return new AnyResource($this->articleService->pubInfo($article));
     }
 
 

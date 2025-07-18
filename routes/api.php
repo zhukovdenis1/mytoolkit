@@ -72,6 +72,7 @@ Route::middleware([JwtAdminMiddleware::class])->group(function () {
                 Route::get('/', [ShopArticleController::class, 'index']);
                 Route::post('/', [ShopArticleController::class, 'store']);
                 Route::get('{article}', [ShopArticleController::class, 'show']);
+                Route::get('{article}/pub-info', [ShopArticleController::class, 'pubInfo']);
                 Route::put('{article}', [ShopArticleController::class, 'update']);
                 Route::put('{article}/edit-content', [ShopArticleController::class, 'updateContent']);
                 Route::delete('{article}', [ShopArticleController::class, 'destroy']);

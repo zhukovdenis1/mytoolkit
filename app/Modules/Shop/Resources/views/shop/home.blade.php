@@ -20,7 +20,7 @@
 
 
     @if($popular?->isNotEmpty())
-        <p><strong>Популярное: </strong></p>
+        {!! $article['content']["intro"] ?? '' !!}
         <x-shop::product-list :products="$popular" :more="false" />
     @endif
 

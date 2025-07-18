@@ -56,11 +56,10 @@ class ShopController extends Controller
         $articles = null;
 
         if (!$search) {
-            $popular = $this->service->getPopular();
+            $popular = $this->service->getProductWithReviews();
             $coupons = $this->service->getMainPageCoupons();
             $articles = $this->service->getMainPageArticles();
         }
-
         return view('Shop::shop.home', [
             'monthName' => mb_ucfirst($this->dateTimeHelper->getMonthName(intval(date('m')), 'nominative')),
             'epnCategories' => $this->service->getEpnMenu(),
@@ -79,9 +78,19 @@ class ShopController extends Controller
         $products = ShopProduct::query()
             ->select('id', 'hru','created_at')
             ->whereNull('deleted_at')
-            ->whereNotIn('category_0', [16002,1309])
+            ->whereNotIn('category_0', config('shop.sex_categories'))
             ->orderBy('id', 'desc')
-            ->limit(5000)
+            ->limit(3000)
+            ->get();
+
+        $productsWithArticles = ShopProduct::query()
+            ->select('p.id', 'p.hru', 'a.created_at')
+            ->from('shop_articles as a')
+            ->leftJoin('shop_products as p', 'a.product_id', '=', 'p.id')
+            ->where('a.site_id', app()->siteId())
+            ->where('a.published_at', '<=', Carbon::now())
+            ->orderByDesc('a.published_at')
+            ->limit(1000)
             ->get();
 
         $articles = ShopArticle::query()
@@ -96,7 +105,8 @@ class ShopController extends Controller
 
         return view('Shop::shop.sitemap', [
             'products' => $products,
-            'articles' => $articles
+            'articles' => $articles,
+            'productsWithArticles' => $productsWithArticles
         ]);
     }
     public function more(Request $request)
@@ -223,7 +233,7 @@ class ShopController extends Controller
 //
 //        $product = ShopProduct::query()->findOrFail($productId);
 
-        if (in_array($product->category_0, [16002,1309])) {
+        if (in_array($product->category_0, config('shop.sex_categories'))) {
             abort(404);
         }
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Resources;
+namespace App\Http\Resources;
 
 use App\Modules\Profile\Http\Resources\Shared\ProfileResource;
 use App\Modules\Profile\Models\Profile;
-use App\Resources\BaseResource;
+//use App\Resources\BaseResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
