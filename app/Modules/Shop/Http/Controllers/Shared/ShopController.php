@@ -85,9 +85,11 @@ class ShopController extends Controller
 
         $productsWithArticles = ShopProduct::query()
             ->select('p.id', 'p.hru', 'a.created_at')
-            ->from('shop_articles as a')
-            ->leftJoin('shop_products as p', 'a.product_id', '=', 'p.id')
+            ->from('shop_products as p')
+            ->leftJoin('shop_articles as a', 'a.product_id', '=', 'p.id')
             ->where('a.site_id', app()->siteId())
+            ->where('a.code', 'like', 'review-%')
+            //->whereNotNull('a.product_id')
             ->where('a.published_at', '<=', Carbon::now())
             ->orderByDesc('a.published_at')
             ->limit(1000)

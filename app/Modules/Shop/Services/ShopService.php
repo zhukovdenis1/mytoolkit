@@ -313,10 +313,12 @@ class ShopService extends BaseService
 //            ->limit(24);
 
         $query = ShopProduct::query()
-            ->select('p.*')
-            ->from('shop_articles as a')
-            ->leftJoin('shop_products as p', 'a.product_id', '=', 'p.id')
+            ->select('p.id', 'p.title', 'p.title_ae', 'p.photo', 'p.rating', 'p.price', 'p.price_from', 'p.price_to', 'p.hru', 'p.category_0')
+            ->from('shop_products as p')
+            ->leftJoin('shop_articles as a', 'a.product_id', '=', 'p.id')
             ->where('a.site_id', app()->siteId())
+            ->where('a.code', 'like', 'review-%')
+            //->whereNotNull('a.product_id')
             ->where('a.published_at', '<=', Carbon::now())
             ->orderByDesc('a.published_at')
             ->limit(24);
