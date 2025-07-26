@@ -59,7 +59,8 @@ class Helper
             ],
         );
 
-        $connect = $connects[static::$connect];
+        //$connect = $connects[static::$connect];
+        $connect = $connects[0];
 
         $ch = curl_init();
         if ($headers) {

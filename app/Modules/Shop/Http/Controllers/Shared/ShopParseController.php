@@ -246,44 +246,146 @@ class ShopParseController extends Controller
         return new AnonymousResource($coupon);
     }
 
-    public function getProductForReviewsParse(Request $request): AnonymousResource
+    public function getProductForReviewsTagsParse(Request $request): AnonymousResource
     {
         $data = ShopProduct::query()
             ->whereNull('reviews_updated_at')
+            ->where(function($query) {
+                $query->whereNull('extra_data')
+                    ->orWhereRaw('JSON_EXTRACT(extra_data, \'$.reviews.tags\') IS NULL');
+            })
             ->orderByDesc('epn_month_income')
             ->first();
 
         return new AnonymousResource($data);
     }
 
-    public function setParsedReviewsTags(Request $request): AnonymousResource
+    public function getProductForReviewsParse(Request $request): AnonymousResource
     {
-        $validated = $request->validate([
-            'product_id' => ['required', 'integer'],
-            'tags' => ['nullable', 'array'],
-        ]);
-        $product = ShopProduct::query()->findOrFail($validated['product_id']);
-        $extra = $product->extra_data;
-        $extra['reviews']['tags'] = $validated['tags'] ?? null;
-        $extra['reviews']['parse']['currentPage'] = 1;//чтобы дальше парсились не теги, а отзывы
-        $product->extra_data = $extra;
-        $saved = $product->save();
 
-        return new AnonymousResource(['saved' => $saved]);
+        $data = ShopProduct::query()
+            //->where('id', '=', -1)
+            ->whereNull('reviews_updated_at')
+            ->orderByDesc('epn_month_income')
+            ->first();
+
+        if ($data) {
+            $page = $data['extra_data']['reviews']['parse']['currentPage'] ?? 1;
+            $data = [
+                //'page' => $page,
+                'product_id' => $data->id,
+                'url' => 'https://aliexpress.ru/item/' . $data->id_ae . '/reviews',
+                //'url' => 'https://aliexpress.ru/item/1005008081521104/reviews',
+                'referer' => 'https://aliexpress.ru/item/' . $data->id_ae . '.html'
+                //'referer' => 'https://aliexpress.ru/item/1005008081521104.html'
+            ];
+        }
+
+        return new AnonymousResource($data);
     }
 
     public function setParsedReviews(Request $request): AnonymousResource
     {
         $validated = $request->validate([
             'product_id' => ['required', 'integer'],
-            'reviews' => ['nullable', 'array'],
+            'json' => ['nullable', 'string'],
             'page' => ['required', 'integer'],
             'limit' => ['required', 'integer'],
         ]);
 
+        $data = json_decode($validated['json'], true);
+        if (is_null($data)) {
+            return new AnonymousResource(['error' => 'not valid json']);
+        }
+        $productId = $validated['product_id'];
+        $pageNum = $validated['page'];
+        $pageSize = $validated['limit'];
+
         $product = ShopProduct::query()->findOrFail($validated['product_id']);
 
-        $reviews = $validated['reviews'] ?? [];
+        $idAe = $product->id_ae;
+
+        $formatReviewDate = function(?string $dateString): ?string {
+            if (!$dateString) {
+                return null;
+            }
+
+            $dateString = str_replace('Дополнен ', '', $dateString);
+
+            // Создаем массив соответствий русских названий месяцев английским
+            $months = [
+                'января' => 'January',
+                'февраля' => 'February',
+                'марта' => 'March',
+                'апреля' => 'April',
+                'мая' => 'May',
+                'июня' => 'June',
+                'июля' => 'July',
+                'августа' => 'August',
+                'сентября' => 'September',
+                'октября' => 'October',
+                'ноября' => 'November',
+                'декабря' => 'December'
+            ];
+
+            // Заменяем русское название месяца на английское
+            foreach ($months as $ru => $en) {
+                $dateString = str_replace($ru, $en, $dateString);
+            }
+
+            // Преобразуем строку в дату и форматируем
+            $date = \DateTime::createFromFormat('j F Y', $dateString);
+            $formattedDate = null;
+            if ($date) {
+                $formattedDate = $date->format('Y-m-d');
+            }
+
+            return $formattedDate;
+        };
+
+        $result = [];
+
+        $i = 0;
+        foreach ($data['data']['reviews'] as $review) {
+            $images = [];
+            if (!empty($review['root']['images'])) {
+                foreach ($review['root']['images'] as $image) {
+                    $images[] = [
+                        'id' => $image['id'],
+                        'url' => $image['url'],
+                    ];
+                }
+            }
+
+            $i++;
+            $result[] = [
+                'id_ae' => $review['root']['id'],
+                'product_id' => $productId,
+                'product_id_ae' => $idAe,
+                'date' => $formatReviewDate($review['root']['date'] ?? null),
+                'grade' => $review['root']['grade'] ?? null,
+                'text' => $review['root']['text'] ?? '',
+                'reviewer' => empty($review['reviewer']) ? null : [
+                    'name' => $review['reviewer']['name'],
+                    'avatar' => $review['reviewer']['avatar'],
+                    'countryFlag' => $review['reviewer']['countryFlag'],
+                ],
+                'images' => $images ? $images : null,
+                'likesAmount' => $review['interaction']['likesAmount'] ?? 0,
+                'sort' => ($pageNum-1)*$pageSize + $i,
+                'additional' => empty($review['additional']) ? null : [
+                    'id' => $review['additional']['id'],
+                    'date' => $formatReviewDate($review['additional']['date'] ?? null),
+                    'grade' => $review['additional']['grade'],
+                    'text' => $review['additional']['text'],
+                ],
+                'raw' => $review,
+            ];
+        }
+
+
+
+        $reviews = $result ?? [];
 
         $inserted = 0;
         $updated = 0;
@@ -317,15 +419,12 @@ class ShopParseController extends Controller
         }
 
 
-        $extra = $product->extra_data;
-        $extra['reviews']['parse']['currentPage'] = (int) $validated['page'] + 1;
-
-        if (empty($reviews) || intval($validated['page']) >= 40) {
+        if (empty($reviews) || intval($validated['page']) >= 30) {
             $product->reviews_updated_at = Carbon::now();
             $product->reviews_amount = ShopReview::where('product_id', $product->id)->count();
-            $extra['reviews']['parse']['currentPage'] = 0;
+            //$extra['reviews']['parse']['currentPage'] = 0;
         }
-        $product->extra_data = $extra;
+        //$product->extra_data = $extra;
         $saved = $product->save();
 
         return new AnonymousResource([
@@ -334,4 +433,83 @@ class ShopParseController extends Controller
             'failed' => $failed,
         ]);
     }
+
+//    public function setParsedReviewsTags(Request $request): AnonymousResource
+//    {
+//        $validated = $request->validate([
+//            'product_id' => ['required', 'integer'],
+//            'tags' => ['nullable', 'array'],
+//        ]);
+//        $product = ShopProduct::query()->findOrFail($validated['product_id']);
+//        $extra = $product->extra_data;
+//        $extra['reviews']['tags'] = $validated['tags'] ?? null;
+//        $extra['reviews']['parse']['currentPage'] = 1;//чтобы дальше парсились не теги, а отзывы
+//        $product->extra_data = $extra;
+//        $saved = $product->save();
+//
+//        return new AnonymousResource(['saved' => $saved]);
+//    }
+
+//    public function setParsedReviewsOld(Request $request): AnonymousResource
+//    {
+//        $validated = $request->validate([
+//            'product_id' => ['required', 'integer'],
+//            'reviews' => ['nullable', 'array'],
+//            'page' => ['required', 'integer'],
+//            'limit' => ['required', 'integer'],
+//        ]);
+//
+//        $product = ShopProduct::query()->findOrFail($validated['product_id']);
+//
+//        $reviews = $validated['reviews'] ?? [];
+//
+//        $inserted = 0;
+//        $updated = 0;
+//        $failed = 0;
+//
+//        foreach ($reviews as $reviewData) {
+//            try {
+//                // Проверяем существование записи по уникальному id_ae
+//                $existingReview = ShopReview::where('id_ae', $reviewData['id_ae'])->first();
+//
+//                if ($existingReview) {
+//                    // Обновляем существующую запись
+//                    $result = $existingReview->update($reviewData);
+//                    $result ? $updated++ : $failed++;
+//                } else {
+//                    // Создаем новую запись
+//                    $result = ShopReview::create($reviewData);
+//                    $result ? $inserted++ : $failed++;
+//                }
+//            } catch (\Exception $e) {
+//                $failed++;
+//                // Можно логировать ошибку:
+//                // \Log::error('Review upsert failed: ' . $e->getMessage(), $reviewData);
+//                $logger = Log::build([
+//                    'driver' => 'single',
+//                    'path' => storage_path('logs/parser-reviews-errors.log'),
+//                ]);
+//
+//                $logger->error('Review upsert failed: ' . $e->getMessage(), $reviewData);
+//            }
+//        }
+//
+//
+//        $extra = $product->extra_data;
+//        $extra['reviews']['parse']['currentPage'] = (int) $validated['page'] + 1;
+//
+//        if (empty($reviews) || intval($validated['page']) >= 40) {
+//            $product->reviews_updated_at = Carbon::now();
+//            $product->reviews_amount = ShopReview::where('product_id', $product->id)->count();
+//            $extra['reviews']['parse']['currentPage'] = 0;
+//        }
+//        $product->extra_data = $extra;
+//        $saved = $product->save();
+//
+//        return new AnonymousResource([
+//            'inserted' => $inserted,
+//            'updated' => $updated,
+//            'failed' => $failed,
+//        ]);
+//    }
 }

@@ -38,6 +38,7 @@ return [
     ],
     'reviews' => [
         'get_uri'  => '/api/shop/get-product-for-reviews-parse',
+        'get_tags_uri'  => '/api/shop/get-product-for-reviews-tags-parse',
         'set_uri'  => '/api/shop/set-parsed-reviews',
         'set_tags_uri'  => '/api/shop/set-parsed-reviews-tags',
     ]
