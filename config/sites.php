@@ -16,39 +16,39 @@ return [
         'group' => 'shop'
     ],
     [
-        'hosts' => ['shop3'],
+        'hosts' => ['review-best.ru', 'best-review.loc'],
         'id' => 3,
-        'group' => 'shop'
+        'group' => 'shop2'
     ],
     [
-        'hosts' => ['shop4'],
+        'hosts' => ['full-review.ru'],
         'id' => 4,
-        'group' => 'shop'
+        'group' => 'shop2'
     ],
     [
-        'hosts' => ['shop5'],
+        'hosts' => ['polnyi-obzor.ru'],
         'id' => 5,
-        'group' => 'shop'
+        'group' => 'shop2'
     ],
     [
-        'hosts' => ['shop6'],
+        'hosts' => ['amazon.russkom-oficialnyj.ru'],
         'id' => 6,
-        'group' => 'shop'
+        'group' => 'shop2'
     ],
     [
-        'hosts' => ['shop7'],
+        'hosts' => ['taobao.russkom-oficialnyj.ru'],
         'id' => 7,
-        'group' => 'shop'
+        'group' => 'shop2'
     ],
     [
-        'hosts' => ['dzen1 (ff)'],
+        'hosts' => ['dzen1 (ff)', 'dzhum.russkom-oficialnyj.ru'],
         'id' => 8,
-        'group' => 'shop'
+        'group' => 'shop2'
     ],
     [
         'hosts' => ['dzen2 (google)'],
         'id' => 9,
-        'group' => 'shop'
+        'group' => 'shop2'
     ],
 
 ];

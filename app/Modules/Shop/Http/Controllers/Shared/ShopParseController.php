@@ -246,19 +246,19 @@ class ShopParseController extends Controller
         return new AnonymousResource($coupon);
     }
 
-    public function getProductForReviewsTagsParse(Request $request): AnonymousResource
-    {
-        $data = ShopProduct::query()
-            ->whereNull('reviews_updated_at')
-            ->where(function($query) {
-                $query->whereNull('extra_data')
-                    ->orWhereRaw('JSON_EXTRACT(extra_data, \'$.reviews.tags\') IS NULL');
-            })
-            ->orderByDesc('epn_month_income')
-            ->first();
-
-        return new AnonymousResource($data);
-    }
+//    public function getProductForReviewsTagsParse(Request $request): AnonymousResource
+//    {
+//        $data = ShopProduct::query()
+//            ->whereNull('reviews_updated_at')
+//            ->where(function($query) {
+//                $query->whereNull('extra_data')
+//                    ->orWhereRaw('JSON_EXTRACT(extra_data, \'$.reviews.tags\') IS NULL');
+//            })
+//            ->orderByDesc('epn_month_income')
+//            ->first();
+//
+//        return new AnonymousResource($data);
+//    }
 
     public function getProductForReviewsParse(Request $request): AnonymousResource
     {
@@ -266,6 +266,7 @@ class ShopParseController extends Controller
         $data = ShopProduct::query()
             //->where('id', '=', -1)
             ->whereNull('reviews_updated_at')
+            ->whereNull('not_found_at')
             ->orderByDesc('epn_month_income')
             ->first();
 

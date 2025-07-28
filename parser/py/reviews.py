@@ -12,8 +12,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Конфигурация
 class Config:
-    get_url = 'https://deshevyi.loc/api/shop/get-product-for-reviews-parse'
-    set_url = 'https://deshevyi.loc/api/shop/set-parsed-reviews'
+    get_url = 'https://deshevyi.ru/api/shop/get-product-for-reviews-parse'
+    set_url = 'https://deshevyi.ru/api/shop/set-parsed-reviews'
     review_url = 'https://aliexpress.ru/aer-jsonapi/review/v5/desktop/product-reviews?_bx-v=2.5.31'
     max_page = 35
     scroll_delay_min = 1  # сек

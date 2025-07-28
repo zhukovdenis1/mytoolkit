@@ -50,9 +50,14 @@ class ShopArticleHelper
         return $text;
     }
 
-    public function getDataByCode(string $code): ?array
+    public function getDataByCode(string $code, ?int $siteId = null): ?array
     {
-        $article = ShopArticle::query()->where('code', $code)->first();
+        $article = ShopArticle::query()->where('code', $code);
+        if ($siteId) {
+            $article->where('site_id', $siteId);
+        }
+        $article = $article->first();
+
         if (!$article) return null;
 
         if (is_string($article->text)) {

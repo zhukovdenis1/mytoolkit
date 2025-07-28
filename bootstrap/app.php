@@ -52,6 +52,27 @@ if ($siteData && $siteData['group'] == 'shop') {
         ->create();
 
         //$app->macro('appId', fn() => 'shop');
+} elseif ($siteData && $siteData['group'] == 'shop2') {
+    $app = Application::configure(basePath: dirname(__DIR__))
+        ->withRouting(
+            web: __DIR__ . '/../routes/web_shop2.php',
+            api: __DIR__.'/../routes/api_shop2.php',
+            commands: __DIR__.'/../routes/console.php',
+            health: '/up',
+        )
+        ->withMiddleware(function (Middleware $middleware) {
+//            $middleware->alias([
+//                'shop_visits' => \App\Http\Middleware\Shop\RegisterVisit::class,
+//            ]);
+            $middleware->append(FirewallMiddleware::class);
+            $middleware->append(JsonUnescapeUnicode::class);
+            $middleware->append(HandleCors::class);
+            $middleware->append(RequestStatsMiddleware::class);
+        })
+        ->withExceptions(new ExceptionHandler('shop2'))
+        ->create();
+
+    //$app->macro('appId', fn() => 'shop');
 } else {
     $app = Application::configure(basePath: dirname(__DIR__))
         ->withRouting(

@@ -1,4 +1,4 @@
-@extends('layouts.shop')
+@extends($template)
 
 @section('title')
     @if ($reviewArticle)

@@ -35,9 +35,9 @@ class ShopService extends BaseService
     ){}
 
 
-    public function getArticleData($code): ?array
+    public function getArticleData($code, ?int $siteId = null): ?array
     {
-       return $this->articleHelper->getDataByCode($code);
+       return $this->articleHelper->getDataByCode($code, $siteId);
     }
 
     public function getGoRedirectUrl(array $validated, Request $request): string
