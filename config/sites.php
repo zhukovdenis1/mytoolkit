@@ -22,24 +22,24 @@ return [
         'hosts' => ['review-best.ru', 'best-review.loc'],
         'id' => 3,
         'group' => 'shop2',
-        'yandexVerification' => '',
-        'yandexMetrika' => '',
+        'yandexVerification' => '982cc7f715f8795e',
+        'yandexMetrika' => '103519140',
         'googleVerification' => ''
     ],
     '4' => [
         'hosts' => ['full-review.ru'],
         'id' => 4,
         'group' => 'shop2',
-        'yandexVerification' => '',
-        'yandexMetrika' => '',
+        'yandexVerification' => '084b89b7d31b3a7f',
+        'yandexMetrika' => '103519182',
         'googleVerification' => ''
     ],
     '5' => [
         'hosts' => ['polnyi-obzor.ru'],
         'id' => 5,
         'group' => 'shop2',
-        'yandexVerification' => '',
-        'yandexMetrika' => '',
+        'yandexVerification' => 'df3ef5364fd97231',
+        'yandexMetrika' => '103519188',
         'googleVerification' => ''
     ],
     '6' => [
@@ -78,24 +78,24 @@ return [
         'hosts' => ['full-review.online'],
         'id' => 10,
         'group' => 'shop',
-        'yandexVerification' => '',
-        'yandexMetrika' => '',
+        'yandexVerification' => '0d625ecc80683b0e',
+        'yandexMetrika' => '103519325',
         'googleVerification' => ''
     ],
     '11' => [
-        'hosts' => ['review-best.online'],
+        'hosts' => ['review-best.online', 'review-best2.loc'],
         'id' => 11,
         'group' => 'shop',
-        'yandexVerification' => '',
-        'yandexMetrika' => '',
+        'yandexVerification' => '2f120ae021cdde4c',
+        'yandexMetrika' => '103519307',
         'googleVerification' => ''
     ],
     '12' => [
         'hosts' => ['polnyi-obzor.online'],
         'id' => 12,
         'group' => 'shop',
-        'yandexVerification' => '',
-        'yandexMetrika' => '',
+        'yandexVerification' => 'd965877cb390bff1',
+        'yandexMetrika' => '103519291',
         'googleVerification' => ''
     ],
     '13' => [

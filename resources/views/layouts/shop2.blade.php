@@ -51,7 +51,7 @@
             <!--aside>Asided</aside-->
 
         </main>
-        <footer>Подборка товаров с <a href="{{route('go', ['url' => 'https://aliexpress.ru'])}}">Алиэкспресс</a> &copy;{{ date('Y') }}</footer>
+        <footer>Подборка товаров &copy;{{ date('Y') }}</footer>
     </div>
     <!--cript src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script-->
     <script src="/shop/js/jquery-3.7.1.min.js"></script>
@@ -112,6 +112,7 @@
                 webvisor:true
             });
         </script>
+        <noscript><div><img src="https://mc.yandex.ru/watch/{{$siteConfig['yandexMetrika']}}" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
         <!-- /Yandex.Metrika counter -->
     @endif
 </div>

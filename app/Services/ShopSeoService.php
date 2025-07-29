@@ -10,6 +10,8 @@ class ShopSeoService
 {
     public function getNoIndexTag(string $noIndex, Request $request): string
     {
+        $siteId = (int) app()->siteId();
+
         if ($noIndex == 'false') {
             $noIndex = false;
         } elseif ($noIndex == 'true') {
@@ -18,6 +20,9 @@ class ShopSeoService
             $noIndex = false;
             $routeName = $request->route()?->getName();
             if (!empty($request->all()) || $routeName == 'category' || $routeName == 'coupon.detail') {
+                $noIndex = true;
+            }
+            if ($siteId != 2 && !in_array($routeName, ['home','review.detail', 'detail'])) {
                 $noIndex = true;
             }
         }

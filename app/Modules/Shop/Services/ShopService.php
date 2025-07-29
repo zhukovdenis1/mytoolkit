@@ -269,6 +269,28 @@ class ShopService extends BaseService
             });
         }
 
+        //временно
+        $siteId = (int) app()->siteId();
+        if ($siteId == 10) {
+            $query->where('epn_month_income', '>', 0);
+        } elseif ($siteId == 11) {
+            $query->where('epn_cashback', '>', 0);
+            $query->orderBy('epn_cashback', 'desc');
+        } elseif ($siteId == 12) {
+            $query->where('epn_month_income', '>', 2000);
+            $query->orderBy('epn_month_income', 'asc');
+        } elseif ($siteId == 13) {
+            $query->where('epn_cashback', '>', 500);
+            $query->orderBy('epn_cashback', 'asc');
+        } elseif ($siteId == 14) {
+            $query->where('epn_month_income', '>', 20000);
+            $query->orderBy('updated_at', 'desc');
+        } elseif ($siteId == 15) {
+            $query->where('epn_cashback', '>', 500);
+            $query->orderBy('updated_at', 'desc');
+        }
+        //-------
+
         if ($category) {
             //$query->where('category_id', $category);
 

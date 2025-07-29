@@ -42,6 +42,7 @@ class ShopController extends Controller
 
     public function index(Request $request)
     {
+        $siteId = (int) app()->siteId();
         $validated = $request->validate([
             'page'        => ['nullable', 'integer', 'min:1', 'max:100'],
             'search'      => ['nullable', 'string', 'max:50'],
@@ -56,10 +57,11 @@ class ShopController extends Controller
         $articles = null;
 
         if (!$search) {
-            $popular = $this->service->getProductWithReviews();
-            $coupons = $this->service->getMainPageCoupons();
-            $articles = $this->service->getMainPageArticles();
+            $popular = $siteId == 2 ? $this->service->getProductWithReviews() : null;
+            $coupons = $siteId == 2 ? $this->service->getMainPageCoupons() : null;
+            $articles = $siteId == 2 ? $this->service->getMainPageArticles() : null;
         }
+
         return view('Shop::shop.home', [
             'monthName' => mb_ucfirst($this->dateTimeHelper->getMonthName(intval(date('m')), 'nominative')),
             'epnCategories' => $this->service->getEpnMenu(),
@@ -68,22 +70,46 @@ class ShopController extends Controller
             'coupons' => $coupons,
             'articles' => $articles,
             'searchString' => $search,
-            'article' => $this->service->getArticleData('home')
+            'article' => $this->service->getArticleData('home', $siteId)
         ]);
     }
 
     public function sitemap(Request $request)
     {
 
-        $products = ShopProduct::query()
+        $query = ShopProduct::query()
             ->select('id', 'hru','created_at')
             ->whereNull('deleted_at')
             ->whereNotIn('category_0', config('shop.sex_categories'))
             ->orderBy('id', 'desc')
-            ->limit(3000)
-            ->get();
+            ->limit(3000);
 
-        $productsWithArticles = ShopProduct::query()
+        $siteId = (int) app()->siteId();
+
+        if ($siteId == 10) {
+            $query->where('epn_month_income', '>', 0);
+        } elseif ($siteId == 11) {
+            $query->where('epn_cashback', '>', 0);
+            $query->orderBy('epn_cashback', 'desc');
+        } elseif ($siteId == 12) {
+            $query->where('epn_month_income', '>', 2000);
+            $query->orderBy('epn_month_income', 'asc');
+        } elseif ($siteId == 13) {
+            $query->where('epn_cashback', '>', 500);
+            $query->orderBy('epn_cashback', 'asc');
+        } elseif ($siteId == 14) {
+            $query->where('epn_month_income', '>', 20000);
+            $query->orderBy('updated_at', 'desc');
+        } elseif ($siteId == 15) {
+            $query->where('epn_cashback', '>', 500);
+            $query->orderBy('updated_at', 'desc');
+        }
+
+        $products = $query->get();
+
+
+
+        $productsWithArticles = $siteId == 2 ? ShopProduct::query()
             ->select('p.id', 'p.hru', 'a.created_at')
             ->from('shop_products as p')
             ->leftJoin('shop_articles as a', 'a.product_id', '=', 'p.id')
@@ -93,9 +119,9 @@ class ShopController extends Controller
             ->where('a.published_at', '<=', Carbon::now())
             ->orderByDesc('a.published_at')
             ->limit(1000)
-            ->get();
+            ->get() : [];
 
-        $articles = ShopArticle::query()
+        $articles = $siteId == 2 ? ShopArticle::query()
             ->select('id', 'uri', 'created_at')
             ->whereNull('deleted_at')
             ->where('site_id', app()->siteId())
@@ -103,7 +129,7 @@ class ShopController extends Controller
             ->where('published_at', '<', Carbon::now())
             ->orderBy('id', 'desc')
             ->limit(1000)
-            ->get();
+            ->get(): [];
 
         return view('Shop::shop.sitemap', [
             'products' => $products,
@@ -207,7 +233,7 @@ class ShopController extends Controller
             'products' => $products,
             'category' => $category,
             'searchString' => $search,
-            'article' => $this->service->getArticleData('epn-'.$category['id'])
+            'article' => $this->service->getArticleData('epn-'.$category['id'], app()->siteId())
         ]);
     }
 
