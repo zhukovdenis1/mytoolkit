@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 
-use App\Http\Resources\SimpleResource;
+//use App\Http\Resources\SimpleResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +12,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\View;
 use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,7 +30,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
+          View::share('baseLayout', 'layouts.' . app()->siteGroup());
+          View::share('siteConfig', config('sites.' . app()->siteId()));
 //        // Переопределяем макрос toJson для всех ресурсов, чтобы применить глобально JSON_UNESCAPED_UNICODE
 //        JsonResource::macro('toJson', function ($options = 0) {
 //            return json_encode($this->resolve(), JSON_UNESCAPED_UNICODE | $options);

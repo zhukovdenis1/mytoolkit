@@ -1,4 +1,4 @@
-@extends('layouts.shop')
+@extends($baseLayout)
 
 @section('title', 'Избранное / Недорогой интернет-магазин')
 @section('description', 'Избранные товары товаров')

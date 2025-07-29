@@ -17,8 +17,8 @@
     <link rel="stylesheet" href="/shop/css/colorbox.css" />
     @stack('css')
 
-    <meta name="yandex-verification" content="5d0ecdba6a014fcc" />
-    <meta name="google-site-verification" content="Eougu2REuO6g1AZkpyBbgV_VdahDZ_ffBBsXtiikB8c" />
+    <meta name="yandex-verification" content="{{$siteConfig['yandexVerification']}}" />
+    <meta name="google-site-verification" content="{{$siteConfig['googleVerification']}}" />
 </head>
 <body>
 <div class="wrapper">
@@ -113,16 +113,16 @@
             k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
         (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-        ym(32676105, "init", {
+        ym({{$siteConfig['yandexMetrika']}}, "init", {
             clickmap:true,
             trackLinks:true,
             accurateTrackBounce:true,
             webvisor:true
         });
     </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/32676105" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    @endif
     <!-- /Yandex.Metrika counter -->
+    @endif
+
 </div>
 </body>
 </html>

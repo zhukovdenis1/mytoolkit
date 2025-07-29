@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Route;
     Route::get('coupons', [Shop2Controller::class, 'goHome'])->name('coupons');
     //Route::get('coupons/{coupon}/{couponHru?}', [ShopCouponController::class, 'detail'])->name('coupon.detail');
     //Route::get('a', [ShopArticleController::class, 'index'])->name('articles');
-    //Route::get('a-{article}/{articleHru?}', [ShopArticleController::class, 'detail'])->name('article.detail');
+    //Route::get('a-{article}/{articleHru?}', [Shop2Controller::class, 'detail'])->name('article.detail');
     Route::get('r-{review}/{reviewHru?}', [Shop2Controller::class, 'detail'])->name('review.detail');
     Route::get('r-{product}/{productHru?}', [Shop2Controller::class, 'goHome'])->name('detail');
 

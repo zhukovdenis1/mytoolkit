@@ -1,4 +1,4 @@
-@extends($template)
+@extends($baseLayout)
 
 @section('title')
     @if ($reviewArticle)

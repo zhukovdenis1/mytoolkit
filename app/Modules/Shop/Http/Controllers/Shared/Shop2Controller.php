@@ -19,14 +19,11 @@ use Illuminate\Support\Facades\Mail;
 
 class Shop2Controller extends Controller
 {
-    private string $template = '';
     public function __construct(
         private readonly ShopService $service,
         private readonly DateTimeHelper $dateTimeHelper
 
-    ) {
-        $this->template = 'layouts.' . app()->siteGroup();
-    }
+    ) {}
     public function go(Request $request)
     {
         $validated = $request->validate([
@@ -82,7 +79,6 @@ class Shop2Controller extends Controller
         $popular = $query->get();
 
         return view('Shop::shop2.home', [
-            //'template' => $this->template,
             'monthName' => mb_ucfirst($this->dateTimeHelper->getMonthName(intval(date('m')), 'nominative')),
             'epnCategories' => $this->service->getEpnMenu(),
             'popular' => $popular,
@@ -208,7 +204,6 @@ class Shop2Controller extends Controller
 
 
         return view('Shop::shop.detail', [
-                'template' => $this->template,
                 'p' => $product,
                 'images' => $img,
                 'vkAttachment' => $vkAttachment,
