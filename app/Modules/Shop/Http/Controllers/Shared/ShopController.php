@@ -81,7 +81,6 @@ class ShopController extends Controller
             ->select('id', 'hru','created_at')
             ->whereNull('deleted_at')
             ->whereNotIn('category_0', config('shop.sex_categories'))
-            ->orderBy('id', 'desc')
             ->limit(3000);
 
         $siteId = (int) app()->siteId();
@@ -105,7 +104,7 @@ class ShopController extends Controller
             $query->orderBy('updated_at', 'desc');
         }
 
-        $products = $query->get();
+        $products = $query->orderBy('id', 'desc')->get();
 
 
 

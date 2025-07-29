@@ -253,7 +253,6 @@ class ShopService extends BaseService
             //->whereNull('deleted_at') soft delete автоматически это делает
             //->whereNull('not_found_at')
             //->whereNotIn('category_0', [16002,1309])
-            ->orderBy('id', 'desc')
             ->offset($offset)
             ->limit($limit);
 
@@ -306,6 +305,8 @@ class ShopService extends BaseService
         if ($epnCategory) {
             $query->where('epn_category_id', $epnCategory);
             $query->orderBy('epn_month_income', 'desc');
+        } else {
+            $query->orderBy('id', 'desc');
         }
 
         return $query->get();
