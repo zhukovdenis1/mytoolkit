@@ -46,24 +46,24 @@ return [
         'hosts' => ['amazon.russkom-oficialnyj.ru'],
         'id' => 6,
         'group' => 'shop2',
-        'yandexVerification' => '',
-        'yandexMetrika' => '',
+        'yandexVerification' => 'c6a20138e3c1d028',
+        'yandexMetrika' => '103539274',
         'googleVerification' => ''
     ],
     '7' => [
         'hosts' => ['taobao.russkom-oficialnyj.ru'],
         'id' => 7,
         'group' => 'shop2',
-        'yandexVerification' => '',
-        'yandexMetrika' => '',
+        'yandexVerification' => 'cdfce2c1a5e36409',
+        'yandexMetrika' => '103539287',
         'googleVerification' => ''
     ],
     '8' => [
         'hosts' => ['dzen1 (ff)', 'dzhum.russkom-oficialnyj.ru'],
         'id' => 8,
         'group' => 'shop2',
-        'yandexVerification' => '',
-        'yandexMetrika' => '',
+        'yandexVerification' => '0e4eec874cc66bd3',
+        'yandexMetrika' => '103539297',
         'googleVerification' => ''
     ],
     '9' => [
@@ -99,27 +99,27 @@ return [
         'googleVerification' => ''
     ],
     '13' => [
-        'hosts' => ['ozon.russkom-oficialnyj.online'],
+        'hosts' => ['ozon.russkom-oficialnyj.ru'],
         'id' => 13,
         'group' => 'shop',
-        'yandexVerification' => '',
-        'yandexMetrika' => '',
+        'yandexVerification' => '98956927adc9b49d',
+        'yandexMetrika' => '103539307',
         'googleVerification' => ''
     ],
     '14' => [
-        'hosts' => ['valberis.russkom-oficialnyj.online'],
+        'hosts' => ['valberis.russkom-oficialnyj.ru'],
         'id' => 14,
         'group' => 'shop',
-        'yandexVerification' => '',
-        'yandexMetrika' => '',
+        'yandexVerification' => 'ed265c099b632f85',
+        'yandexMetrika' => '103539313',
         'googleVerification' => ''
     ],
     '15' => [
-        'hosts' => ['aliexpress.russkom-oficialnyj.online'],
+        'hosts' => ['aliexpress.russkom-oficialnyj.ru'],
         'id' => 15,
         'group' => 'shop',
-        'yandexVerification' => '',
-        'yandexMetrika' => '',
+        'yandexVerification' => '63073d85283627eb',
+        'yandexMetrika' => '103539316',
         'googleVerification' => ''
     ],
 ];
