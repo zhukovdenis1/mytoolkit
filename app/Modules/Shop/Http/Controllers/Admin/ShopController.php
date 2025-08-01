@@ -25,7 +25,7 @@ class ShopController extends BaseController
         $sites = config('sites') ?? [];
         $result = [];
         foreach ($sites as $s) {
-            if (is_null($group) || $s['group'] == $group) {
+            if (is_null($group) || /*$s['group'] == $group*/strpos($s['group'], $group) === 0) {
                 $result[] = [
                     'id' => $s['id'],
                     'name' => $s['id'] . '. ' . $s['hosts'][0]
