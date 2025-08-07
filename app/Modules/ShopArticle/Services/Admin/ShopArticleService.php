@@ -155,7 +155,7 @@ class ShopArticleService extends BaseService
             }
             $href = config('app.shop_scheme') . config('app.shop_url') . "/p-{$product->id}/{$product->hru}{$tid}";
 
-            $text .= '<p><a href="' . $href . '" target="_blank">Более подбробная информация: фото, видео, отзывы, характеристики... доступна по этой ссылке</a></p>';
+            $text .= '<p><a href="' . $href . '" target="_blank">Более подробная информация: фото, видео, отзывы, характеристики... доступна по этой ссылке</a></p>';
             $text .= "<p><a href='$href' target='_blank'>$href</a></p>";
             $text .= '<p><a href="https://aliexpress.ru/item/' . $product->id_ae . '/reviews" target="_blank">Aliexpess</a></p>';
             $text .= '<p>';

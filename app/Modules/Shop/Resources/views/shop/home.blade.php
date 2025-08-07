@@ -19,8 +19,8 @@
     </div>
 
 
+    {!! $article['content']["intro"] ?? '' !!}
     @if($popular?->isNotEmpty())
-        {!! $article['content']["intro"] ?? '' !!}
         <x-shop::product-list :products="$popular" :more="false" />
     @endif
 

@@ -197,6 +197,11 @@ class SocialPostingCommand extends Command
 
         $result = $this->postToGroup($groupId, $vkMessage, $pAttachment );
 
+        ShopProduct::where('id', $product['id'])
+            ->update([
+                'posted_at' => Carbon::now()
+            ]);
+
         //if ($pd['category'] == ModelAliProduct::CAT_KRUTYEVESHI || empty($pd['category']))
         {
             $result = $this->postToTelegram($tgMessage, $photos);
@@ -208,10 +213,7 @@ class SocialPostingCommand extends Command
             //ModelAliProduct::editByKey(array(ModelAliProduct::VK_PUBLISHED_FIELD => $result['response']['post_id']), $product[ModelAliProduct::ID_FIELD]);
         }
 
-        ShopProduct::where('id', $product['id'])
-            ->update([
-                'posted_at' => Carbon::now()
-            ]);
+
 
         return $result;
     }
@@ -240,6 +242,11 @@ class SocialPostingCommand extends Command
 
         $result = $this->postToGroup($groupId, $vkMessage, $pAttachment );
 
+        ShopCoupon::where('id', $coupon['id'])
+            ->update([
+                'posted_at' => Carbon::now()
+            ]);
+
         //if ($pd['category'] == ModelAliProduct::CAT_KRUTYEVESHI || empty($pd['category']))
         {
             $result = $this->postToTelegram($tgMessage, []);
@@ -251,10 +258,7 @@ class SocialPostingCommand extends Command
             //ModelAliProduct::editByKey(array(ModelAliProduct::VK_PUBLISHED_FIELD => $result['response']['post_id']), $product[ModelAliProduct::ID_FIELD]);
         }
 
-        ShopCoupon::where('id', $coupon['id'])
-            ->update([
-                'posted_at' => Carbon::now()
-            ]);
+
 
         return $result;
     }
