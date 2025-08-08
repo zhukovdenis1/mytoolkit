@@ -69,7 +69,7 @@ class Shop2Controller extends Controller
             //->whereNotNull('a.product_id')
             ->where('a.published_at', '<=', Carbon::now())
             ->orderByDesc('a.published_at')
-            ->limit(24);
+            ->limit(200);
 
         if ($search) {
             $query->where('a.h1', 'like', '%' . $search . '%');

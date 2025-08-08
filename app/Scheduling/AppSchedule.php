@@ -20,28 +20,13 @@ class AppSchedule
         $schedule->command('shop:post')->dailyAt('04:00');
         $schedule->command('shop:post')->dailyAt('09:00');
         $schedule->command('shop:post')->dailyAt('14:00');
-        $schedule->command('shop:genArticles')->dailyAt('16:40');
         $schedule->command('shop:genArticles')->dailyAt('17:00');
-        $schedule->command('shop:genArticles')->dailyAt('17:20');
-        $schedule->command('shop:genArticles')->dailyAt('17:40');
         $schedule->command('shop:genArticles')->dailyAt('18:00');
-        $schedule->command('shop:genArticles')->dailyAt('18:20');
-        $schedule->command('shop:genArticles')->dailyAt('18:40');
         $schedule->command('shop:genArticles')->dailyAt('19:00');
-        $schedule->command('shop:genArticles')->dailyAt('19:20');
-        $schedule->command('shop:genArticles')->dailyAt('19:40');
         $schedule->command('shop:genArticles')->dailyAt('20:00');
-        $schedule->command('shop:genArticles')->dailyAt('20:20');
-        $schedule->command('shop:genArticles')->dailyAt('20:40');
         $schedule->command('shop:genArticles')->dailyAt('21:00');
-        $schedule->command('shop:genArticles')->dailyAt('21:20');
-        $schedule->command('shop:genArticles')->dailyAt('21:40');
         $schedule->command('shop:genArticles')->dailyAt('22:00');
-        $schedule->command('shop:genArticles')->dailyAt('22:20');
-        $schedule->command('shop:genArticles')->dailyAt('22:40');
         $schedule->command('shop:genArticles')->dailyAt('23:00');
-        $schedule->command('shop:genArticles')->dailyAt('23:20');
-        $schedule->command('shop:genArticles')->dailyAt('23:40');
         $schedule->command('shop:genArticles')->dailyAt('23:59');
         //$schedule->command('stats:clean --days=30')->daily();
     }
