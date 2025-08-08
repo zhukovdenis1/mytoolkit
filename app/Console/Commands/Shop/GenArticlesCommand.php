@@ -93,12 +93,12 @@ class GenArticlesCommand extends Command
             $sites = config('sites');
             $allIdList = [];
             foreach ($sites as $s) {
-                if ($s['group'] == 'shop') {
+                if (!empty($s['genArticles'])) {
                     $allIdList[] = $s['id'];
                 }
             }
             $rest = array_diff($allIdList, $existsIdList);
-            return array_slice($rest, 0, $numArticles);;
+            return array_slice($rest, 0, $numArticles);
         })(array_column($articles, 'site_id'), $numArticles);
 
         $numArticles = count($nextSitesIds);

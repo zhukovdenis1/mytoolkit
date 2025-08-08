@@ -16,7 +16,8 @@ return [
         'group' => 'shop',
         'yandexVerification' => '5d0ecdba6a014fcc',
         'yandexMetrika' => '32676105',
-        'googleVerification' => 'Eougu2REuO6g1AZkpyBbgV_VdahDZ_ffBBsXtiikB8c'
+        'googleVerification' => 'Eougu2REuO6g1AZkpyBbgV_VdahDZ_ffBBsXtiikB8c',
+        'genArticles' => true,
     ],
     '3' => [
         'hosts' => ['review-best.ru', 'best-review.loc'],
@@ -24,7 +25,8 @@ return [
         'group' => 'shop2',
         'yandexVerification' => '982cc7f715f8795e',
         'yandexMetrika' => '103519140',
-        'googleVerification' => ''
+        'googleVerification' => '',
+        'genArticles' => true,
     ],
     '4' => [
         'hosts' => ['full-review.ru'],
@@ -32,7 +34,8 @@ return [
         'group' => 'shop2',
         'yandexVerification' => '084b89b7d31b3a7f',
         'yandexMetrika' => '103519182',
-        'googleVerification' => ''
+        'googleVerification' => '',
+        'genArticles' => true,
     ],
     '5' => [
         'hosts' => ['polnyi-obzor.ru'],
@@ -40,7 +43,8 @@ return [
         'group' => 'shop2',
         'yandexVerification' => 'df3ef5364fd97231',
         'yandexMetrika' => '103519188',
-        'googleVerification' => ''
+        'googleVerification' => '',
+        'genArticles' => true,
     ],
     '6' => [
         'hosts' => ['amazon.russkom-oficialnyj.ru'],
@@ -48,7 +52,8 @@ return [
         'group' => 'shop2',
         'yandexVerification' => 'c6a20138e3c1d028',
         'yandexMetrika' => '103539274',
-        'googleVerification' => ''
+        'googleVerification' => '',
+        'genArticles' => true,
     ],
     '7' => [
         'hosts' => ['taobao.russkom-oficialnyj.ru'],
@@ -56,7 +61,8 @@ return [
         'group' => 'shop2',
         'yandexVerification' => 'cdfce2c1a5e36409',
         'yandexMetrika' => '103539287',
-        'googleVerification' => ''
+        'googleVerification' => '',
+        'genArticles' => true,
     ],
     '8' => [
         'hosts' => ['dzen1 (ff)', 'dzhum.russkom-oficialnyj.ru'],
@@ -64,7 +70,8 @@ return [
         'group' => 'shop2',
         'yandexVerification' => '0e4eec874cc66bd3',
         'yandexMetrika' => '103539297',
-        'googleVerification' => ''
+        'googleVerification' => '',
+        'genArticles' => true,
     ],
     '9' => [
         'hosts' => ['dzen2 (google)'],
@@ -72,7 +79,8 @@ return [
         'group' => 'shop2',
         'yandexVerification' => '',
         'yandexMetrika' => '',
-        'googleVerification' => ''
+        'googleVerification' => '',
+        'genArticles' => true,
     ],
     '10' => [
         'hosts' => ['full-review.online'],

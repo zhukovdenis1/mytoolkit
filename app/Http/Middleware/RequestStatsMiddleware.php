@@ -12,8 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RequestStatsMiddleware
 {
-
-
     public function handle($request, Closure $next): Response
     {
         if (!$this->shouldCollectStats($request)) {
