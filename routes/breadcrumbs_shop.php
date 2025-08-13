@@ -85,7 +85,6 @@ Breadcrumbs::for('category', function (BreadcrumbTrail $trail, $category): void 
 });
 
 
-
 Breadcrumbs::for('detail', function (BreadcrumbTrail $trail, ShopProduct|string $product): void {
     if (is_string($product)) {
         return;
@@ -95,15 +94,32 @@ Breadcrumbs::for('detail', function (BreadcrumbTrail $trail, ShopProduct|string 
 
     $trail->parent('home');
 
-    $categories = ShopCategory::query()
-        ->select('id_ae', 'title', 'hru')
-        ->whereIn('id_ae', $categories)
-        ->limit(4)
-        ->get();
+    if ($product->epn_category_id) {
+        $categories = config('epn.categories');
+        foreach ($categories as $category) {
+            if ($category['id'] == $product->epn_category_id) {
+                $trail->push(
+                    $category['name'],
+                    route(
+                        'epnCategory',
+                        ['categoryId' => $product->epn_category_id, 'categoryHru' => $category['uri']]
+                    )
+                );
+            }
+        }
+    } else {
+        $categories = ShopCategory::query()
+            ->select('id_ae', 'title', 'hru')
+            ->whereIn('id_ae', $categories)
+            ->limit(4)
+            ->get();
 
-    foreach ($categories as $c) {
-        $trail->push($c['title'], route('category', ['category' => $c, 'categoryHru' => $c['hru']]));
+        foreach ($categories as $c) {
+            $trail->push($c['title'], route('category', ['category' => $c, 'categoryHru' => $c['hru']]));
+        }
     }
 
-    $trail->push($pd->title ?? '', '');
+
+
+    $trail->push(Str::limit($product->title_ae ?? '', 70), '');
 });

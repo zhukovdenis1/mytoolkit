@@ -411,6 +411,9 @@ class ShopController extends Controller
                 Storage::append('old_ali_not_found.txt', date('Y-m-d H:i:s ') . 'https://old.deshevyi.ru/ali/'. $productHru . ' ' . $html);
                 return redirect()->route('home');
             }
+        } else {
+            //redirect to home
+            return redirect()->route('home');
         }
 
         if (strpos($html, 'page404')) {
