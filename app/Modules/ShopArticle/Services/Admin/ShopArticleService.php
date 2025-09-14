@@ -183,19 +183,23 @@ class ShopArticleService extends BaseService
             if ($text[0]['type'] == 'product' && $text[1]['type'] == 'visual') {
                 $props = explode("\n", $text[0]['data']['props'] ?? []);
                 $cons = explode("\n", $text[0]['data']['cons'] ?? []);
-                $propsConsTable = '<p>Основные преимущества и недостатки, которые отмечают покупатели в отзывах:</p>';
-                $propsConsTable .= '<table styel="width: 100%">';
-                $propsConsTable .= '<tr><th style="width:50%">Преимущества</th><th style="width:50%">Недостатки</th></tr>';
-                for ($i=0; $i < max(count($props), count($cons)); $i++) {
-                    $propsConsTable .= '<tr>';
-                    $propsConsTable .= '<td style="width:50%">' . ($props[$i] ?? '') . '</td>';
-                    $propsConsTable .= '<td style="width:50%">' . ($cons[$i] ?? '') . '</td>';
-                    $propsConsTable .= '</tr>';
+                $propsConsText = '<p>Основные преимущества и недостатки, которые отмечают покупатели в отзывах:</p>';
+                $propsConsText .= '<p><b>Преимущества</b>:</p>';
+                $propsConsText .= '<ul>';
+                foreach ($props as $p) {
+                    $propsConsText .= '<li>' . $p . '</li>';
                 }
-                $propsConsTable .= '</table>';
+                $propsConsText .= '</ul>';
+                $propsConsText .= '<p><b>Недостатки</b>:</p>';
+                $propsConsText .= '<ul>';
+                foreach ($cons as $c) {
+                    $propsConsText .= '<li>' . $c . '</li>';
+                }
+                $propsConsText .= '</ul>';
 
-                $text[1]['data']['text'] = $propsConsTable . "<p><a href='$href' target='_blank'>$href</a></p>" . $text[1]['data']['text'];
+                $text[1]['data']['text'] = $propsConsText . "<p><a href='$href' target='_blank'>$href</a></p>" . $text[1]['data']['text'];
                 $text[1]['data']['text'] .= '<p><a href="' . $href . '" target="_blank">Более подробная информация: фото, видео, отзывы, характеристики... доступна по этой ссылке</a></p>';
+                unset($text[0]);
                 $article->text = $text;
             }
         }
