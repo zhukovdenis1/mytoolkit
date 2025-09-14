@@ -42,7 +42,7 @@ class ShopArticleController extends BaseController
 
     public function show(ShopArticle $article): ShopArticleResource
     {
-        return new ShopArticleResource($article);
+        return new ShopArticleResource($this->articleService->prepareForDzen($article));
     }
 
     public function pubInfo(ShopArticle $article): AnyResource

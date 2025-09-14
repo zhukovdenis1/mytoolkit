@@ -97,7 +97,7 @@ Breadcrumbs::for('detail', function (BreadcrumbTrail $trail, ShopProduct|string 
     if ($product->epn_category_id) {
         $categories = config('epn.categories');
         foreach ($categories as $category) {
-            if ($category['id'] == $product->epn_category_id) {
+            if ($category['id'] == $product->epn_category_id && isset($category['uri'])) {
                 $trail->push(
                     $category['name'],
                     route(

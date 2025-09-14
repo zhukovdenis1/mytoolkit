@@ -168,4 +168,38 @@ class ShopArticleService extends BaseService
         return $text;
     }
 
+    public function prepareForDzen(ShopArticle $article): ShopArticle
+    {
+        if (in_array($article->site_id, [8,9]) && isset($article->text[0]) && isset($article->text[1])) {
+            $product = ShopProduct::query()->find($article->product_id);
+            if ($article->site_id == 8) {
+                $tid = '?tid=3';
+            }
+            if ($article->site_id == 9) {
+                $tid = '?tid=4';
+            }
+            $href = config('app.shop_scheme') . config('app.shop_url') . "/p-{$product->id}/{$product->hru}{$tid}";
+            $text = $article->text;
+            if ($text[0]['type'] == 'product' && $text[1]['type'] == 'visual') {
+                $props = explode("\n", $text[0]['data']['props'] ?? []);
+                $cons = explode("\n", $text[0]['data']['cons'] ?? []);
+                $propsConsTable = '<p>Основные преимущества и недостатки, которые отмечают покупатели в отзывах:</p>';
+                $propsConsTable .= '<table styel="width: 100%">';
+                $propsConsTable .= '<tr><th style="width:50%">Преимущества</th><th style="width:50%">Недостатки</th></tr>';
+                for ($i=0; $i < max(count($props), count($cons)); $i++) {
+                    $propsConsTable .= '<tr>';
+                    $propsConsTable .= '<td style="width:50%">' . ($props[$i] ?? '') . '</td>';
+                    $propsConsTable .= '<td style="width:50%">' . ($cons[$i] ?? '') . '</td>';
+                    $propsConsTable .= '</tr>';
+                }
+                $propsConsTable .= '</table>';
+
+                $text[1]['data']['text'] = $propsConsTable . "<p><a href='$href' target='_blank'>$href</a></p>" . $text[1]['data']['text'];
+                $text[1]['data']['text'] .= '<p><a href="' . $href . '" target="_blank">Более подробная информация: фото, видео, отзывы, характеристики... доступна по этой ссылке</a></p>';
+                $article->text = $text;
+            }
+        }
+        return $article;
+    }
+
 }
