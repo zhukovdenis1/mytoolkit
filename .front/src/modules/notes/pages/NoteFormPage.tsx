@@ -133,7 +133,20 @@ export const NoteFormPage: React.FC<NoteFormPageProps> = ({ modal = {
                     />
                 </Form.Item>
                 <SubNoteList parentId={noteId} />
-                <Editor editor={editor} disabled={modal.loading} />
+                <Editor
+                    editor={editor}
+                    disabled={modal.loading}
+                    mode="edit"
+                    config={{
+                        fileRoutes: {
+                            save: {route: 'notes.files.add', data: {note_id: noteId}},
+                            delete: {route: 'files.delete'}
+                        },
+                        image: {
+                            storageId: 1
+                        }
+                    }}
+                />
                 <Form.Item>
                     <Space>
                         <Button type="default" htmlType="submit" onClick={() => form.setFieldValue("exit", 0)}>Save</Button>
