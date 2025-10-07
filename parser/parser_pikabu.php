@@ -46,7 +46,7 @@ try {
     }
 
     $pikabuUrl = $config['coupons']['pikabu_url'] . $uri;
-
+    $pikabuUrl = str_replace('\/', '/', $pikabuUrl);
     $content = Helper::getAeContent($pikabuUrl);
 
     if (empty($content)) {
