@@ -5,9 +5,9 @@
         @if(in_array($product->category_0, config('shop.sex_categories')))
 
         @elseif(strpos($product->photo[0], 'video') || strpos($product->photo[0], 'taobao'))
-            <img src="{{$product->photo[1]}}_200x200.jpg" alt="{{$product->title ?? $product->title_ae}}" />
+            <img src="{{$product->photo[1]}}_200x200.jpg" alt="{{$product->title ?? $product->title_ae}}" referrerpolicy="no-referrer" />
         @else
-            <img src="{{$product->photo[0]}}_200x200.jpg" alt="{{$product->title ?? $product->title_ae}}" />
+            <img src="{{$product->photo[0]}}_200x200.jpg" alt="{{$product->title ?? $product->title_ae}}" referrerpolicy="no-referrer" />
         @endif
     @endif
 @endif

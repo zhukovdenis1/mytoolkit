@@ -2,9 +2,9 @@
     <li>
         <div class="profile">
             <div class="profile-photo">
-                <img class="profile" src="{{ $r['reviewer']['avatar'] ?? '' }}"  />
+                <img class="profile" src="{{ $r['reviewer']['avatar'] ?? '' }}" referrerpolicy="no-referrer"  />
                 @isset($r['reviewer']['countryFlag'])
-                    <img class="country" src="{{ $r['reviewer']['countryFlag'] }}" />
+                    <img class="country" src="{{ $r['reviewer']['countryFlag'] }}" referrerpolicy="no-referrer" />
                 @endisset
             </div>
             <div>
@@ -22,7 +22,7 @@
         <div class="img-list">
             @isset($r['images'])
                 @foreach ($r['images'] as $img)
-                    <a class="reviewImg" rel="review-img" target="_blank" href="{{ $img['url'] }}"><img class="img" src="{{ $img['url'] }}_100x100.jpg" /></a>
+                    <a class="reviewImg" rel="review-img" target="_blank" href="{{ $img['url'] }}"><img class="img" src="{{ $img['url'] }}_100x100.jpg" referrerpolicy="no-referrer" /></a>
                 @endforeach
             @endisset
         </div>

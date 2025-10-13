@@ -65,7 +65,7 @@
 
     <div class="img-wrap">
         @if ($images)
-        <a class="prodImg" rel="gal" target="_blank" href="{{ $images[0] }}"><img src="{{ $images[0] }}_250x250.jpg" title="{{ $p->title }}" alt="{{ $p->title }}" /></a>
+        <a class="prodImg" rel="gal" target="_blank" href="{{ $images[0] }}"><img src="{{ $images[0] }}_250x250.jpg" title="{{ $p->title }}" alt="{{ $p->title }}" referrerpolicy="no-referrer" /></a>
         @endif
     </div>
 
@@ -102,10 +102,10 @@
 
     <div class="images" id="photo">
         @if ($images)
-        <a class="prodImg firstImg" rel="gal" href="{{ $images[0] }}" target="_blank"><img src="{{ $images[0] }}_200x200.jpg" alt="{{ $p->title }}#0" /></a>
+        <a class="prodImg firstImg" rel="gal" href="{{ $images[0] }}" target="_blank"><img src="{{ $images[0] }}_200x200.jpg" alt="{{ $p->title }}#0" referrerpolicy="no-referrer" /></a>
         @endif
         @for ($i = 1; $i < count($images); $i++)
-            <a class="prodImg" rel="gal" href="{{ $images[$i] }}" target="_blank"><img src="{{ $images[$i] }}_200x200.jpg" alt="{{ $p->title }}#<?=$i?>" /></a>
+            <a class="prodImg" rel="gal" href="{{ $images[$i] }}" target="_blank"><img src="{{ $images[$i] }}_200x200.jpg" alt="{{ $p->title }}#<?=$i?>" referrerpolicy="no-referrer" /></a>
         @endfor
         {!! $vkAttachment !!}
     </div>
@@ -169,7 +169,7 @@
                                     <div class="profile-photo">
                                         <img class="profile" src="{{ $r['reviewer']['avatar'] }}" />
                                         @isset($r['reviewer']['countryFlag'])
-                                            <img class="country" src="{{ $r['reviewer']['countryFlag'] }}" />
+                                            <img class="country" src="{{ $r['reviewer']['countryFlag'] }}" referrerpolicy="no-referrer" />
                                         @endisset
                                     </div>
                                     <div>
@@ -192,7 +192,7 @@
                                 <div class="img-list">
                                     @isset($r['root']['images'])
                                         @foreach ($r['root']['images'] as $img)
-                                            <a class="reviewImg" rel="review-img" target="_blank" href="{{ $img['url'] }}"><img class="img" src="{{ $img['url'] }}_100x100.jpg" /></a>
+                                            <a class="reviewImg" rel="review-img" target="_blank" href="{{ $img['url'] }}"><img class="img" src="{{ $img['url'] }}_100x100.jpg" referrerpolicy="no-referrer" /></a>
                                         @endforeach
                                     @endisset
                                 </div>
@@ -201,9 +201,9 @@
                             <li>
                                 <div class="profile">
                                     <div class="profile-photo">
-                                        <img class="profile" src="{{ $r['user']['profileImageUrl'] ?? '' }}" />
+                                        <img class="profile" src="{{ $r['user']['profileImageUrl'] ?? '' }}" referrerpolicy="no-referrer" />
                                         @isset($r['user']['countryImageUrl'])
-                                            <img class="country" src="{{ $r['user']['countryImageUrl'] }}" />
+                                            <img class="country" src="{{ $r['user']['countryImageUrl'] }}" referrerpolicy="no-referrer" />
                                         @endisset
                                     </div>
                                     <div>
@@ -227,7 +227,7 @@
                                 <div class="img-list">
                                     @isset($r['images'])
                                         @foreach ($r['images'] as $img)
-                                            <a class="reviewImg" rel="review-img" target="_blank" href="{{ $img['url'] }}"><img class="img" src="{{ $img['url'] }}_100x100.jpg" /></a>
+                                            <a class="reviewImg" rel="review-img" target="_blank" href="{{ $img['url'] }}"><img class="img" src="{{ $img['url'] }}_100x100.jpg" referrerpolicy="no-referrer" /></a>
                                         @endforeach
                                     @endisset
                                 </div>
